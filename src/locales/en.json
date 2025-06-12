@@ -1,0 +1,62 @@
+{
+  "welcome": "Welcome Back to Wapfi",
+  "login_prompt": "Please log in to your account",
+  "email_or_phone": "Email or Phone Number",
+  "password": "Password",
+  "remember_me": "Remember Me",
+  "forgot_password": "Forgot Password",
+  "sign_in": "Sign In",
+  "dont_have_account": "Don't have an account?",
+  "sign_up": "Sign Up",
+  "agree_terms": "By signing in, you agree to our",
+  "terms_conditions": "Terms & Conditions",
+  "privacy_policy": "Privacy Policy",
+  "invalid_credentials": "Incorrect email or phone number. Please try again.",
+  "signup_title": "Create your Wapfi Account",
+  "signup_subtitle": "Register to start your journey",
+  "full_name": "Full Name",
+  "confirm_password": "Confirm Password",
+  "already_have_account": "Already have an account?",
+  "sign_up_error": "This email or phone number is already registered. Try logging in or use another.",
+  "forgot_password_subtext": "We'll send you a 4-digit code to your email or phone number to verify your identity and help you reset your password.",
+  "forgot_password_error": "We couldn't send the code. Please make sure your email or phone number is correct.",
+  "continue": "Continue",
+  "verify_title": "Verify Your Email or Phone Number",
+  "verify_subtext": "Please enter the 4-digit code sent to your email or phone number.",
+  "verify_error": "The code you entered is incorrect. Please try again.",
+  "resend_code_in": "Resend code in",
+  "resend": "Resend",
+
+  "errors": {
+    "email_or_phone_required": "Please enter your email or phone number",
+    "invalid_email_or_phone": "Invalid email or phone number",
+    "password_required": "Please enter your password",
+    "password_min": "Password must be at least 8 characters",
+    "full_name_required": "Please enter your full name",
+    "full_name_invalid": "Invalid full name",
+    "confirm_password_required": "Please confirm your password",
+    "digit_required": "Please enter a digit",
+    "invalid_digit": "Invalid character",
+    "passwords_do_not_match": "Passwords do not match. Please try again."
+  },
+
+  "placeholders": {
+    "email_phone": "Enter your email address or phone number",
+    "password": "Enter your password",
+    "full_name": "Enter your full name",
+    "confirm_password": "Confirm your password"
+  },
+
+  "background": {
+    "headline": "Get Loans. Pay Back in Plastics.",
+    "subtext": "Wapfi lets you borrow cash instantly and repay with the value of recyclable plastics."
+  },
+
+  "change_password": {
+    "title": "Change Password",
+    "subtext": "Enter your current password and set a new one to keep your account secure",
+    "general_error": "Please complete all fields correctly to update your password.",
+    "new": "New Password",
+    "confirm": "Confirm Password"
+  }
+}

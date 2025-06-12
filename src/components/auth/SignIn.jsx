@@ -1,0 +1,177 @@
+import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useState, useEffect } from "react";
+import WapfiLogo from "../WapfiLogo";
+import BackgroundImage from "../BackgroundImage";
+import AuthFooter from "./AuthFooter";
+import { useNavigate } from "react-router-dom";
+import axios from "../../api/axios";
+import { useTranslation } from "react-i18next";
+
+function SignIn() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const schema = yup.object({
+    emailPhone: yup
+      .string()
+      .required(t("errors.email_or_phone_required"))
+      .test("is-email-phone", t("errors.invalid_email_or_phone"), (value) => {
+        return (
+          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{11}$/.test(value)
+        );
+      }),
+    password: yup
+      .string()
+      .required(t("errors.password_required"))
+      .min(8, t("errors.password_min")),
+  });
+
+  const [showFormError, setShowFormError] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({ mode: "onTouched", resolver: yupResolver(schema) });
+
+  useEffect(() => {
+    const remembered = localStorage.getItem("rememberedEmailPhone");
+    if (remembered) {
+      setValue("emailPhone", remembered);
+    }
+  }, [setValue]);
+
+  // const onSubmit = (loginData) => {
+  //   console.log(loginData);
+  //   // if(loginData.remember) {
+  //   //   localStorage.setItem("rememberedEmailPhone", loginData.emailPhone);
+  //   // }
+  //   // else {
+  //   //   localStorage.removeItem("rememberedEmailPhone");
+  //   // }
+
+  //   if (
+  //     loginData.emailPhone !== "test@gmail.com" ||
+  //     loginData.password !== "secret123"
+  //   ) {
+  //     setShowFormError(true);
+  //   } else {
+  //     setShowFormError(false);
+  //     // navigate to dashboard
+  //   }
+  // };
+
+  const onSubmit = async (loginData) => {
+    try {
+      if (loginData.rememberMe) {
+        localStorage.setItem("rememberedEmailPhone", loginData.emailPhone);
+      } else {
+        localStorage.removeItem("rememberedEmailPhone");
+      }
+
+      const response = await axios.post("/auth/sign_in", {
+        identifier: loginData.emailPhone,
+        password: loginData.password,
+        // rememberMe: loginData.rememberMe,
+      });
+
+      console.log("Login success:", response.data);
+      setShowFormError(false);
+      // navigate to dashboard
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login error:", error);
+      setShowFormError(true);
+    }
+  };
+
+  return (
+    <div className="w-[85%] h-[956px] mx-auto min-md:w-[90%] md:flex md:justify-between md:mt-6">
+      <WapfiLogo />
+      <div className="md:w-[42%] md:m-14">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="text-[16px] md:text-[18px]"
+        >
+          <div className="mt-10 mb-7">
+            <p className="font-bold text-2xl text-[#10172E] md:text-[32px]">
+              {t("welcome")}
+            </p>
+            <p className="text-[18px] font-normal text-[#656565] md:text-[24px]">
+              {t("login_prompt")}
+            </p>
+          </div>
+
+          {showFormError && (
+            <p className="text-red-500 mb-3">{t("invalid_credentials")}</p>
+          )}
+
+          <label>
+            {t("email_or_phone")} <br />
+            <input
+              type="text"
+              {...register("emailPhone")}
+              placeholder={t("placeholders.email_phone")}
+              className="text-[rgba(34,34,34,0.50)] text-[15px] w-full mb-5.5 border-1 rounded-lg p-[14px] md:text-[18px]"
+            />
+          </label>
+
+          {errors.emailPhone && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.emailPhone?.message}
+            </p>
+          )}
+
+          <br />
+          <label>
+            {t("password")} <br />
+            <input
+              {...register("password")}
+              type="password"
+              placeholder={t("placeholders.password")}
+              className="text-[rgba(34,34,34,0.50)] text-[15px] w-full mb-1.5 border-1 rounded-lg p-[14px] md:text-[18px]"
+            />
+          </label>
+
+          {errors.password && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.password?.message}
+            </p>
+          )}
+
+          <br />
+          <div className="flex justify-between">
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="block mr-1.5"
+                {...register("rememberMe")}
+              />
+              <span className="block">{t("remember_me")}</span>
+            </label>
+            <Link
+              to="/forgot-password"
+              className="text-[#439182] cursor-pointer"
+            >
+              {t("forgot_password")}
+            </Link>
+          </div>
+          <button
+            type="submit"
+            className="text-center w-full my-6 rounded-[50px] text-[#FFF] font-medium bg-[#439182] py-3 px-3 cursor-pointer"
+          >
+            {t("sign_in")}
+          </button>
+        </form>
+        <AuthFooter />
+      </div>
+      <BackgroundImage />
+    </div>
+  );
+}
+
+export default SignIn;

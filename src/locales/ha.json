@@ -1,0 +1,62 @@
+{
+  "welcome": "Barka da zuwa Wapfi",
+  "login_prompt": "Da fatan za a shiga cikin asusun ku",
+  "email_or_phone": "Imel ko Lambar waya",
+  "password": "Kalmar sirri",
+  "remember_me": "Ka tuna ni",
+  "forgot_password": "Ka manta kalmar sirri?",
+  "sign_in": "Shiga",
+  "dont_have_account": "Ba ku da asusu?",
+  "sign_up": "Yi rijista",
+  "agree_terms": "Ta hanyar shiga, kuna yarda da",
+  "terms_conditions": "Sharuɗɗa & Ka'idoji",
+  "privacy_policy": "Manufar Sirri",
+  "invalid_credentials": "Imel ko lambar waya da kalmar sirri ba daidai ba. Da fatan a sake gwadawa.",
+  "signup_title": "Ƙirƙiri Asusun Wapfi ɗinku",
+  "signup_subtitle": "Yi rijista don fara tafiyar ku",
+  "full_name": "Cikakken suna",
+  "confirm_password": "Sake shigar da kalmar sirri",
+  "already_have_account": "Kana da asusu?",
+  "sign_up_error": "An riga an yi rijista da wannan imel ko lambar waya. Da fatan a shiga ko amfani da wani daban.",
+  "forgot_password_subtext": "Za mu aiko maka da lamba guda huɗu zuwa imel ko lambar wayarka domin tantance kai da kuma taimaka maka ka saita sabuwar kalmar sirri.",
+  "forgot_password_error": "Ba za mu iya aika lamban ba. Da fatan a tabbatar da cewa imel ko lambar waya ya dace.",
+  "continue": "Ci gaba",
+  "verify_title": "Tabbatar da Imel ko Lambar Waya",
+  "verify_subtext": "Da fatan za a shigar da lambobi huɗu da aka aiko zuwa imel ko lambar wayarka.",
+  "verify_error": "Lambobin da ka shigar ba daidai bane. Da fatan a sake gwadawa.",
+  "resend_code_in": "Aika lambobi bayan",
+  "resend": "Sake Aika",
+
+  "errors": {
+    "email_or_phone_required": "Da fatan za a shigar da imel ko lambar waya",
+    "invalid_email_or_phone": "Imel ko lambar waya bai dace ba",
+    "password_required": "Da fatan za a shigar da kalmar sirri",
+    "password_min": "Kalmar sirri dole ta kasance aƙalla haruffa 8",
+    "full_name_required": "Da fatan a shigar da cikakken suna",
+    "full_name_invalid": "Cikakken suna bai dace ba",
+    "confirm_password_required": "Da fatan a tabbatar da kalmar sirri",
+    "digit_required": "Da fatan a shigar da lamba",
+    "invalid_digit": "Harafi mara kyau",
+    "passwords_do_not_match": "Kalmar sirri da aka tabbatar ba su dace ba. Don Allah a sake gwadawa."
+
+  },
+
+  "placeholders": {
+    "email_phone": "Shigar da imel ko lambar waya",
+    "password": "Shigar da kalmar sirri",
+    "full_name": "Shigar da cikakken suna",
+    "confirm_password": "Sake shigar da kalmar sirri"
+  },
+
+  "background": {
+    "headline": "Samu rance. Biya da robobi.",
+    "subtext": "Wapfi yana baka rance nan take kuma zaka biya da darajar robobin da zaka iya sake amfani da su."
+  },
+  "change_password": {
+    "title": "Canza Kalmar Sirri",
+    "subtext": "Shigar da kalmar sirri ta yanzu kuma saita sabuwa don kiyaye asusunka lafiya",
+    "general_error": "Da fatan a cika duka filayen daidai don sabunta kalmar sirri.",
+    "new": "Sabuwar Kalmar Sirri",
+    "confirm": "Tabbatar da Kalmar Sirri"
+  }
+}
