@@ -3,14 +3,17 @@ import UKFlag from "../assets/UK Flag.svg";
 import NigerianFlag from "../assets/Nigerian Flag.svg";
 import { useLanguage } from "../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
+import i18n from "../i18n";
 
 function SiteLanguage() {
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
 
   const handleChange = (e) => {
-    console.log(e.target.value);
-    setLanguage(e.target.value);
+    const selectedLang = e.target.value;
+    console.log(selectedLang);
+    setLanguage(selectedLang);
+    i18n.changeLanguage(selectedLang === "hausa" ? "ha" : "en");
   };
 
   const handleSubmit = (e) => {
@@ -21,12 +24,15 @@ function SiteLanguage() {
   };
 
   return (
-    <div className="w-[85%] h-[956px] mx-auto min-md:w-[90%] md:mt-6">
+    <div className="w-[85%] mx-auto min-md:w-[90%] md:mt-6">
       <WapfiLogo />
       <div className="h-[50%] flex justify-center items-center">
-        <form className="w-[562px] bg-white px-7 py-10 rounded-[8.89px] gap-8" onSubmit={handleSubmit}>
-          <p className="text-center font-bold text-[28px]">
-            Choose your language
+        <form
+          className="w-[562px] bg-white px-7 py-10 my-16 rounded-[8.89px] gap-8"
+          onSubmit={handleSubmit}
+        >
+          <p className="text-center font-bold text-[28px] font-raleway">
+            Choose your Language
           </p>
           <div>
             <label>
@@ -44,8 +50,8 @@ function SiteLanguage() {
                 <input
                   type="radio"
                   name="language"
-                  value="english"
-                  checked={language === "english"}
+                  value="en"
+                  checked={language === "en"}
                   onChange={handleChange}
                 />
               </div>
@@ -64,8 +70,8 @@ function SiteLanguage() {
                 <input
                   type="radio"
                   name="language"
-                  value="hausa"
-                  checked={language === "hausa"}
+                  value="ha"
+                  checked={language === "ha"}
                   onChange={handleChange}
                 />
               </div>

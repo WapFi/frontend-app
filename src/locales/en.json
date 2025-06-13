@@ -37,7 +37,7 @@
     "confirm_password_required": "Please confirm your password",
     "digit_required": "Please enter a digit",
     "invalid_digit": "Invalid character",
-    "passwords_do_not_match": "Passwords do not match. Please try again."
+     "passwords_do_not_match": "Passwords do not match. Please try again."
   },
 
   "placeholders": {

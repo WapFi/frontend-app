@@ -104,79 +104,82 @@ function VerifyPhoneEmail() {
     return `${minutes}:${seconds}`;
   }
   return (
-    <div className="w-[85%] h-[956px] mx-auto min-md:w-[90%] md:flex md:justify-between md:mt-6">
+    <div>
       <WapfiLogo />
+      <div className="w-[85%] h-[956px] mx-auto min-md:w-[90%] md:flex md:justify-between md:mt-6 lg:gap-12 lg:mb-9 lg:flex-row">
+        <div className="md:w-[70%] md:mx-auto md:m-14 lg:w-[511px] lg:h-[621px]">
+          <div className="mt-10 mb-7 text-center">
+            <p className="font-raleway font-bold text-[24px] text-[#10172E] mt-24 md:text-[32px]">
+              {t("verify_title")}
+            </p>
+            <p className="text-[18px] text-[#656565] mt-3 mb-3.5 md:text-[24px]">
+              {t("verify_subtext")}
+            </p>
 
-      <div className="md:w-[42%] md:m-14 md:mt-24">
-        <div className="mt-10 mb-7 text-center">
-          <p className="font-raleway font-bold text-[24px] text-[#10172E] mt-24 md:text-[32px]">
-            {t("verify_title")}
-          </p>
-          <p className="text-[18px] text-[#656565] mt-3 mb-8 md:text-[24px]">
-            {t("verify_subtext")}
-          </p>
+            {showFormError && (
+              <p className="text-red-500 mb-3">{t("verify_error")}</p>
+            )}
 
-          {showFormError && (
-            <p className="text-red-500 mb-3">{t("verify_error")}</p>
-          )}
+            <button className="text-[#656565] mt-20">
+              {t("resend_code_in")}{" "}
+              <span className="text-[#2D6157]">{formatTime(secondsLeft)}</span>
+            </button>
+          </div>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="md:text-[18px] -mt-5"
+          >
+            <div className="flex justify-center gap-3.5 text-[rgba(34,34,34,0.50)]">
+              <input
+                type="text"
+                maxLength={1}
+                {...register("firstDigit")}
+                className="text-center w-[50px] h-[26px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
+              />
 
-          <button className="text-[#656565] mt-20">
-            {t("resend_code_in")}{" "}
-            <span className="text-[#2D6157]">{formatTime(secondsLeft)}</span>
+              <input
+                type="text"
+                maxLength={1}
+                {...register("secondDigit")}
+                className="text-center w-[50px] h-[26px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
+              />
+
+              <input
+                type="text"
+                maxLength={1}
+                {...register("thirdDigit")}
+                className="text-center w-[50px] h-[26px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
+              />
+
+              <input
+                type="text"
+                maxLength={1}
+                {...register("fourthDigit")}
+                className="text-center w-[50px] h-[26px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
+              />
+            </div>
+            <button
+              type="submit"
+              className="text-center w-full my-6 rounded-[50px] text-[#FFF] font-medium bg-[#439182] py-3 px-3 cursor-pointer"
+            >
+              {t("continue")}
+            </button>
+          </form>
+          <button
+            disabled={secondsLeft > 0}
+            onClick={() => setSecondsLeft(60)}
+            className={`flex justify-center mx-auto gap-1 ${
+              secondsLeft > 0
+                ? "opacity-50 cursor-not-allowed"
+                : "cursor-pointer"
+            }`}
+          >
+            <img src={arrowTimer} alt="Arrow Timer" />
+            <p className="text-[18px] text-[#2D6157]">{t("resend")}</p>
           </button>
         </div>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="md:text-[18px] -mt-5"
-        >
-          <div className="flex justify-center gap-3.5 text-[rgba(34,34,34,0.50)]">
-            <input
-              type="text"
-              maxLength={1}
-              {...register("firstDigit")}
-              className="text-center w-[50px] h-[26px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
-            />
-
-            <input
-              type="text"
-              maxLength={1}
-              {...register("secondDigit")}
-              className="text-center w-[50px] h-[26px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
-            />
-
-            <input
-              type="text"
-              maxLength={1}
-              {...register("thirdDigit")}
-              className="text-center w-[50px] h-[26px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
-            />
-
-            <input
-              type="text"
-              maxLength={1}
-              {...register("fourthDigit")}
-              className="text-center w-[50px] h-[26px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
-            />
-          </div>
-          <button
-            type="submit"
-            className="text-center w-full my-6 rounded-[50px] text-[#FFF] font-medium bg-[#439182] py-3 px-3 cursor-pointer"
-          >
-            {t("continue")}
-          </button>
-        </form>
-        <button
-          disabled={secondsLeft > 0}
-          onClick={() => setSecondsLeft(60)}
-          className={`flex justify-center mx-auto gap-1 ${
-            secondsLeft > 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-          }`}
-        >
-          <img src={arrowTimer} alt="Arrow Timer" />
-          <p className="text-[18px] text-[#2D6157]">{t("resend")}</p>
-        </button>
+        <BackgroundImage />
       </div>
-      <BackgroundImage />
     </div>
   );
 }
