@@ -414,13 +414,13 @@ function VerifyPhoneEmail() {
             <button
               disabled={secondsLeft > 0 || resending}
               onClick={handleResend}
-              className={`flex justify-center mx-auto gap-1 ${
+              className={`flex justify-center items-center mx-auto gap-2 ${
                 secondsLeft > 0 || resending
                   ? "opacity-50 cursor-not-allowed"
                   : "cursor-pointer"
               }`}
             >
-              <img src={arrowTimer} alt="Arrow Timer" />
+              <img src={arrowTimer} alt="Arrow Timer" className="block"/>
               <p className="text-[18px] text-[#2D6157]">{t("verify.resend")}</p>
 
               {/* {resending ? (
