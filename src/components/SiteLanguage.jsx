@@ -45,7 +45,7 @@ function SiteLanguage() {
       <WapfiLogo />
       <div className="h-[50%] flex justify-center items-center">
         <form
-          className="w-[562px] bg-white px-7 py-10 my-16 rounded-[8.89px] gap-8"
+          className="w-[562px] bg-white px-7 py-10 my-10 rounded-[8.89px] gap-8"
           onSubmit={handleSubmit}
         >
           <p className="text-center font-bold text-[28px] text-[#10172E] font-raleway">
