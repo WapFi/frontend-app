@@ -199,14 +199,14 @@ function ForgotPassword() {
 
   return (
     <div
-      className={`justify-between lg:flex lg:justify-center lg:my-10 2xl:gap-10 transition-opacity duration-[2500ms] ease-in-out ${
+      className={`w-full max-w-screen flex flex-col lg:flex-row justify-between lg:flex lg:justify-center lg:my-10 2xl:gap-10 transition-opacity duration-[2500ms] ease-in-out ${
         fadeIn ? "opacity-100" : "opacity-0"
       }`}
     >
       {/* <WapfiLogo /> */}
       <div>
         <WapfiLogo />
-        <div className="mx-auto flex flex-col items-center gap-[40px] w-[389px] h-[621px] md:text-[18px] md:w-[75%] lg:w-[511px] lg:h-[621px] lg:gap-[40px] lg:self-center lg:mx-12 xl:mx-14 2xl:ml-32">
+        <div className="mx-auto flex flex-col items-center gap-[40px] w-full max-w-[389px] md:text-[18px] md:max-w-[75%] lg:max-w-[511px] lg:gap-[40px] lg:self-center lg:mx-12 xl:mx-14 2xl:ml-32">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="w-full flex flex-col gap-1 self-stretch md:text-[18px]"

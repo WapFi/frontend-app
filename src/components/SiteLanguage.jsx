@@ -38,14 +38,14 @@ function SiteLanguage() {
 
   return (
     <div
-      className={`w-[85%] mx-auto min-md:w-[90%] md:mt-6 transition-opacity duration-[2500ms] ease-in-out ${
+      className={`w-[85%] min-h-screen mx-auto min-md:w-[90%] md:mt-6 transition-opacity duration-[2500ms] ease-in-out ${
         fadeIn ? "opacity-100" : "opacity-0"
       }`}
     >
       <WapfiLogo />
-      <div className="h-[50%] flex justify-center items-center">
+      <div className="flex justify-center items-center">
         <form
-          className="w-[562px] bg-white px-7 py-10 my-10 rounded-[8.89px] gap-8"
+          className="w-[520px] bg-white px-7 py-10 my-10 rounded-[8.89px] gap-8"
           onSubmit={handleSubmit}
         >
           <p className="text-center font-bold text-[28px] text-[#10172E] font-raleway">

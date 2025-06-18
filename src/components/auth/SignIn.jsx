@@ -216,11 +216,15 @@ function SignIn() {
           .toLowerCase()
       )
       .required(t("sign_in.errors.email_or_phone_required"))
-      .test("is-email-phone", t("sign_in.errors.invalid_email_or_phone"), (value) => {
-        return (
-          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{11}$/.test(value)
-        );
-      }),
+      .test(
+        "is-email-phone",
+        t("sign_in.errors.invalid_email_or_phone"),
+        (value) => {
+          return (
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{11}$/.test(value)
+          );
+        }
+      ),
     password: yup
       .string()
       .required(t("sign_in.errors.password_required"))
@@ -272,22 +276,21 @@ function SignIn() {
     } catch (error) {
       console.error("Login error:", error);
       setShowFormError(true);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
   return (
     <div
-      className={`justify-between lg:flex lg:justify-center lg:my-10 2xl:gap-10 transition-opacity duration-[2500ms] ease-in-out ${
+      className={`w-full max-w-screen flex flex-col lg:flex-row justify-between lg:flex lg:justify-center lg:my-10 2xl:gap-10 transition-opacity duration-[2500ms] ease-in-out ${
         fadeIn ? "opacity-100" : "opacity-0"
       }`}
     >
       {/* <WapfiLogo /> */}
       <div>
-        <WapfiLogo/>
-        <div className="mx-auto flex flex-col items-center gap-[40px] w-[389px] h-[621px] md:text-[18px] md:w-[75%] lg:w-[511px] lg:h-[621px] lg:gap-[40px] lg:self-center lg:mx-12 xl:mx-14 2xl:ml-32">
+        <WapfiLogo />
+        <div className="mx-auto flex flex-col items-center gap-[40px] w-full max-w-[389px] md:text-[18px] md:max-w-[75%] lg:max-w-[511px] lg:gap-[40px] lg:self-center lg:mx-12 xl:mx-14 2xl:ml-32">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="w-full flex flex-col gap-1 self-stretch md:text-[18px]"
@@ -303,13 +306,13 @@ function SignIn() {
             </div>
 
             {showFormError && (
-              <p className="text-red-500 mb-3">{t("sign_in.invalid_credentials")}</p>
+              <p className="text-red-500 mb-3">
+                {t("sign_in.invalid_credentials")}
+              </p>
             )}
 
             {showSuccessMessage && (
-              <p className="text-green-500 mb-3">
-                {t("sign_in.success")}
-              </p>
+              <p className="text-green-500 mb-3">{t("sign_in.success")}</p>
             )}
 
             <label className="text-[#222] gap-2">

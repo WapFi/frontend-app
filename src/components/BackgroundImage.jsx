@@ -6,7 +6,7 @@ function BackgroundImage() {
 
   return (
     <div
-      className="hidden bg-cover rounded-3xl w-[669px] h-[890px] text-[#FFF] lg:flex lg:mr-3.5"
+      className="border hidden bg-cover rounded-3xl w-[669px] h-[890px] text-[#FFF] lg:flex lg:mr-3.5"
       style={{ backgroundImage: `url(${bgImage})` }}
     >
       <div
