@@ -1,11 +1,21 @@
+import LoadingSpinner from "./LoadingSpinner";
 import WapfiLogo from "./WapfiLogo";
 import UKFlag from "../assets/UK Flag.svg";
 import NigerianFlag from "../assets/Nigerian Flag.svg";
 import { useLanguage } from "../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import i18n from "../i18n";
 
 function SiteLanguage() {
+  const [fadeIn, setFadeIn] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setFadeIn(true);
+  }, []);
+
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
 
@@ -19,26 +29,33 @@ function SiteLanguage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (language !== "") {
-      navigate("/sign-in");
+      setLoading(true);
+      setTimeout(() => {
+        navigate("/sign-in");
+      }, 3000);
     }
   };
 
   return (
-    <div className="w-[85%] mx-auto min-md:w-[90%] md:mt-6">
+    <div
+      className={`w-[85%] mx-auto min-md:w-[90%] md:mt-6 transition-opacity duration-[2500ms] ease-in-out ${
+        fadeIn ? "opacity-100" : "opacity-0"
+      }`}
+    >
       <WapfiLogo />
       <div className="h-[50%] flex justify-center items-center">
         <form
           className="w-[562px] bg-white px-7 py-10 my-16 rounded-[8.89px] gap-8"
           onSubmit={handleSubmit}
         >
-          <p className="text-center font-bold text-[28px] font-raleway">
+          <p className="text-center font-bold text-[28px] text-[#10172E] font-raleway">
             Choose your Language
           </p>
           <div>
             <label>
               <div
-                className={`flex justify-between p-2 rounded-2xl my-3.5 border ${
-                  language === "english"
+                className={`flex justify-between p-2 rounded-2xl my-3.5 border hover:cursor-pointer ${
+                  language === "en"
                     ? "border-[#439182]"
                     : "border-[#999999]"
                 }`}
@@ -59,8 +76,8 @@ function SiteLanguage() {
 
             <label>
               <div
-                className={`flex justify-between p-2 rounded-2xl my-3.5 border ${
-                  language === "hausa" ? "border-[#439182]" : "border-[#999999]"
+                className={`flex justify-between p-2 rounded-2xl my-3.5 border hover:cursor-pointer ${
+                  language === "ha" ? "border-[#439182]" : "border-[#999999]"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
@@ -79,15 +96,15 @@ function SiteLanguage() {
           </div>
 
           <button
-            disabled={language === ""}
+            disabled={language === "" || loading}
             type="submit"
-            className={`text-center w-full my-6 rounded-[50px] text-[#FFF] font-medium bg-[#439182] py-3 px-3 ${
-              language === ""
-                ? "opacity-50 cursor-not-allowed"
+            className={`text-center w-full my-6 rounded-[50px] text-[#FFF] font-medium bg-[#439182] py-3 px-3 hover:opacity-80 ${
+              language === "" || loading
+                ? "hover:opacity-80 transition-opacity duration-300 cursor-not-allowed"
                 : "cursor-pointer"
             }`}
           >
-            Continue
+            {loading ? <LoadingSpinner /> : "Continue"}
           </button>
         </form>
       </div>
