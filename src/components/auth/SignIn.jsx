@@ -290,7 +290,7 @@ function SignIn() {
       {/* <WapfiLogo /> */}
       <div>
         <WapfiLogo />
-        <div className="mx-auto flex flex-col items-center gap-[40px] w-full mb-10 max-w-[95%] md:text-[18px] md:max-w-[75%] lg:max-w-[511px] lg:gap-[40px] lg:self-center lg:mx-12 xl:mx-14 2xl:ml-32">
+        <div className="mx-auto flex flex-col items-center gap-[40px] w-full mb-12 max-w-[95%] md:text-[18px] md:max-w-[75%] lg:max-w-[511px] lg:gap-[40px] lg:self-center lg:mx-12 xl:mx-14 2xl:ml-32">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="w-full flex flex-col gap-1 self-stretch md:text-[18px]"
