@@ -7,13 +7,13 @@ function Sidebar() {
   const { t } = useTranslation();
 
   return (
-    <div className="text-[#A0B0AB] text-[16px] px-6 pt-8 bg-white w-[320px] h-[2096px] shrink-0 rounded-tl-none rounded-bl-none rounded-tr-[20px] rounded-br-[20px] border-r border-[#00000014]">
-      <WapfiLogo />
-      <div className="w-[294px] h-[760px] flex flex-col items-start self-stretch mt-20 gap-4 grow shrink-0 basis-0">
+    <div className="h-full text-[#A0B0AB] text-[16px] px-6 pt-5 bg-white grow rounded-tl-none rounded-bl-none rounded-tr-[20px] rounded-br-[20px] border-r border-[#00000014]">
+      <WapfiLogo className="md:!my-0 md:!ml-0" />
+      <div className="flex flex-col items-start self-stretch mt-20 gap-4 grow shrink-0 basis-0">
         <NavLink
-          to="/sidebar"
+          to="/dashboard"
           className={({ isActive }) =>
-            `w-[278px] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] ${
+            `2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] ${
               isActive
                 ? "bg-[#439182] text-white p-6 rounded-[12px]"
                 : "text-[#A0B0AB] py-[8px] px-[16px]"
@@ -47,7 +47,7 @@ function Sidebar() {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `w-[278px] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] ${
+            `2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] ${
               isActive
                 ? "bg-[#439182] text-white p-6 rounded-[12px]"
                 : "text-[#A0B0AB] py-[8px] px-[16px]"
@@ -74,7 +74,7 @@ function Sidebar() {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `w-[278px] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] ${
+            `2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] ${
               isActive
                 ? "bg-[#439182] text-white p-6 rounded-[12px]"
                 : "text-[#A0B0AB] py-[8px] px-[16px]"
@@ -98,7 +98,7 @@ function Sidebar() {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `w-[278px] h-[40px] flex items-center gap-3 self-stretch  px-[16px] rounded-[12px] ${
+            `2xl:w-[95%] h-[40px] flex items-center gap-3 self-stretch  px-[16px] rounded-[12px] ${
               isActive
                 ? "bg-[#439182] text-white p-6 rounded-[12px]"
                 : "text-[#A0B0AB] h-[40px] py-[8px]"
@@ -124,7 +124,7 @@ function Sidebar() {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `w-[278px] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] ${
+            `2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] ${
               isActive
                 ? "bg-[#439182] text-white p-6 rounded-[12px]"
                 : "text-[#A0B0AB] py-[8px] px-[16px]"
@@ -153,7 +153,7 @@ function Sidebar() {
           </svg>
           <p>{t("sidebar.settings")}</p>
         </NavLink>
-        <NavLink className="w-[278px] text-[#2D6157] flex items-center gap-3 self-stretch h-[40px] py-[8px] px-[16px] mt-38">
+        <NavLink className="2xl:w-[95%] text-[#2D6157] flex items-center gap-3 self-stretch h-[40px] py-[8px] px-[16px] mt-38">
           <img src={logoutIcon} alt="log out icon" />
           <p>{t("sidebar.logout")}</p>
         </NavLink>

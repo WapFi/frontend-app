@@ -4,35 +4,46 @@ import DateDisplay from "../DateDisplay";
 import calendarIcon from "../../../assets/calendar icon.svg";
 import bellIcon from "../../../assets/bell icon.svg";
 import { useLanguage } from "../../../context/LanguageContext";
+import { useEffect, useState } from "react";
+import { fetchUserMe } from "../../../api/mockApi";
 
 function HeaderBar() {
   const { language, setLanguage } = useLanguage();
 
-  const fullName = "Pmina Gogo Roy"; // later you can get this from user context
-  const initials = fullName
-    .split(" ")
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetchUserMe().then((res) => {
+      if (res.status) {
+        setUser(res.data);
+      }
+    });
+  }, []);
+
+  const initials = user?.full_name
+    ?.split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase();
 
   return (
-    <div className="border text-[#222] flex justify-between items-center shrink-0 pt-8 px-[28px] w-[1192px] h-[76px]">
-      <div className="flex items-center gap-2">
+    <div className="text-[#222] flex justify-between items-center grow pt-8 md:px-3 lg:px-[28px]">
+      <div className="flex items-center gap-2"> 
         <img
           src={calendarIcon}
           alt="calendar icon"
           className="w-[18px] h-[17.582px]"
         />
-        <DateDisplay />
+        <p className="text-[#2D6157] font-semibold flex gap-1 items-center"> Today, <DateDisplay /> </p>
       </div>
-      <div className="flex justify-center items-center gap-6 cursor-pointer">
+      <div className="flex justify-center items-center gap-4">
         <div
-          className="flex items-center gap-2.5"
+          className="flex items-center gap-2.5 cursor-pointer"
           onClick={() => setLanguage("en")}
         >
           <img src={UKFlag} alt="Flag of the UK" />
           <span
-            className={`text-[14px] md:text-[16px]  ${
+            className={`md:text-[16px]  ${
               language === "en" ? "text-[#2D6157]" : "text-[#222]"
             }`}
           >
@@ -46,7 +57,7 @@ function HeaderBar() {
         >
           <img src={NigerianFlag} alt="Flag of Nigeria" />
           <span
-            className={`text-[14px] md:text-[16px]  ${
+            className={`md:text-[16px]  ${
               language === "ha" ? "text-[#2D6157]" : "text-[#222]"
             }`}
           >
