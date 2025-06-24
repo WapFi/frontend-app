@@ -55,9 +55,9 @@ function LoanDetails() {
             <p className="text-[12px] md:text-[16px] text-[rgba(34,34,34,0.50)]">
               Amount
             </p>
-            <div>
+            <div className="flex gap-2">
               <img src={NairaIcon} alt="naira icon" />{" "}
-              <span className="md:text-[22px] text-[#222] font-medium">
+              <span className="block md:text-[22px] text-[#222] font-medium">
                 20,000
               </span>
             </div>

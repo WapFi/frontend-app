@@ -104,17 +104,15 @@ function LoanDetailsScreenMobile() {
             </div>
           )} */}
           {showCalendar && (
-            <div className="absolute right-0 mt-2 z-50 bg-white border p-2 rounded shadow-md w-max min-w-[200px]">
-              <input
-                type="month"
-                value={selectedMonth}
-                onChange={(e) => {
-                  setSelectedMonth(e.target.value);
-                  setShowCalendar(false);
-                }}
-                className="text-sm outline-none border-none w-full h-10"
-              />
-            </div>
+            <input
+              type="month"
+              value={selectedMonth}
+              onChange={(e) => {
+                setSelectedMonth(e.target.value);
+                setShowCalendar(false);
+              }}
+              className="absolute right-0 mt-2 z-50 bg-white border rounded w-[160px] h-[40px] text-sm"
+            />
           )}
         </div>
       </div>
