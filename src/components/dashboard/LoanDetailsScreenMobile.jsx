@@ -90,8 +90,8 @@ function LoanDetailsScreenMobile() {
             </span>
           </div>
 
-          {showCalendar && (
-            <div className="absolute right-0 mt-2 z-50 bg-white border p-2 rounded shadow-md">
+          {/* {showCalendar && (
+            <div className="absolute w-[150px] right-0 mt-2 z-50 bg-white border p-2 rounded shadow-md">
               <input
                 type="month"
                 value={selectedMonth}
@@ -100,6 +100,19 @@ function LoanDetailsScreenMobile() {
                   setShowCalendar(false);
                 }}
                 className="text-sm outline-none border-none"
+              />
+            </div>
+          )} */}
+          {showCalendar && (
+            <div className="absolute right-0 mt-2 z-50 bg-white border p-2 rounded shadow-md w-max min-w-[200px]">
+              <input
+                type="month"
+                value={selectedMonth}
+                onChange={(e) => {
+                  setSelectedMonth(e.target.value);
+                  setShowCalendar(false);
+                }}
+                className="text-sm outline-none border-none w-full h-10"
               />
             </div>
           )}
