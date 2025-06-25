@@ -8,7 +8,7 @@ import { useLanguage } from "../../../context/LanguageContext";
 // import { fetchUserMe } from "../../../api/mockApi";
 import { useTranslation } from "react-i18next";
 
-function HeaderBar({userName}) {
+function HeaderBar({ userName }) {
   const { t } = useTranslation();
   const { language, setLanguage } = useLanguage();
 
@@ -22,22 +22,23 @@ function HeaderBar({userName}) {
   //   });
   // }, []);
 
-  const initials = userName.full_name
-    ?.split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
-
+  const nameParts = userName.full_name?.split(" ");
+  const initials = nameParts
+    ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+    : "";
 
   return (
     <div className="text-[#222] flex justify-between items-center grow pt-8 md:px-3 lg:px-[28px]">
-      <div className="flex items-center gap-2"> 
+      <div className="flex items-center gap-2">
         <img
           src={calendarIcon}
           alt="calendar icon"
           className="w-[18px] h-[17.582px]"
         />
-        <p className="text-[#2D6157] font-semibold flex gap-1 items-center"> {t("header_bar.today")}, <DateDisplay /> </p>
+        <p className="text-[#2D6157] font-semibold flex gap-1 items-center">
+          {" "}
+          {t("header_bar.today")}, <DateDisplay />{" "}
+        </p>
       </div>
       <div className="flex justify-center items-center gap-4">
         <div

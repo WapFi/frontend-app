@@ -11,7 +11,7 @@ import NigerianFlag from "../../../assets/Nigerian Flag.svg";
 import logoutIcon from "../../../assets/logout icon.svg";
 // import { fetchUserMe } from "../../../api/mockApi";
 
-function MobileMenu({userName}) {
+function MobileMenu({ userName }) {
   const { t } = useTranslation();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,11 +27,10 @@ function MobileMenu({userName}) {
   //   });
   // }, []);
 
-  const initials = userName.full_name
-    ?.split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+  const nameParts = userName.full_name?.split(" ");
+  const initials = nameParts
+    ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+    : "";
 
   return (
     <div className={`${menuOpen ? "bg-white h-screen" : "bg-[#f1f1f1]"}`}>
