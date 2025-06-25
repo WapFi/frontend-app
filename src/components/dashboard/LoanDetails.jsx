@@ -4,8 +4,11 @@ import AccessBankLogo from "../../assets/access bank logo.svg";
 import DateDisplay from "./DateDisplay";
 import RepaymentProgressBar from "./RepaymentProgressBar";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function LoanDetails() {
+  const { t } = useTranslation();
+
   return (
     <div className="w-full lg:flex lg:flex-col lg:gap-14 lg:w-[50%]">
       {/* <div className="flex justify-between items-center">
@@ -22,7 +25,7 @@ function LoanDetails() {
       <div className="bg-white md:bg-[#fafafa] flex flex-col gap-12 px-3.5 md:px-[18px] py-[22px] rounded-[24px]">
         <div className="flex justify-between items-center self-stretch">
           <p className="font-raleway text-[#222] rounded-[24px] md:rounded-[12px] text-[18px] font-semibold md:text-[20px] flex flex-col items-start">
-            Loan Details
+           {t("loanDetails.title")}
           </p>
           <div className="flex items-center gap-2.5">
             <span className="text-[14px] font-medium text-[rgba(34,34,34,0.80)] md:text-[16px]">
@@ -36,7 +39,7 @@ function LoanDetails() {
         <div className="flex justify-between gap-5.5">
           <div className="flex flex-col gap-[5px]">
             <p className="text-[12px] md:text-[16px] text-[rgba(34,34,34,0.50)]">
-              Payment Method
+              {t("loanDetails.paymentMethod")}
             </p>
             <p className="md:text-[22px] text-[#222] font-medium">
               Recyclables
@@ -44,7 +47,7 @@ function LoanDetails() {
           </div>
           <div className="flex flex-col gap-[5px]">
             <p className="text-[12px] md:text-[16px] text-[rgba(34,34,34,0.50)]">
-              Disbursed To
+               {t("loanDetails.disbursedTo")}
             </p>
             <img src={AccessBankLogo} alt="bank logo" />
             <p className="text-[12px] md:text-[14px] text-[#222] font-medium uppercase">
@@ -53,7 +56,7 @@ function LoanDetails() {
           </div>
           <div>
             <p className="text-[12px] md:text-[16px] text-[rgba(34,34,34,0.50)]">
-              Amount
+             {t("loanDetails.amount")}
             </p>
             <div className="flex gap-2">
               <img src={NairaIcon} alt="naira icon" />{" "}
@@ -64,7 +67,7 @@ function LoanDetails() {
           </div>
         </div>
         <div className="bg-[#F9F9F9] border border-[rgba(255,255,255,0.16)] rounded-[12px] self-stretch py-4 px-3 md:bg-[rgba(255,255,255,0.83)] md:border-[rgba(255,255,255,0.68)]">
-          <p className="text-[#242424] text-[18px]">Repayment Progress</p>
+          <p className="text-[#242424] text-[18px]">  {t("loanDetails.repaymentProgress")}</p>
           <div className="relative">
             {/* <p className="absolute left-[67%] md:left-[74%] top-[30%] flex gap-1 items-center font-raleway font-medium text-[#444]">
               <img src={NairaIcon} alt="naira icon" />
@@ -74,31 +77,31 @@ function LoanDetails() {
           </div>
 
           <Link className="text-[14px] text-right block font-medium text-[#2D6157]">
-            Repayment History
+             {t("loanDetails.repaymentHistory")}
           </Link>
         </div>
         <div className="flex justify-between items-center py-[12px] bg-[#f9f9f9] self-stretch rounded-xl border border-[rgba(255,255,255,0.68)]">
           <div>
-            <p className="text-[rgba(34,34,34,0.50)] text-[14px]">Term</p>
+            <p className="text-[rgba(34,34,34,0.50)] text-[14px]">{t("loanDetails.term")}</p>
             <p className="text-[#222] font-medium text-[14px] md:text-[18px]">
               3 months
             </p>
           </div>
           <div>
-            <p className="text-[rgba(34,34,34,0.50)] text-[14px]">Start Date</p>
+            <p className="text-[rgba(34,34,34,0.50)] text-[14px]">{t("loanDetails.startDate")}</p>
             <p className="text-[#222] font-medium text-[14px] md:text-[18px]">
               <DateDisplay />
             </p>
           </div>
           <div>
-            <p className="text-[rgba(34,34,34,0.50)] text-[14px]">Due Date</p>
+            <p className="text-[rgba(34,34,34,0.50)] text-[14px]"> {t("loanDetails.dueDate")}</p>
             <p className="text-[#222] font-medium text-[14px] md:text-[18px]">
               July 15, 2025
             </p>
           </div>
         </div>
         <p className="text-[rgba(34,34,34,0.50)]">
-          Loan Purpose: <span className="text-[#222]">School Fees</span>
+           {t("loanDetails.loanPurpose")} <span className="text-[#222]">School Fees</span>
         </p>
       </div>
     </div>

@@ -12,17 +12,34 @@ function SiteLanguage() {
 
   const [loading, setLoading] = useState(false);
 
+  // useEffect(() => {
+  //   setFadeIn(true);
+  // }, []);
   useEffect(() => {
-    setFadeIn(true);
+    const storedLang = localStorage.getItem("language");
+    if (storedLang) {
+      setLanguage(storedLang);
+      i18n.changeLanguage(storedLang === "hausa" ? "ha" : "en");
+      navigate("/sign-in");
+    } else {
+      setFadeIn(true);
+    }
   }, []);
 
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
 
+  // const handleChange = (e) => {
+  //   const selectedLang = e.target.value;
+  //   console.log(selectedLang);
+  //   setLanguage(selectedLang);
+  //   i18n.changeLanguage(selectedLang === "hausa" ? "ha" : "en");
+  // };
+
   const handleChange = (e) => {
     const selectedLang = e.target.value;
-    console.log(selectedLang);
     setLanguage(selectedLang);
+    localStorage.setItem("language", selectedLang);
     i18n.changeLanguage(selectedLang === "hausa" ? "ha" : "en");
   };
 
@@ -55,9 +72,7 @@ function SiteLanguage() {
             <label>
               <div
                 className={`flex justify-between p-2 rounded-2xl my-3.5 border hover:cursor-pointer ${
-                  language === "en"
-                    ? "border-[#439182]"
-                    : "border-[#999999]"
+                  language === "en" ? "border-[#439182]" : "border-[#999999]"
                 }`}
               >
                 <div className="flex items-center gap-2.5">

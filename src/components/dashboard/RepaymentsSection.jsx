@@ -202,9 +202,12 @@ import calendarIcon from "../../assets/calendar icon.svg";
 import searchIcon from "../../assets/search icon.svg";
 import RepaymentsList from "./RepaymentsList";
 import LoanDetails from "./LoanDetails";
-import { fetchRepayments } from "../../api/mockApi";
+// import { fetchRepayments } from "../../api/mockApi";
+import { useTranslation } from "react-i18next";
 
 function RepaymentsSection() {
+  const { t } = useTranslation();
+
   const [selectedLoan, setSelectedLoan] = useState(null);
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -245,17 +248,17 @@ function RepaymentsSection() {
       <div className="hidden md:flex justify-between items-start self-stretch w-full">
         <div className="flex justify-between items-center md:w-[45%] relative">
           <p className="font-raleway font-semibold md:text-[24px]">
-            Repayments
+            {t("repaymentsSection.title")}
           </p>
           <div className="ml-3.5 relative">
-            <div className="flex md:items-center gap-2.5 pl-3 shrink-0 rounded-[30px] border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)]">
+            <div className="hidden lg:flex lg:items-center gap-2.5 pl-3 shrink-0 rounded-[30px] border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)]">
               <p className="text-[16px] text-[rgba(34,34,34,0.80)] font-medium">
                 {selectedMonth
                   ? new Date(`${selectedMonth}-01`).toLocaleString("default", {
                       month: "long",
                       year: "numeric",
                     })
-                  : "Select Month"}
+                  : t("repaymentsSection.selectMonth")}
               </p>
               <span
                 className="block p-4 rounded-[50%] bg-[#E6E6E6] cursor-pointer"
@@ -285,7 +288,7 @@ function RepaymentsSection() {
           <div className="flex items-center justify-between gap-2.5 pl-3 shrink-0 rounded-[30px] w-full md:w-[60%] border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)]">
             <input
               type="search"
-              placeholder="Search Loan ID and Amount...."
+              placeholder={t("repaymentsSection.searchPlaceholder")}
               className="text-[14px] w-[90%] md:text-[16px] text-[rgba(34,34,34,0.50)] rounded-full bg-transparent outline-none border-none"
             />
             <button className="cursor-pointer">
@@ -293,7 +296,7 @@ function RepaymentsSection() {
             </button>
           </div>
           <Link className="text-[14px] md:text-[16px] text-[#2D6157] text-center font-semibold shrink-0">
-            View All
+            {t("repaymentsSection.viewAll")}
           </Link>
         </div>
       </div>
@@ -301,16 +304,16 @@ function RepaymentsSection() {
       {/* MOBILE HEADER */}
       <div className="flex flex-col md:hidden w-full">
         <div className="flex justify-between items-center self-stretch mb-4">
-          <p className="font-raleway font-semibold text-[24px]">Repayment</p>
+          <p className="font-raleway font-semibold text-[24px]">{t("repaymentsSection.mobileTitle")}</p>
           <Link className="text-[14px] md:text-[16px] text-[#2D6157] text-center font-semibold">
-            View All
+             {t("repaymentsSection.viewAll")}
           </Link>
         </div>
 
         <div className="flex items-center justify-between gap-2.5 pl-3 shrink-0 rounded-[30px] w-full border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)]">
           <input
             type="search"
-            placeholder="Search Loan ID and Amount...."
+            placeholder={t("repaymentsSection.searchPlaceholder")}
             className="text-[14px] w-[90%] md:text-[16px] text-[rgba(34,34,34,0.50)] rounded-full bg-transparent outline-none border-none"
           />
           <button className="cursor-pointer">

@@ -8,9 +8,10 @@ import ForgotPassword from "../components/auth/ForgotPassword";
 import VerifyPhoneEmail from "../components/auth/VerifyPhoneEmail";
 import ChangePassword from "../components/auth/ChangePassword";
 import Layout from "../components/dashboard/layout/Layout";
-import Dashboard from "../components/dashboard/Dashboard";
+// import Dashboard from "../components/dashboard/Dashboard";
 import LoanDetailsScreenMobile from "../components/dashboard/LoanDetailsScreenMobile";
 import PrivateRoute from "./PrivateRoute";
+import DashboardWrapper from "../components/dashboard/DashboardWrapper";
 
 function AppRoutes() {
   return (
@@ -29,12 +30,12 @@ function AppRoutes() {
       <Route
         path=""
         element={
-          // <PrivateRoute>
-          <Layout />
-          // </PrivateRoute>
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
         }
       >
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<DashboardWrapper />} />
         <Route path="/repayments/:id" element={<LoanDetailsScreenMobile />} />
       </Route>
 

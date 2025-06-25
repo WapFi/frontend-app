@@ -37,8 +37,10 @@
 
 import { useEffect, useState } from "react";
 import colonIcon from "../../assets/colon icon.svg";
+import { useTranslation } from "react-i18next";
 
 function CountdownTimer({ targetTime }) {
+  const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
 
   function getTimeLeft() {
@@ -76,7 +78,7 @@ function CountdownTimer({ targetTime }) {
   return (
     <div className="md:flex justify-between self-stretch">
       <p className="lg:w-[33%] 2xl:w-[30%] lg:flex lg:self-center">
-        Time left to next payment:
+         {t("countdown.title")}
       </p>
 
       <div className="flex gap-4 justify-center w-full items-center md:justify-between">
@@ -84,28 +86,28 @@ function CountdownTimer({ targetTime }) {
           <p className="text-[18px] font-semibold md:text-[24px]">
             {timeLeft.days}
           </p>
-          <p className="text-[12px] font-medium md:text-[18px]">Days</p>
+          <p className="text-[12px] font-medium md:text-[18px]">{t("countdown.days")}</p>
         </div>
         <img src={colonIcon} alt="colon" />
         <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">
           <p className="text-[18px] font-semibold md:text-[24px]">
             {timeLeft.hours}
           </p>
-          <p className="text-[12px] font-medium md:text-[18px]">Hours</p>
+          <p className="text-[12px] font-medium md:text-[18px]">{t("countdown.hours")}</p>
         </div>
         <img src={colonIcon} alt="colon" />
         <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">
           <p className="text-[18px] font-semibold md:text-[24px]">
             {timeLeft.minutes}
           </p>
-          <p className="text-[12px] font-medium md:text-[18px]">Minutes</p>
+          <p className="text-[12px] font-medium md:text-[18px]">{t("countdown.minutes")}</p>
         </div>
         <img src={colonIcon} alt="colon" />
         <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">
           <p className="text-[18px] font-semibold md:text-[24px]">
             {timeLeft.seconds}
           </p>
-          <p className="text-[12px] font-medium md:text-[18px]">Seconds</p>
+          <p className="text-[12px] font-medium md:text-[18px]">{t("countdown.seconds")}</p>
         </div>
       </div>
     </div>

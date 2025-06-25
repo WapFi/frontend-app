@@ -109,12 +109,108 @@
     "headline": "Samu rance. Biya da robobi.",
     "subtext": "Wapfi yana baka rance nan take kuma zaka biya da darajar robobin da zaka iya sake amfani da su."
   },
-    "sidebar": {
+  "sidebar": {
     "dashboard": "Allon Kulawa",
     "takeLoan": "Karɓi Rance",
     "repayments": "Biyan Bashi",
     "creditScore": "Matsayin Ƙima",
     "settings": "Saituna",
     "logout": "Fita"
+  },
+  "mobile_menu": {
+    "dashboard": "Allon Kulawa",
+    "takeLoan": "Karɓi Rance",
+    "repayments": "Biyan Bashi",
+    "creditScore": "Matsayin Ƙima",
+    "settings": "Saituna",
+    "logout": "Fita"
+  },
+  "header_bar": {
+    "today": "Yau"
+  },
+  "overview": {
+    "title": "Bayanin Kuɗi",
+    "totalLoanTaken": "Jimillar Bashin da Aka Karɓa",
+    "lastLoan": "Bashi na ƙarshe",
+    "amountRepaid": "Adadin da Aka Biya",
+    "repaymentHistory": "Tarihin Biyan Kuɗi:",
+    "activeLoan": "Bashin da ke Aiki",
+    "dueBy": "Ranar ƙarshe"
+  },
+  "repaymentsSection": {
+    "title": "Biyan Kuɗi",
+    "mobileTitle": "Biya",
+    "selectMonth": "Zaɓi Wata",
+    "searchPlaceholder": "Nemo ID ɗin Bashi da Adadi....",
+    "viewAll": "Duba Duka"
+  },
+  "repaymentsList": {
+    "noRepayments": "Babu biyan kuɗi a wannan watan.",
+    "statusCompleted": "An gama",
+    "statusPending": "Ana jira"
+  },
+  "creditScore": {
+    "title": "Ƙididdigar Bashi",
+    "totalCredit": "Jimillar Ƙididdiga",
+    "nextLevelSuffix": "don zuwa mataki na gaba",
+    "loading": "Ana loda ƙididdigar bashi...",
+    "tier0Message": "Tier 0 – Tabbatar da BVN ɗinka don Buɗe Samun Lamuni",
+    "bvnVerification": "Tabbatar da BVN",
+    "unverified": "Ba a tabbatar ba",
+    "tier1Message": "Tier 1 – Kammala Tabbatar da NIN don Buɗe Tier 2",
+    "ninVerification": "Tabbatar da NIN",
+    "completed": "An kammala",
+    "tier2Message": "Tier 2 Bai Cikakku ba – Tabbatar da NIN, BVN da Adireshi don samun aron ₦50,000",
+    "addressVerification": "Tabbatar da Adireshi",
+    "pending": "Ana jira",
+    "tier3Message": "Tier 1 – Kammala Tabbatar da BVN don Buɗe Tier 2"
+  },
+  "countdown": {
+    "title": "Ragowar lokaci kafin biyan kuɗi na gaba:",
+    "days": "Kwana",
+    "hours": "Sa'a",
+    "minutes": "Minti",
+    "seconds": "Dakika"
+  },
+  "layout": {
+    "error": "Ba a iya ɗaukar bayanan ku ba. Da fatan za a sake gwadawa."
+  },
+  "newUserDashboard": {
+    "title": "Dashboard",
+    "overviewTitle": "Bayani",
+    "totalLoanTaken": "Jimillar Lamunin da Aka Karɓa",
+    "lastLoan": "Lamuni na ƙarshe: Babu – Ba ku taɓa karɓar lamuni ba",
+    "amountRepaid": "Adadin da Aka Biya",
+    "repaymentHistory": "Tarihin Biyan Kuɗi: 0 daga cikin 0 an kammala",
+    "activeLoan": "Lamuni Mai Aiki",
+    "dueBy": "Ranar Karewa: — (Babu lamuni mai aiki)"
+  },
+  "newUserRepayments": {
+    "title": "Biyan Kuɗi",
+    "mobileTitle": "Biya",
+    "searchPlaceholder": "Bincika ID na Lamuni ko Adadi...",
+    "viewAll": "Duba Dukansu",
+    "ctaMessage": "Ba ku taɓa karɓar lamuni ba. Fara yanzu!",
+    "ctaButton": "Karɓi Lamuni"
+  },
+  "loanDetailsMobile": {
+    "title": "Biya Lamuni",
+    "selectMonth": "Zaɓi Wata",
+    "noRepayments": "Babu biya a wannan watan.",
+    "statusCompleted": "An gama",
+    "statusPending": "Ana jiran biya",
+    "back": "Koma baya"
+  },
+  "loanDetails": {
+    "title": "Cikakken Bayanin Lamuni",
+    "paymentMethod": "Hanyar Biyan Kuɗi",
+    "disbursedTo": "An Aika Zuwa",
+    "amount": "Adadin Kuɗi",
+    "repaymentProgress": "Ci gaban Biyan Kuɗi",
+    "repaymentHistory": "Tarihin Biyan Kuɗi",
+    "term": "Lokaci",
+    "startDate": "Ranar Fara",
+    "dueDate": "Ranar Ƙarshe",
+    "loanPurpose": "Manufar Lamuni:"
   }
 }

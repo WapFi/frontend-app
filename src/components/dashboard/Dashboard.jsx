@@ -358,31 +358,45 @@ import { Link } from "react-router-dom";
 import NairaIcon from "../../assets/naira icon.svg";
 import RepaymentsSection from "./RepaymentsSection";
 import RepaymentProgressBar from "./RepaymentProgressBar";
-import New_User_Dashboard from "./New_User_Dashboard";
+// import New_User_Dashboard from "./New_User_Dashboard";
 import CountdownTimer from "./CountdownTimer";
 import CreditScore from "./CreditScore";
 import Overview from "./Overview";
-import { fetchDashboardData } from "../../api/mockApi";
-import { useState, useEffect } from "react";
+// import { fetchDashboardData } from "../../api/mockApi";
+// import { useState, useEffect } from "react";
+// import { fetchDashboardData } from "../../api/apiData";
 
-function Dashboard() {
-  const [dashboardData, setDashboardData] = useState(null);
+function Dashboard({ dashboardData }) {
+  // const [dashboardData, setDashboardData] = useState(null);
 
-  useEffect(() => {
-    fetchDashboardData().then((res) => {
-      if (res.status) {
-        setDashboardData(res.data);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   fetchDashboardData().then((res) => {
+  //     if (res.status) {
+  //       setDashboardData(res.data);
+  //     }
+  //   });
+  // }, []);
 
-  if (!dashboardData?.activeLoan?.due_date) return <p>Loading...</p>;
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     try {
+  //       const res = await fetchDashboardData();
+  //       if (res.status) {
+  //         setDashboardData(res.data);
+  //       }
+  //     } catch (error) {
+  //       console.log("Failed to load dashboard data: ", error);
+  //     }
+  //   };
+  // }, []);
+
+  // if (!dashboardData?.activeLoan?.due_date) return <p>Loading...</p>;
 
   const dueDate = new Date(dashboardData.activeLoan.due_date);
   const targetTime = dueDate.getTime(); // milliseconds
 
-  const { totalLoanTaken, amountRepaid, activeLoan, creditScore } =
-    dashboardData;
+  // const { totalLoanTaken, amountRepaid, activeLoan, creditScore } =
+  //   dashboardData;
 
   return (
     <div className="text-[18px] text-[#222] flex flex-col items-end md:items-start md:shrink-0 gap-8 py-4 px-2.5 lg:px-[23px]">
@@ -401,7 +415,7 @@ function Dashboard() {
           <div className="flex items-center gap-2">
             <img src={NairaIcon} alt="Naira Icon" />
             <p className="md:text-[24px] font-semibold">
-              {activeLoan.outstanding_balance}
+              {dashboardData.activeLoan.outstanding_balance}
             </p>
           </div>
         </div>
@@ -419,7 +433,10 @@ function Dashboard() {
               <span>20,000</span>
             </p> */}
           </div>
-          <RepaymentProgressBar />
+          <RepaymentProgressBar
+            amountRepaid={dashboardData.activeLoan.amount_paid}
+            loanAmount={dashboardData.activeLoan.loan_amount}
+          />
         </div>
         {/* <div className="relative">
           <p className="absolute left-[71%] md:left-[74%] top-[30%] flex gap-1 items-center font-raleway font-medium text-[#444]">
@@ -434,13 +451,17 @@ function Dashboard() {
         </Link>
       </div>
 
-      <Overview />
+      <Overview
+        totalLoanTaken={dashboardData.totalLoanTaken}
+        amountRepaid={dashboardData.amountRepaid}
+        activeLoan={dashboardData.activeLoan} 
+      />
 
       <RepaymentsSection />
 
       {/* Credit Score Section */}
 
-      <CreditScore />
+      <CreditScore userCreditScore={dashboardData.creditScore} />
     </div>
   );
 }

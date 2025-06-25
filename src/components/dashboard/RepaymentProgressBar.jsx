@@ -1,19 +1,19 @@
 import React, { useRef, useEffect, useState } from "react";
 import NairaIcon from "../../assets/naira icon.svg"; // adjust path if needed
-import { fetchDashboardData } from "../../api/mockApi";
+// import { fetchDashboardData } from "../../api/mockApi";
 
-export default function RepaymentProgressBar() {
-  const [dashboardData, setDashboardData] = useState(null);
+export default function RepaymentProgressBar({amountRepaid, loanAmount}) {
+  // const [dashboardData, setDashboardData] = useState(null);
   const containerRef = useRef(null); // ✅ moved to top
   const [barWidth, setBarWidth] = useState(0); // ✅ moved to top
 
-  useEffect(() => {
-    fetchDashboardData().then((res) => {
-      if (res.status) {
-        setDashboardData(res.data);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   fetchDashboardData().then((res) => {
+  //     if (res.status) {
+  //       setDashboardData(res.data);
+  //     }
+  //   });
+  // }, []);
 
   // useEffect(() => {
   //   const updateWidth = () => {
@@ -27,7 +27,7 @@ export default function RepaymentProgressBar() {
   // }, []);
 
   useEffect(() => {
-  if (!dashboardData) return;
+  // if (!dashboardData) return;
 
   const updateWidth = () => {
     if (containerRef.current) {
@@ -45,16 +45,16 @@ export default function RepaymentProgressBar() {
     cancelAnimationFrame(raf);
     window.removeEventListener("resize", updateWidth);
   };
-}, [dashboardData]); // ✅ Runs only when data is available
+}, [loanAmount]); // ✅ Runs only when data is available
 
 
-  if (!dashboardData) return <p>Loading dashboard...</p>;
+  // if (!dashboardData) return <p>Loading dashboard...</p>;
 
-  const { totalLoanTaken, amountRepaid } = dashboardData;
+  // const { totalLoanTaken, amountRepaid } = dashboardData;
 
   const barHeight = 8;
   const tagWidth = 60;
-  const progress = Math.max(0, Math.min(amountRepaid / totalLoanTaken, 1));
+  const progress = Math.max(0, Math.min(amountRepaid / loanAmount, 1));
 
   const anchorX = Math.max(
     tagWidth / 2,
@@ -127,7 +127,7 @@ export default function RepaymentProgressBar() {
           }}
         >
           <img src={NairaIcon} alt="naira icon" className="w-3 h-3" />
-          <span>{totalLoanTaken.toLocaleString()}</span>
+          <span>{loanAmount.toLocaleString()}</span>
         </p>
 
         {/* Progress Bar Background */}

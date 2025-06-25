@@ -177,41 +177,45 @@
 
 // export default CreditScore;
 
-
-import { useEffect, useState } from "react";
 import BVNUnverified from "./BVNUnverified";
 import BVNVerified from "./BVNVerified";
 import AddressUnverified from "./AddressUnverified";
 import AddressVerified from "./AddressVerified";
 import CreditScoreStarIcon from "../../assets/credit score star icon.svg";
-import { fetchDashboardData } from "../../api/mockApi";
+// import { fetchDashboardData } from "../../api/mockApi";
+import { useTranslation } from "react-i18next";
 
-function CreditScore() {
-  const [scoreData, setScoreData] = useState(null);
+function CreditScore({ userCreditScore }) {
+  // console.log(userCreditScore);
+  const tier = userCreditScore.tier;
 
-  useEffect(() => {
-    fetchDashboardData().then((res) => {
-      if (res.status) {
-        setScoreData(res.data.creditScore);
-      }
-    });
-  }, []);
+  const { t } = useTranslation();
 
-  if (!scoreData) return <p>Loading credit score...</p>;
+  // const [scoreData, setScoreData] = useState(null);
 
-  const { current_score, tier, next_tier_threshold, progress_to_next_tier } =
-    scoreData;
+  // useEffect(() => {
+  //   fetchDashboardData().then((res) => {
+  //     if (res.status) {
+  //       setScoreData(res.data.creditScore);
+  //     }
+  //   });
+  // }, []);
+
+  // if (!scoreData) return <p>{t("creditScore.loading")}</p>;
+
+  // const { current_score, tier, next_tier_threshold } = scoreData;
 
   const radius = 135.8;
   const strokeWidth = 20;
   const circumference = 2 * Math.PI * radius;
-  const progress = current_score / next_tier_threshold;
+  const progress =
+    userCreditScore.current_score / userCreditScore.next_tier_threshold;
   const strokeDashoffset = circumference * (1 - progress);
 
   const angle = progress * 2 * Math.PI - Math.PI / 2;
 
   const tierInfo = {
-    tier: `Tier ${tier}`,
+    tier: `Tier ${userCreditScore.tier}`,
     progressColor: "#2D6157",
     tierBadgeStyles:
       "text-[#B08D57] border border-[#B08D57] text-[12px] md:text-[14px] bg-[rgba(176,141,87,0.14)] rounded-[21.333px]",
@@ -223,10 +227,12 @@ function CreditScore() {
         <div className="flex items-center gap-2">
           <img src={CreditScoreStarIcon} alt="credit score star icon" />
           <p className="md:text-[24px] font-raleway font-semibold">
-            Credit Score
+            {t("creditScore.title")}
           </p>
         </div>
-        <p className="text-[#BB8C2D] md:text-[24px]">{current_score}</p>
+        <p className="text-[#BB8C2D] md:text-[24px]">
+          {userCreditScore.current_score}
+        </p>
       </div>
 
       <div className="flex flex-col items-center self-stretch gap-6 md:flex-row md:items-end md:justify-between">
@@ -282,7 +288,7 @@ function CreditScore() {
                 stroke="#2D6157"
                 strokeWidth="1"
               >
-                {current_score}
+                {userCreditScore.current_score}
               </text>
 
               <circle
@@ -304,7 +310,7 @@ function CreditScore() {
                 fontWeight="400"
                 fill="#2D6157"
               >
-                {current_score}
+                {userCreditScore.current_score}
               </text>
             </svg>
 
@@ -315,16 +321,17 @@ function CreditScore() {
                 {tierInfo.tier}
               </div>
               <p className="text-[12px] text-[#888] font-medium text-center md:text-[18px]">
-                Total Credit
+                {t("creditScore.totalCredit")}
               </p>
               <p className="md:text-[48px] font-medium text-[#222] text-right">
-                {current_score}
+                {userCreditScore.current_score}
               </p>
             </div>
           </div>
 
           <p className="text-center text-[#444] text-[16px] font-medium uppercase md:text-[20px]">
-            {next_tier_threshold - current_score} to the next level
+            {userCreditScore.next_tier_threshold}{" "}
+            {t("creditScore.nextLevelSuffix")}
           </p>
         </div>
 
@@ -338,4 +345,3 @@ function CreditScore() {
 }
 
 export default CreditScore;
-

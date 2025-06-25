@@ -180,10 +180,13 @@
 // export default RepaymentsList;
 
 import { useEffect, useState } from "react";
-import { fetchRepayments } from "../../api/mockApi";
+// import { fetchRepayments } from "../../api/mockApi";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function RepaymentsList({ onSelect, selectedMonth }) {
+  const { t } = useTranslation();
+
   const [repayments, setRepayments] = useState([]);
   const navigate = useNavigate();
 
@@ -216,7 +219,7 @@ function RepaymentsList({ onSelect, selectedMonth }) {
   return (
     <div className="w-full flex flex-col gap-4 lg:w-[45%]">
       {filteredRepayments.length === 0 && selectedMonth ? (
-        <p className="text-sm text-gray-500">No repayments for this month.</p>
+        <p className="text-sm text-gray-500">{t("repaymentsList.noRepayments")}</p>
       ) : (
         [...filteredRepayments]
           .sort(
@@ -261,7 +264,7 @@ function RepaymentsList({ onSelect, selectedMonth }) {
                       : "bg-white text-[#7D9776]"
                   }`}
                 >
-                  {isCompleted ? "Completed" : "Pending"}
+                  {isCompleted ? t("repaymentsList.statusCompleted") : t("repaymentsList.statusPending")}
                 </span>
 
                 <span

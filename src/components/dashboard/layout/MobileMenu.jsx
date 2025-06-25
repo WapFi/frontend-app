@@ -9,25 +9,25 @@ import { useLanguage } from "../../../context/LanguageContext";
 import UKFlag from "../../../assets/UK Flag.svg";
 import NigerianFlag from "../../../assets/Nigerian Flag.svg";
 import logoutIcon from "../../../assets/logout icon.svg";
-import { fetchUserMe } from "../../../api/mockApi";
+// import { fetchUserMe } from "../../../api/mockApi";
 
-function MobileMenu() {
+function MobileMenu({userName}) {
   const { t } = useTranslation();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const { language, setLanguage } = useLanguage();
 
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    fetchUserMe().then((res) => {
-      if (res.status) {
-        setUser(res.data);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   fetchUserMe().then((res) => {
+  //     if (res.status) {
+  //       setUser(res.data);
+  //     }
+  //   });
+  // }, []);
 
-  const initials = user?.full_name
+  const initials = userName.full_name
     ?.split(" ")
     .map((n) => n[0])
     .join("")
@@ -94,7 +94,7 @@ function MobileMenu() {
                 stroke-linejoin="round"
               />
             </svg>
-            <p>Dashboard</p>
+            <p>{t("mobile_menu.dashboard")}</p>
           </NavLink>
           <NavLink
             to="/"
@@ -120,7 +120,7 @@ function MobileMenu() {
                 stroke-linejoin="round"
               />
             </svg>
-            <p>Take a Loan</p>
+            <p>{t("mobile_menu.takeLoan")}</p>
           </NavLink>
           <NavLink
             to="/"
@@ -143,7 +143,7 @@ function MobileMenu() {
                 fill="currentColor"
               />
             </svg>
-            <p>Repayments</p>
+            <p>{t("mobile_menu.repayments")}</p>
           </NavLink>
           <NavLink
             to="/"
@@ -168,7 +168,7 @@ function MobileMenu() {
                 fill="currentColor"
               />
             </svg>
-            <p>Credit Score</p>
+            <p>{t("mobile_menu.creditScore")}</p>
           </NavLink>
           <NavLink
             to="/"
@@ -199,7 +199,7 @@ function MobileMenu() {
                 fill="currentColor"
               />
             </svg>
-            <p>Settings</p>
+            <p>{t("mobile_menu.settings")}</p>
           </NavLink>
           <div className="flex flex-col gap-2.5 mt-3">
             <div
@@ -235,7 +235,7 @@ function MobileMenu() {
           </div>
           <NavLink className="text-[#2D6157] flex items-center gap-3 self-stretch h-[40px] px-[16px] mt-20">
             <img src={logoutIcon} alt="log out icon" />
-            <p>Logout</p>
+            <p>{t("mobile_menu.logout")}</p>
           </NavLink>
         </div>
       )}

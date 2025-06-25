@@ -76,7 +76,7 @@
     },
     "continue": "Continue"
   },
-    "forgot_password": {
+  "forgot_password": {
     "title": "Forgot Password",
     "subtext": "We'll send you a 4-digit code to your email or phone number to verify your identity and help you reset your password.",
     "error": "We couldn't send the code. Please make sure your email or phone number is correct.",
@@ -91,7 +91,7 @@
       "email_phone": "Enter your email address or phone number"
     }
   },
-    "verify": {
+  "verify": {
     "title": "Verify Your Email or Phone Number",
     "subtext": "Please enter the 4-digit code sent to your email or phone number.",
     "error": "The code you entered is incorrect. Please try again.",
@@ -105,16 +105,112 @@
       "invalid_digit": "Invalid character"
     }
   },
-    "background": {
+  "background": {
     "headline": "Get Loans. Pay Back in Plastics.",
     "subtext": "Wapfi lets you borrow cash instantly and repay with the value of recyclable plastics."
   },
-    "sidebar": {
+  "sidebar": {
     "dashboard": "Dashboard",
     "takeLoan": "Take a Loan",
     "repayments": "Repayments",
     "creditScore": "Credit Score",
     "settings": "Settings",
     "logout": "Log Out"
+  },
+  "mobile_menu": {
+    "dashboard": "Dashboard",
+    "takeLoan": "Take a Loan",
+    "repayments": "Repayments",
+    "creditScore": "Credit Score",
+    "settings": "Settings",
+    "logout": "Log Out"
+  },
+  "header_bar": {
+    "today": "Today"
+  },
+  "overview": {
+    "title": "Overview",
+    "totalLoanTaken": "Total Loan Taken",
+    "lastLoan": "Last Loan",
+    "amountRepaid": "Amount Repaid",
+    "repaymentHistory": "Repayment History:",
+    "activeLoan": "Active Loan",
+    "dueBy": "Due by"
+  },
+  "repaymentsSection": {
+    "title": "Repayments",
+    "mobileTitle": "Repayment",
+    "selectMonth": "Select Month",
+    "searchPlaceholder": "Search Loan ID and Amount....",
+    "viewAll": "View All"
+  },
+  "repaymentsList": {
+    "noRepayments": "No repayments for this month.",
+    "statusCompleted": "Completed",
+    "statusPending": "Pending"
+  },
+  "creditScore": {
+    "title": "Credit Score",
+    "totalCredit": "Total Credit",
+    "nextLevelSuffix": "to the next level",
+    "loading": "Loading credit score...",
+    "tier0Message": "Tier 0 – Verify Your BVN to Unlock Loan Access",
+    "bvnVerification": "BVN Verification",
+    "unverified": "Unverified",
+    "tier1Message": "Tier 1 – Complete NIN Verification to Unlock Tier 2",
+    "ninVerification": "NIN Verification",
+    "completed": "Completed",
+    "tier2Message": "Tier 2 Incomplete – Verify NIN, BVN and Address to Access ₦50,000 Loans",
+    "addressVerification": "Address Verification",
+    "pending": "Pending",
+    "tier3Message": "Tier 1 – Complete BVN Verification to Unlock Tier 2"
+  },
+  "countdown": {
+    "title": "Time left to next payment:",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds"
+  },
+  "layout": {
+    "error": "Unable to fetch your personal information. Please try again."
+  },
+  "newUserDashboard": {
+    "title": "Dashboard",
+    "overviewTitle": "Overview",
+    "totalLoanTaken": "Total Loan Taken",
+    "lastLoan": "Last Loan: None – You haven't taken any loans yet",
+    "amountRepaid": "Amount Repaid",
+    "repaymentHistory": "Repayment History: 0 of 0 completed",
+    "activeLoan": "Active Loan",
+    "dueBy": "Due by: — (No current loan)"
+  },
+  "newUserRepayments": {
+    "title": "Repayments",
+    "mobileTitle": "Repayment",
+    "searchPlaceholder": "Search Loan ID and Amount....",
+    "viewAll": "View All",
+    "ctaMessage": "You haven’t taken any loans yet. Apply now to get started!",
+    "ctaButton": "Take a Loan"
+  },
+  "loanDetailsMobile": {
+    "title": "Repayments",
+    "selectMonth": "Select Month",
+    "noRepayments": "No repayments for this month.",
+    "statusCompleted": "Completed",
+    "statusPending": "Pending",
+    "back": "Back"
+  },
+  "loanDetails": {
+    "title": "Loan Details",
+    "paymentMethod": "Payment Method",
+    "disbursedTo": "Disbursed To",
+    "amount": "Amount",
+    "repaymentProgress": "Repayment Progress",
+    "repaymentHistory": "Repayment History",
+    "term": "Term",
+    "startDate": "Start Date",
+    "dueDate": "Due Date",
+    "loanPurpose": "Loan Purpose:"
   }
 }

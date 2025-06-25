@@ -259,13 +259,19 @@ function SignIn() {
         localStorage.removeItem("rememberedEmailPhone");
       }
 
-      const response = await axios.post("/auth/sign_in", {
-        identifier: loginData.emailPhone,
-        password: loginData.password,
-        remember_me: loginData.rememberMe,
-      });
+      const response = await axios.post(
+        "/auth/sign_in",
+        {
+          identifier: loginData.emailPhone,
+          password: loginData.password,
+          remember_me: loginData.rememberMe,
+        }
+        // { withCredentials: true }
+      );
 
       console.log("Login success:", response.data);
+      localStorage.setItem("auth_token", response.data.token);
+      // console.log("Token saved:", response.data.token);
       setShowFormError(false);
       setShowSuccessMessage(true);
 

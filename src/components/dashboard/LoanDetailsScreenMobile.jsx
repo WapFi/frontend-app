@@ -38,9 +38,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import LoanDetails from "./LoanDetails";
 import calendarIcon from "../../assets/calendar icon.svg";
 import DateDisplay from "./DateDisplay";
-import { fetchRepayments } from "../../api/mockApi";
+import { useTranslation } from "react-i18next";
+// import { fetchRepayments } from "../../api/mockApi";
 
 function LoanDetailsScreenMobile() {
+  const { t } = useTranslation();
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -70,7 +73,10 @@ function LoanDetailsScreenMobile() {
   return (
     <div className="p-4 flex flex-col gap-4">
       <div className="flex justify-between items-center mb-14 relative">
-        <p className="font-raleway font-semibold text-[24px]">Repayments</p>
+        <p className="font-raleway font-semibold text-[24px]">
+          {" "}
+          {t("loanDetailsMobile.title")}
+        </p>
 
         <div className="ml-3.5 relative">
           <div className="flex items-center gap-2.5 pl-3 shrink-0 rounded-[30px] border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)]">
@@ -80,7 +86,7 @@ function LoanDetailsScreenMobile() {
                     month: "long",
                     year: "numeric",
                   })
-                : "Select Month"}
+                : t("loanDetailsMobile.selectMonth")}
             </p>
             <span
               className="block p-4 rounded-[50%] bg-[#E6E6E6] cursor-pointer"
@@ -120,7 +126,10 @@ function LoanDetailsScreenMobile() {
       {/* Repayment Buttons */}
       <div className="flex flex-col gap-4">
         {filteredRepayments.length === 0 && selectedMonth ? (
-          <p className="text-sm text-gray-500">No repayments for this month.</p>
+          <p className="text-sm text-gray-500">
+            {" "}
+            {t("loanDetailsMobile.noRepayments")}
+          </p>
         ) : (
           filteredRepayments.map((repayment) => (
             <button
@@ -155,7 +164,9 @@ function LoanDetailsScreenMobile() {
                     : "bg-white text-[#7D9776]"
                 } font-medium text-[12px] py-1 px-2`}
               >
-                {repayment.status === "VERIFIED" ? "Completed" : "Pending"}
+                {repayment.status === "VERIFIED"
+                  ? t("loanDetailsMobile.statusCompleted")
+                  : t("loanDetailsMobile.statusPending")}
               </span>
 
               <span
@@ -197,7 +208,7 @@ function LoanDetailsScreenMobile() {
         onClick={() => navigate(-1)}
         className="text-[#2D6157] text-[14px] mt-4 underline"
       >
-        ← Back
+        ← {t("loanDetailsMobile.back")}
       </button>
     </div>
   );

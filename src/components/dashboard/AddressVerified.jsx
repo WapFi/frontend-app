@@ -1,36 +1,44 @@
 import VerifiedIcon from "../../assets/verified icon.svg";
+import { useTranslation } from "react-i18next";
 
 function AddressVerified() {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col py-4 px-[18px] gap-2 md:gap-4 justify-center items-start self-strech rounded-xl bg-[#fafafa]">
       <p className="font-medium text-[#222]">
-        Tier 1 – Complete BVN Verification to Unlock Tier 2
+        T{t("creditScore.tier3Message")}
       </p>
       <div className="flex justify-between self-stretch items-center">
         <p className="text-[14px] text-[#888] md:text-[18px]">
-          BVN Verification
+          {t("creditScore.bvnVerification")}
         </p>
         <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[#D3F3DF] bg-[#F2FDF5]">
           <img src={VerifiedIcon} alt="unverified icon" />
-          <p className="text-[14px] text-[#16A34A] bg-[#F2FDF5]">Completed</p>
+          <p className="text-[14px] text-[#16A34A] bg-[#F2FDF5]">
+            {t("creditScore.completed")}
+          </p>
         </div>
       </div>
       <div className="flex justify-between self-stretch items-center">
         <p className="text-[14px] text-[#888] md:text-[18px]">
-          NIN Verification
+          {t("creditScore.ninVerification")}
         </p>
         <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[#D3F3DF] bg-[#F2FDF5]">
           <img src={VerifiedIcon} alt="unverified icon" />
-          <p className="text-[14px] text-[#16A34A]">Completed</p>
+          <p className="text-[14px] text-[#16A34A]">
+            {t("creditScore.completed")}
+          </p>
         </div>
       </div>
       <div className="flex justify-between self-stretch items-center">
         <p className="text-[14px] text-[#888] md:text-[18px]">
-          Address Verification
+          {t("creditScore.addressVerification")}
         </p>
         <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[#D3F3DF] bg-[#F2FDF5]">
           <img src={VerifiedIcon} alt="unverified icon" />
-          <p className="text-[14px] text-[#16A34A]">Completed</p>
+          <p className="text-[14px] text-[#16A34A]">
+            {t("creditScore.completed")}
+          </p>
         </div>
       </div>
     </div>
