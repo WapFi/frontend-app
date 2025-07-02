@@ -161,8 +161,11 @@ import calendarIcon from "../../assets/calendar icon.svg";
 import searchIcon from "../../assets/search icon.svg";
 import { fetchRepayments } from "../../api/apiData";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 function New_User_Dashboard({ dashboardData }) {
+  const navigate = useNavigate();
+
   const { t } = useTranslation();
 
   const [currentMonth, setCurrentMonth] = useState("");
@@ -185,6 +188,12 @@ function New_User_Dashboard({ dashboardData }) {
     const month = String(now.getMonth() + 1).padStart(2, "0");
     setCurrentMonth(`${year}-${month}`);
   }, []);
+
+  // const handleClick = () => {
+  //   setTimeout(() => {
+  //     navigate("/enter-bvn");
+  //   }, 2000);
+  // }
 
   return (
     <div className="text-[18px] text-[#222] flex flex-col items-end md:items-start md:shrink-0 gap-8 py-4 px-2.5 lg:px-[23px]">
@@ -311,8 +320,9 @@ function New_User_Dashboard({ dashboardData }) {
             {t("newUserRepayments.ctaMessage")}
           </p>
           <button
-            className="flex justify-center items-center gap-2.5 bg-[#439182] rounded-[40px] py-2.5 px-6 pointer-events-none"
-            disabled
+          onClick={() => navigate("/take-a-loan/enter-bvn")}
+            className="flex justify-center items-center gap-2.5 bg-[#439182] rounded-[40px] py-2.5 px-6 cursor-pointer hover:opacity-80"
+            
           >
             <img src={plusIcon} alt="plus icon" />
             <span className="text-white text-[16px] font-medium">

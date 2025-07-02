@@ -202,7 +202,7 @@ import calendarIcon from "../../assets/calendar icon.svg";
 import searchIcon from "../../assets/search icon.svg";
 import RepaymentsList from "./RepaymentsList";
 import LoanDetails from "./LoanDetails";
-// import { fetchRepayments } from "../../api/mockApi";
+import { fetchRepayments } from "../../api/apiData";
 import { useTranslation } from "react-i18next";
 
 function RepaymentsSection() {

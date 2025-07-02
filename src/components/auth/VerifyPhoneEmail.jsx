@@ -256,22 +256,6 @@ function VerifyPhoneEmail() {
 
   const { register, handleSubmit } = useForm({ resolver: yupResolver(schema) });
 
-  // const onSubmit = (code) => {
-  //   console.log(code);
-
-  //   if (
-  //     code.firstDigit !== "1" ||
-  //     code.secondDigit !== "1" ||
-  //     code.thirdDigit !== "1" ||
-  //     code.fourthDigit !== "1"
-  //   ) {
-  //     setShowFormError(true);
-  //   } else {
-  //     setShowFormError(false);
-  //     navigate("/change-password");
-  //   }
-  // };
-
   const onSubmit = async (otpCode) => {
     setLoading(true);
 
@@ -283,10 +267,6 @@ function VerifyPhoneEmail() {
 
     try {
       const response = await axios.get(`/auth/verify/${code}`, {
-        // firstDigit: otpCode.firstDigit,
-        // secondDigit: otpCode.secondDigit,
-        // thirdDigit: otpCode.thirdDigit,
-        // fourthDigit: otpCode.fourthDigit,
       });
       const otpCode = localStorage.setItem("otpCode", code);
 

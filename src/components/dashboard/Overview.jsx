@@ -1,7 +1,7 @@
-// import NairaIcon from "../../assets/naira icon.svg";
-// // import { fetchDashboardData } from "../../api/mockApi";
+import NairaIcon from "../../assets/naira icon.svg";
+// import { fetchDashboardData } from "../../api/mockApi";
 // import { useState, useEffect } from "react";
-// import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 // function Overview({totalLoanTaken, amountRepaid, activeLoan, dueDate}) {
 //   const { t } = useTranslation();
@@ -112,7 +112,7 @@ function Overview({ totalLoanTaken, amountRepaid, activeLoan }) {
             <p className="text-[30px]">{amountRepaid.toLocaleString()}</p>
           </div>
           <p className="text-[14px] text-[#666]">
-            {t("overview.repaymentHistory")}:
+            {t("overview.repaymentHistory")}
           </p>
         </div>
 
@@ -139,6 +139,5 @@ function Overview({ totalLoanTaken, amountRepaid, activeLoan }) {
     </div>
   );
 }
-
 
 export default Overview;

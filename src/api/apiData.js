@@ -55,8 +55,6 @@
 //   });
 // }
 
-
-
 // export function fetchRepayments() {
 //   return Promise.resolve({
 //     data: {
@@ -100,17 +98,30 @@ import axios from "./axios";
 export const fetchUserMe = async () => {
   const response = await axios.get("/users/me");
   return response.data;
-}
+};
 
 // fetch dashboard info
 export const fetchDashboardData = async () => {
   const response = await axios.get("/users/dashboard");
   // console.log(response);
   return response.data;
-}
+};
 
-// fetch repayments history 
+// fetch repayments history
 export const fetchRepayments = async () => {
-  const response = await axios.get("loans/repayments/history?page=1&limit=10");
+  const response = await axios.get("/loans/history?status=completed&page=1&limit=10");
   return response.data;
-}
+};
+
+export const applyForLoan = async (loanFormData) => {
+  const response = await axios.post("/loans/apply", loanFormData);
+  return response.data;
+};
+
+export const confirmLoanApplication = async (loan_id, password) => {
+  const response = await axios.post("/loans/confirm", {
+    loan_id: loan_id,
+    password: password,
+  });
+  return response;
+};

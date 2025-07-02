@@ -269,7 +269,7 @@ function SignIn() {
         // { withCredentials: true }
       );
 
-      console.log("Login success:", response.data);
+      // console.log("Login success:", response.data);
       localStorage.setItem("auth_token", response.data.token);
       // console.log("Token saved:", response.data.token);
       setShowFormError(false);

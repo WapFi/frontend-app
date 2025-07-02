@@ -180,7 +180,7 @@
 // export default RepaymentsList;
 
 import { useEffect, useState } from "react";
-// import { fetchRepayments } from "../../api/mockApi";
+import { fetchRepayments } from "../../api/apiData";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -193,6 +193,7 @@ function RepaymentsList({ onSelect, selectedMonth }) {
   useEffect(() => {
     fetchRepayments().then((res) => {
       if (res.status) {
+        console.log(res.data);
         setRepayments(res.data.repayments);
       }
     });

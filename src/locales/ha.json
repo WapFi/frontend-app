@@ -185,6 +185,12 @@
     "activeLoan": "Lamuni Mai Aiki",
     "dueBy": "Ranar Karewa: — (Babu lamuni mai aiki)"
   },
+  "dashboard": {
+    "title": "Allon Bayani",
+    "outstandingLoanBalance": "Adadin Bashin da Babu Biya",
+    "repaymentHistory": "Tarihin Biyan Kuɗi"
+  },
+
   "newUserRepayments": {
     "title": "Biyan Kuɗi",
     "mobileTitle": "Biya",
@@ -212,5 +218,157 @@
     "startDate": "Ranar Fara",
     "dueDate": "Ranar Ƙarshe",
     "loanPurpose": "Manufar Lamuni:"
-  }
+  },
+  "bvn": {
+    "title": "Shigar da BVN ɗinka",
+    "subtext": "Da fatan za a shigar da BVN ɗinka domin tantance kai da bayar da damar neman rance.",
+    "success": "An tabbatar da BVN ɗinka cikin nasara!",
+    "cta": "Tantance BVN",
+    "placeholders": {
+      "bvn": "Shigar da BVN ɗinka"
+    },
+    "errors": {
+      "error": "Tantancewar BVN ta gaza. Da fatan za a sake gwadawa.",
+      "invalid": "BVN dole ne ya ƙunshi lamba 11 kawai",
+      "required": "Da fatan za a shigar da BVN ɗinka"
+    }
+  },
+  "verifyPhone": {
+    "title": "Tabbatar da Lambar Wayarka",
+    "subtext": "Mun samo lambar waya da aka danganta da BVN ɗinka. Shigar da lambar sirri mai ƙafa huɗu da aka aiko zuwa wayarka don kammala tantancewa da ci gaba da neman rance.",
+    "error": "Lambar da ka shigar ba daidai ba ce. Duba sosai sannan ka shigar da lambar lambobi 4 da aka aiko maka ta wayarka.",
+    "success": "An tabbatar da lambar waya cikin nasara!",
+    "resend_success": "An sake aiko da sabon lambar tantancewa zuwa wayarka.",
+    "continue": "Ci gaba",
+    "resend_in": "Sake aiko da lamba bayan",
+    "resend": "Sake Aiko",
+    "errors": {
+      "digit_required": "Da fatan za a shigar da lamba",
+      "invalid_digit": "Harafi mara inganci"
+    }
+  },
+  "loanStepper": {
+    "title": "Ɗauki Rance",
+    "steps": {
+      "loanAmountPurpose": "Adadin Rance & Dalili",
+      "bankAccountConfirmation": "Tabbatar da Asusun Banki",
+      "loanRepaymentMethod": "Fahimtar Biyan Rance",
+      "summary": "Takaitawa"
+    }
+  },
+  "loanStep1": {
+    "title": "Nawa kake son aro?",
+    "placeholder": "Shigar da adadin da kake son aro",
+    "limitNote": "Iyakar adadin da zaka iya aro shine ₦50,000",
+    "purposeLabel": "Me zaka yi da rancen?",
+    "purposePlaceholder": "Zaɓi dalilin rance",
+    "otherPurposeLabel": "Sauran",
+    "otherPurposePlaceholder": "Shigar da dalili",
+    "membershipLabel": "Kana memba na WAPAN?",
+    "membershipPlaceholder": "Zaɓi Zaɓi",
+    "options": {
+      "yes": "Eh",
+      "no": "A'a",
+      "BUSINESS_NEEDS": "Bukatar Kasuwanci",
+      "COLLECTION_ADVANCE": "Rancen Tarawa",
+      "PURCHASE_EQUIPMENT": "Siyan Kayan Aiki",
+      "RENT": "Hayar Wuri",
+      "OTHER": "Sauran"
+    },
+    "button": "Ci gaba",
+    "errors": {
+      "invalidEntries": "Bayanan ba su dace ba. Da fatan za a sake gwadawa.",
+      "loanAmountType": "Da fatan za a shigar da lamba mai kyau.",
+      "loanAmountRequired": "Da fatan za a shigar da adadin da kake son aro.",
+      "loanAmountMin": "Mafi karancin adadin rance shine ₦1,000",
+      "loanAmountMax": "Mafi girman adadin rance shine ₦1,000,000",
+      "loanPurposeRequired": "Da fatan za a zaɓi dalilin rance.",
+      "membershipRequired": "Da fatan za a nuna matsayin membobinku."
+    }
+  },
+  "loanStep2": {
+    "errorForm": "Shigarwar ba daidai ba ce. Don Allah a sake gwadawa.",
+    "accountNameLabel": "Sunan Asusun Banki",
+    "accountNumberLabel": "Lambar Asusun Banki",
+    "accountNumberPlaceholder": "Shigar da lambar asusun banki",
+    "bankNameLabel": "Sunan Banki",
+    "bankNamePlaceholder": "Shigar da sunan banki",
+    "button": "Ci gaba",
+    "errors": {
+      "accountNumberRequired": "Da fatan za a shigar da lambar asusu.",
+      "accountNumberInvalid": "Lambar asusu dole ta kasance lambobi 10.",
+      "bankNameRequired": "Da fatan za a shigar da sunan banki."
+    }
+  },
+  "loanStep3": {
+    "formTitle": "Ta yaya kake son biyan wannan rancen?",
+    "repaymentOptions": {
+      "RECYCLABLES": "Kayan Sake Amfani (misali robobi)",
+      "CASH": "Kudi",
+      "BOTH": "Duka"
+    },
+    "dropOffLabelDefault": "Ka san inda zaka biya rancen?",
+    "dropOffLabelRecyclables": "Ka san inda zaka ajiye kayan sake amfani domin biya?",
+    "dropOffLabelCash": "Ka san inda zaka biya kudi?",
+    "yes": "Eh",
+    "no": "A'a",
+    "locationLabel": "Wuri",
+    "selectOption": "Zaɓi zaɓi",
+    "locations": {
+      "Gwagwalada": "Gwagwalada",
+      "Kubwa": "Kubwa",
+      "Maitama": "Maitama"
+    },
+    "errors": {
+      "repaymentMethodRequired": "Da fatan zaɓi hanyar biyan kuɗi.",
+      "knowDropOffRequired": "Da fatan ka nuna idan ka san inda zaka biya.",
+      "repaymentLocationRequired": "Da fatan zaɓi wurin biyan kuɗi.",
+      "invalidEntries": "An samu kuskuren shigarwa. Da fatan a sake gwadawa."
+    }
+  },
+  "loanStep4": {
+    "errorForm": "Wani abu ya faru. Don Allah a sake gwadawa.",
+    "loanAmountPurposeLabel": "Adadin Bashi & Manufa",
+    "howMuchToBorrowLabel": "Nawa kake son karɓa a matsayin bashi?",
+    "loanPurposeLabel": "Me kake buƙatar bashin domin yi?",
+    "wapanMemberLabel": "Kai memba ne na WAPAN?",
+
+    "bankConfirmationLabel": "Tabbatar da Asusun Banki",
+    "accountNameLabel": "Sunan Asusun Banki",
+    "accountNumberLabel": "Lambar Asusun Banki",
+    "bankNameLabel": "Sunan Banki",
+
+    "repaymentUnderstandingLabel": "Fahimtar Biyan Bashi",
+    "repaymentMethodLabel": "Ta yaya kake son biyan wannan bashin?",
+    "knowWhereToRepayLabel": "Ka san inda za ka biya bashinka?",
+    "repaymentLocationLabel": "Wuri",
+
+    "editButton": "Gyara",
+    "continueButton": "Ci gaba",
+
+    "yes": "Eh",
+    "no": "A'a"
+  },
+  "loanRepaymentOverview": {
+    "title": "Sharuɗɗan Lamuni & Bayanin Biyan Kuɗi",
+    "howMuchToBorrow": "Nawa kake son karɓa aro?",
+    "loanTerm": "Lokacin Biyan Lamuni",
+    "oneMonth": "wata",
+    "months": "watanni",
+    "monthlyRepayment": "Biyan Kullum (Robobi)",
+    "totalPlastics": "Jimlar Robobi da Za a Biya",
+    "disbursementTo": "An Tura Zuwa",
+    "confirmationNotice": "Ta hanyar shigar da kalmar sirri, kana tabbatar da amincewa da sharuɗɗan lamuni kuma kana ba da izinin a tura kuɗin zuwa asusun bankin da aka zaɓa.",
+    "formError":  "Kalmar sirri ba daidai ba ce. Don Allah a sake gwadawa.",
+    "passwordLabel": "Kalmar sirri",
+    "passwordPlaceholder": "Shigar da kalmar sirri",
+    "passwordRequired": "Don Allah a shigar da kalmar sirri.",
+    "passwordMin": "Kalmar sirri dole ta kasance aƙalla haruffa 8.",
+    "button": "Tabbatar kuma Karɓi Lamuni"
+  },
+  "loanApprovalModal": {
+  "title": "An Amince da Lamuni Kuma An Tura Shi!",
+  "message": "An riga an tura maka lamuni na ₦{{loan_amount}} cikin asusun bankinka. Za ka biya da {{total_plastic_to_repay_kg}} kg na robobin da za a iya sake amfani da su bisa ga tsarin biyan da ka zaɓa."
+}
+
 }

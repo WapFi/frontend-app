@@ -365,6 +365,7 @@ import Overview from "./Overview";
 // import { fetchDashboardData } from "../../api/mockApi";
 // import { useState, useEffect } from "react";
 // import { fetchDashboardData } from "../../api/apiData";
+import { useTranslation } from "react-i18next";
 
 function Dashboard({ dashboardData }) {
   // const [dashboardData, setDashboardData] = useState(null);
@@ -390,18 +391,20 @@ function Dashboard({ dashboardData }) {
   //   };
   // }, []);
 
-  // if (!dashboardData?.activeLoan?.due_date) return <p>Loading...</p>;
+  // if (!dashboardData?.active_loan?.due_date) return <p>Loading...</p>;
 
-  const dueDate = new Date(dashboardData.activeLoan.due_date);
+  const { t } = useTranslation();
+
+  const dueDate = new Date(dashboardData.active_loan.due_date);
   const targetTime = dueDate.getTime(); // milliseconds
 
-  // const { totalLoanTaken, amountRepaid, activeLoan, creditScore } =
+  // const { totalLoanTaken, amountRepaid, active_loan, creditScore } =
   //   dashboardData;
 
   return (
     <div className="text-[18px] text-[#222] flex flex-col items-end md:items-start md:shrink-0 gap-8 py-4 px-2.5 lg:px-[23px]">
       <p className="font-raleway font-semibold text-[24px] md:text-[32px] self-start">
-        Dashboard
+        {t("dashboard.title")}
       </p>
 
       <div className="rounded-xl flex flex-col self-start justify-center w-full items-start gap-6 border-[#008F4C] border-[1.2px] bg-[#fff] pt-6 pr-[18px] pb-8 pl-[18px]">
@@ -411,11 +414,11 @@ function Dashboard({ dashboardData }) {
         </div> */}
         <CountdownTimer targetTime={targetTime} />
         <div className="flex flex-col flex-start gap-2">
-          <p>Outstanding Loan Balance</p>
+          <p>{t("dashboard.outstandingLoanBalance")}</p>
           <div className="flex items-center gap-2">
             <img src={NairaIcon} alt="Naira Icon" />
             <p className="md:text-[24px] font-semibold">
-              {dashboardData.activeLoan.outstanding_balance}
+              {dashboardData.active_loan.outstanding_balance}
             </p>
           </div>
         </div>
@@ -434,8 +437,8 @@ function Dashboard({ dashboardData }) {
             </p> */}
           </div>
           <RepaymentProgressBar
-            amountRepaid={dashboardData.activeLoan.amount_paid}
-            loanAmount={dashboardData.activeLoan.loan_amount}
+            amountRepaid={dashboardData.active_loan.amount_paid}
+            loanAmount={dashboardData.active_loan.loan_amount}
           />
         </div>
         {/* <div className="relative">
@@ -447,21 +450,21 @@ function Dashboard({ dashboardData }) {
         </div> */}
 
         <Link className="text-[14px] flex self-end font-medium text-[#2D6157]">
-          Repayment History
+          {t("dashboard.repaymentHistory")}
         </Link>
       </div>
 
       <Overview
-        totalLoanTaken={dashboardData.totalLoanTaken}
-        amountRepaid={dashboardData.amountRepaid}
-        activeLoan={dashboardData.activeLoan} 
+        totalLoanTaken={dashboardData.total_loans_taken}
+        amountRepaid={dashboardData.amount_repaid}
+        activeLoan={dashboardData.active_loan} 
       />
 
       <RepaymentsSection />
 
       {/* Credit Score Section */}
 
-      <CreditScore userCreditScore={dashboardData.creditScore} />
+      <CreditScore userCreditScore={dashboardData.credit_score} />
     </div>
   );
 }

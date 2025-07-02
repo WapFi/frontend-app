@@ -185,6 +185,12 @@
     "activeLoan": "Active Loan",
     "dueBy": "Due by: — (No current loan)"
   },
+  "dashboard": {
+    "title": "Dashboard",
+    "outstandingLoanBalance": "Outstanding Loan Balance",
+    "repaymentHistory": "Repayment History"
+  },
+
   "newUserRepayments": {
     "title": "Repayments",
     "mobileTitle": "Repayment",
@@ -212,5 +218,157 @@
     "startDate": "Start Date",
     "dueDate": "Due Date",
     "loanPurpose": "Loan Purpose:"
-  }
+  },
+  "bvn": {
+    "title": "Enter your BVN",
+    "subtext": "Please enter your BVN so we can verify your identity and make you eligible to apply for a loan.",
+    "success": "BVN verified successfully!",
+    "cta": "Verify BVN",
+    "placeholders": {
+      "bvn": "Enter your BVN"
+    },
+    "errors": {
+      "error": "BVN verification failed. Please try again.",
+      "invalid": "BVN must be exactly 11 digits",
+      "required": "Please enter your BVN"
+    }
+  },
+  "verifyPhone": {
+    "title": "Verify Your Phone Number",
+    "subtext": "We've found the phone number linked to your BVN. Enter the 4-digit code sent to your phone to complete verification and continue your loan application.",
+    "error": "Invalid code. Double-check and enter the 4-digit code sent to your phone.",
+    "success": "Phone number verified successfully!",
+    "resend_success": "A new verification code has been sent to your phone.",
+    "continue": "Continue",
+    "resend_in": "Resend code in",
+    "resend": "Resend",
+    "errors": {
+      "digit_required": "Please enter a digit",
+      "invalid_digit": "Invalid character"
+    }
+  },
+  "loanStepper": {
+    "title": "Take a Loan",
+    "steps": {
+      "loanAmountPurpose": "Loan Amount & Purpose",
+      "bankAccountConfirmation": "Bank Account Confirmation",
+      "loanRepaymentMethod": "Loan Repayment Understanding",
+      "summary": "Summary"
+    }
+  },
+  "loanStep1": {
+    "title": "How much would you like to borrow?",
+    "placeholder": "Enter the amount you want to borrow",
+    "limitNote": "Your borrowing limit is ₦50,000",
+    "purposeLabel": "What do you need the loan for?",
+    "purposePlaceholder": "Select loan purpose",
+    "otherPurposeLabel": "Others",
+    "otherPurposePlaceholder": "Enter purpose",
+    "membershipLabel": "Are you a member of WAPAN?",
+    "membershipPlaceholder": "Select Option",
+    "options": {
+      "yes": "Yes",
+      "no": "No",
+      "BUSINESS_NEEDS": "Business Needs",
+      "COLLECTION_ADVANCE": "Collection Advance",
+      "PURCHASE_EQUIPMENT": "Purchase Equipment",
+      "RENT": "Rent",
+      "OTHER": "Other"
+    },
+    "button": "Continue",
+    "errors": {
+      "invalidEntries": "Invalid entries. Please try again.",
+      "loanAmountType": "Please enter a valid number.",
+      "loanAmountRequired": "Please enter the amount you want to borrow.",
+      "loanAmountMin": "Minimum loan amount is ₦1,000",
+      "loanAmountMax": "Maximum loan amount is ₦1,000,000",
+      "loanPurposeRequired": "Please select a purpose for the loan.",
+      "membershipRequired": "Please indicate your membership status."
+    }
+  },
+  "loanStep2": {
+    "errorForm": "Invalid entries. Please try again.",
+    "accountNameLabel": "Bank Account Name",
+    "accountNumberLabel": "Bank Account Number",
+    "accountNumberPlaceholder": "Enter bank account number",
+    "bankNameLabel": "Bank Name",
+    "bankNamePlaceholder": "Enter bank name",
+    "button": "Continue",
+    "errors": {
+      "accountNumberRequired": "Please enter account number.",
+      "accountNumberInvalid": "Account number must be 10 digits.",
+      "bankNameRequired": "Please enter bank name."
+    }
+  },
+  "loanStep3": {
+    "formTitle": "How would you like to repay this loan?",
+    "repaymentOptions": {
+      "RECYCLABLES": "Recyclables (e.g. plastics)",
+      "CASH": "Cash",
+      "BOTH": "Both"
+    },
+    "dropOffLabelDefault": "Do you know where to make your repayment?",
+    "dropOffLabelRecyclables": "Do you know where to drop off recyclables to repay?",
+    "dropOffLabelCash": "Do you know where to make your cash repayment?",
+    "yes": "Yes",
+    "no": "No",
+    "locationLabel": "Location",
+    "selectOption": "Select Option",
+    "locations": {
+      "Gwagwalada": "Gwagwalada",
+      "Kubwa": "Kubwa",
+      "Maitama": "Maitama"
+    },
+    "errors": {
+      "repaymentMethodRequired": "Please select your repayment method.",
+      "knowDropOffRequired": "Please indicate if you know where to pay.",
+      "repaymentLocationRequired": "Please select your repayment location.",
+      "invalidEntries": "Invalid entries. Please try again."
+    }
+  },
+  "loanStep4": {
+    "errorForm": "Something went wrong. Please try again.",
+    "loanAmountPurposeLabel": "Loan Amount & Purpose",
+    "howMuchToBorrowLabel": "How much would you like to borrow?",
+    "loanPurposeLabel": "What do you need the loan for?",
+    "wapanMemberLabel": "Are you a member of WAPAN?",
+
+    "bankConfirmationLabel": "Bank Account Confirmation",
+    "accountNameLabel": "Bank Account Name",
+    "accountNumberLabel": "Bank Account Number",
+    "bankNameLabel": "Bank Name",
+
+    "repaymentUnderstandingLabel": "Loan Payment Understanding",
+    "repaymentMethodLabel": "How would you like to repay this loan?",
+    "knowWhereToRepayLabel": "Do you know where to make your cash repayment?",
+    "repaymentLocationLabel": "Location",
+
+    "editButton": "Edit",
+    "continueButton": "Continue",
+
+    "yes": "Yes",
+    "no": "No"
+  },
+  "loanRepaymentOverview": {
+    "title": "Loan Terms & Repayment Overview",
+    "howMuchToBorrow": "How much would you like to borrow?",
+    "loanTerm": "Loan Repayment Term",
+    "oneMonth": "month",
+    "months": "months",
+    "monthlyRepayment": "Monthly Repayment (Plastics)",
+    "totalPlastics": "Total Plastics to Repay",
+    "disbursementTo": "Disbursement To",
+    "confirmationNotice": "By entering your password, you confirm acceptance of the loan terms and authorize disbursement to the selected bank account.",
+    "formError": "Password may be incorrect. Please try again.",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "passwordRequired": "Please enter your password",
+    "passwordMin": "Password must be at least 8 characters",
+    "button": "Confirm and Receive Loan"
+  },
+  "loanApprovalModal": {
+  "title": "Loan Approved & Sent!",
+  "message": "Your loan of ₦{{loan_amount}} has been successfully disbursed to your bank account. You'll repay with {{total_plastic_to_repay_kg}} kg of recyclable plastics based on your selected repayment plan."
+}
+
 }
