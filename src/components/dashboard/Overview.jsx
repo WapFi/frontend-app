@@ -76,17 +76,26 @@ import { useTranslation } from "react-i18next";
 // export default Overview;
 
 import { fetchRepayments } from "../../api/apiData";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 function Overview({ totalLoanTaken, amountRepaid, activeLoan }) {
+  const [fulfilledRepayments, setFulfilledRepayments] = useState(0);
+  const [totalRepayments, setTotalRepayments] = useState(0);
+
   useEffect(() => {
-    try {
-      const response = fetchRepayments();
-      fulfilledRepayments = response.data.repayments.length;
-      totalRepayments = response.data.total_repayments;
-    } catch (error) {
-      console.log("Error: ", error);
+    async function getRepayments() {
+      try {
+        const response = await fetchRepayments();
+        setFulfilledRepayments(response.data.repayments.length);
+        setTotalRepayments(response.data.total_repayments);
+        // console.log(totalRepayments);
+        // console.log(response.data);
+      } catch (error) {
+        console.log("Error: ", error);
+      }
     }
+
+    getRepayments();
   }, []);
 
   const { t } = useTranslation();
@@ -125,7 +134,7 @@ function Overview({ totalLoanTaken, amountRepaid, activeLoan }) {
             <p className="text-[30px]">{amountRepaid.toLocaleString()}</p>
           </div>
           <p className="text-[14px] text-[#666]">
-            {t("repaymentHistory", {
+            {t("overview.repaymentHistory", {
               fulfilled: fulfilledRepayments,
               total: totalRepayments,
             })}

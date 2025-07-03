@@ -193,7 +193,7 @@ function RepaymentsList({ onSelect, selectedMonth }) {
   useEffect(() => {
     fetchRepayments().then((res) => {
       if (res.status) {
-        console.log(res.data);
+        // console.log(res.data);
         setRepayments(res.data.repayments);
       }
     });
