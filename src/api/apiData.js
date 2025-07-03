@@ -109,7 +109,7 @@ export const fetchDashboardData = async () => {
 
 // fetch repayments history
 export const fetchRepayments = async () => {
-  const response = await axios.get("/loans/history?status=completed&page=1&limit=10");
+  const response = await axios.get("/loans/repayments/history");
   return response.data;
 };
 
