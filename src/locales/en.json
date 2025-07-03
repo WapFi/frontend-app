@@ -173,7 +173,12 @@
     "seconds": "Seconds"
   },
   "layout": {
-    "error": "Unable to fetch your personal information. Please try again."
+    "error": "Unable to fetch your personal information. Please try again.",
+     "activeLoanModal": {
+    "title": "Loan Not Eligible",
+    "body": "You already have an active loan. Please complete your repayment before applying for a new one.",
+    "button": "Go to Dashboard"
+  }
   },
   "newUserDashboard": {
     "title": "Dashboard",
@@ -369,6 +374,14 @@
   "loanApprovalModal": {
   "title": "Loan Approved & Sent!",
   "message": "Your loan of ₦{{loan_amount}} has been successfully disbursed to your bank account. You'll repay with {{total_plastic_to_repay_kg}} kg of recyclable plastics based on your selected repayment plan."
+},
+"cancelApplicationModal": {
+  "error": "Something went wrong. Please try again.",
+  "title": "Cancel Application?",
+  "body": "Are you sure you want to cancel? Any information you've entered so far will be lost.",
+  "noButton": "No, go back",
+  "yesButton": "Yes, cancel"
 }
+
 
 }

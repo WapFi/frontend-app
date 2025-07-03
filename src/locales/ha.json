@@ -173,8 +173,14 @@
     "seconds": "Dakika"
   },
   "layout": {
-    "error": "Ba a iya ɗaukar bayanan ku ba. Da fatan za a sake gwadawa."
+    "error": "Ba a iya samo bayanan ka na sirri ba. Don Allah a sake gwadawa.",
+    "activeLoanModal": {
+      "title": "Ba A Amince Da Lamuni Ba",
+      "body": "Kana da wani lamuni da ke aiki a halin yanzu. Da fatan za ka kammala biyan sa kafin ka nema wani sabon lamuni.",
+      "button": "Je zuwa Dashboard"
+    }
   },
+
   "newUserDashboard": {
     "title": "Dashboard",
     "overviewTitle": "Bayani",
@@ -359,7 +365,7 @@
     "totalPlastics": "Jimlar Robobi da Za a Biya",
     "disbursementTo": "An Tura Zuwa",
     "confirmationNotice": "Ta hanyar shigar da kalmar sirri, kana tabbatar da amincewa da sharuɗɗan lamuni kuma kana ba da izinin a tura kuɗin zuwa asusun bankin da aka zaɓa.",
-    "formError":  "Kalmar sirri ba daidai ba ce. Don Allah a sake gwadawa.",
+    "formError": "Kalmar sirri ba daidai ba ce. Don Allah a sake gwadawa.",
     "passwordLabel": "Kalmar sirri",
     "passwordPlaceholder": "Shigar da kalmar sirri",
     "passwordRequired": "Don Allah a shigar da kalmar sirri.",
@@ -367,8 +373,15 @@
     "button": "Tabbatar kuma Karɓi Lamuni"
   },
   "loanApprovalModal": {
-  "title": "An Amince da Lamuni Kuma An Tura Shi!",
-  "message": "An riga an tura maka lamuni na ₦{{loan_amount}} cikin asusun bankinka. Za ka biya da {{total_plastic_to_repay_kg}} kg na robobin da za a iya sake amfani da su bisa ga tsarin biyan da ka zaɓa."
+    "title": "An Amince da Lamuni Kuma An Tura Shi!",
+    "message": "An riga an tura maka lamuni na ₦{{loan_amount}} cikin asusun bankinka. Za ka biya da {{total_plastic_to_repay_kg}} kg na robobin da za a iya sake amfani da su bisa ga tsarin biyan da ka zaɓa."
+  },
+  "cancelApplicationModal": {
+  "error": "Wani abu ya faru. Don Allah a sake gwadawa.",
+  "title": "Soke Aikace-aikacen?",
+  "body": "Ka tabbata kana son sokewa? Duk bayanan da ka shigar za su bace.",
+  "noButton": "A'a, koma baya",
+  "yesButton": "Eh, soke"
 }
 
 }

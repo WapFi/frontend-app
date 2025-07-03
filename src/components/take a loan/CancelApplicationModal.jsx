@@ -57,25 +57,29 @@
 //   );
 // }
 
+import { useTranslation } from "react-i18next";
 
 export default function CancelApplicationModal({
   onConfirm,
   onCancel,
   loading,
-  error,
-  targetLocation
+  // error,
+  targetLocation,
 }) {
+  const { t } = useTranslation();
+
   return (
     <div className="w-[90%] mx-auto lg:w-[50%] text-center text-[#222] bg-white rounded-[12px] flex flex-col gap-10 py-7 px-5">
-      {error && (
+      {/* {error && (
         <p className="text-red-500 mb-3">
           Something went wrong. Please try again.
         </p>
-      )}
-      <p className="text-[18px] md:text-[20px]">Cancel Application?</p>
+      )} */}
+      <p className="text-[18px] md:text-[20px]">
+        {t("cancelApplicationModal.title")}
+      </p>
       <p className="text-[rgba(68,68,68,0.80)]">
-        Are you sure you want to cancel? Any information you've entered so far
-        will be lost.
+        {t("cancelApplicationModal.body")}
       </p>
       <div className="flex items-center justify-center gap-6">
         <button
@@ -85,7 +89,7 @@ export default function CancelApplicationModal({
             loading ? "duration-300 cursor-not-allowed" : "cursor-pointer"
           }`}
         >
-          {loading ? <LoadingSpinner /> : "No, go back"}
+          {loading ? <LoadingSpinner /> : t("cancelApplicationModal.noButton")}
         </button>
         <button
           disabled={loading}
@@ -94,10 +98,9 @@ export default function CancelApplicationModal({
             loading ? "duration-300 cursor-not-allowed" : "cursor-pointer"
           }`}
         >
-          {loading ? <LoadingSpinner /> : "Yes, cancel"}
+          {loading ? <LoadingSpinner /> : t("cancelApplicationModal.yesButton")}
         </button>
       </div>
     </div>
   );
 }
-
