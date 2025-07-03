@@ -133,7 +133,7 @@
     "totalLoanTaken": "Total Loan Taken",
     "lastLoan": "Last Loan",
     "amountRepaid": "Amount Repaid",
-    "repaymentHistory": "Repayment History:",
+    "repaymentHistory": "Repayment History: {{fulfilled}} of {{total}} completed",
     "activeLoan": "Active Loan",
     "dueBy": "Due by"
   },

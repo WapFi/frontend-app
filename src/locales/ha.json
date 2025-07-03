@@ -133,7 +133,7 @@
     "totalLoanTaken": "Jimillar Bashin da Aka Karɓa",
     "lastLoan": "Bashi na ƙarshe",
     "amountRepaid": "Adadin da Aka Biya",
-    "repaymentHistory": "Tarihin Biyan Kuɗi:",
+    "repaymentHistory": "Tarihin Biyan Lamuni: An kammala {{fulfilled}} daga cikin {{total}}",
     "activeLoan": "Bashin da ke Aiki",
     "dueBy": "Ranar ƙarshe"
   },
