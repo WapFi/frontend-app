@@ -99,10 +99,10 @@ export default function VerifyPhoneNumber() {
   const handleResend = async () => {
     setResending(true);
     try {
-      const identifier = localStorage.getItem("userIdentifier");
-      await axios.post("/auth/request_reset", {
-        identifier,
-      });
+      // const identifier = localStorage.getItem("userIdentifier");
+      // await axios.post("/auth/request_reset", {
+      //   identifier,
+      // });
       setShowResendSuccess(true);
       setSecondsLeft(60);
     } catch (error) {
