@@ -33,17 +33,17 @@
 //   );
 // }
 
-// import { useEffect } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function LoanApprovalModal({ data, onClose }) {
   const { t } = useTranslation();
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     onClose();
-  //   }, 4000);
-  //   return () => clearTimeout(timer);
-  // }, [onClose]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
 
   return (
     <div

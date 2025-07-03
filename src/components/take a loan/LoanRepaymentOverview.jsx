@@ -142,6 +142,7 @@
 //   );
 // }
 
+import LoanApprovalModal from "./LoanApprovalModal";
 import { useTranslation } from "react-i18next";
 import LoadingSpinner from "../LoadingSpinner";
 import { useLocation, useNavigate } from "react-router-dom";
