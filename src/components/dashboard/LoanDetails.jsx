@@ -99,7 +99,7 @@ function LoanDetails({ loanDetails }) {
             role="button"
             tabIndex={0}
             onClick={() => handleRepaymentHistoryClick()}
-            className="text-[14px] text-right block font-medium text-[#2D6157]"
+            className="text-[14px] text-right block font-medium text-[#2D6157] cursor-pointer"
           >
             {t("loanDetails.repaymentHistory")}
           </div>
