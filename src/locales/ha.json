@@ -137,6 +137,10 @@
     "activeLoan": "Bashin da ke Aiki",
     "dueBy": "Ranar ƙarshe"
   },
+  "dashboardWrapper": {
+    "failedLoad": "An kasa lodin bayanan dashboard.",
+    "unableLoad": "Ba a iya loda dashboard. Don Allah sake gwadawa."
+  },
   "repaymentsSection": {
     "title": "Biyan Kuɗi",
     "mobileTitle": "Biya",
@@ -377,11 +381,62 @@
     "message": "An riga an tura maka lamuni na ₦{{loan_amount}} cikin asusun bankinka. Za ka biya da {{total_plastic_to_repay_kg}} kg na robobin da za a iya sake amfani da su bisa ga tsarin biyan da ka zaɓa."
   },
   "cancelApplicationModal": {
-  "error": "Wani abu ya faru. Don Allah a sake gwadawa.",
-  "title": "Soke Aikace-aikacen?",
-  "body": "Ka tabbata kana son sokewa? Duk bayanan da ka shigar za su bace.",
-  "noButton": "A'a, koma baya",
-  "yesButton": "Eh, soke"
-}
-
+    "error": "Wani abu ya faru. Don Allah a sake gwadawa.",
+    "title": "Soke Aikace-aikacen?",
+    "body": "Ka tabbata kana son sokewa? Duk bayanan da ka shigar za su bace.",
+    "noButton": "A'a, koma baya",
+    "yesButton": "Eh, soke"
+  },
+  "repaymentsHistoryWrapper": {
+    "noRepaymentData": "Ba a sami bayanan biyan bashin wannan aron ba."
+  },
+  "repaymentsHistoryHeader": {
+    "title": "Tarihin Biyan Bashi",
+    "selectMonth": "Zaɓi Wata"
+  },
+    "cashRepaymentsTable": {
+    "thisMonth": "Wannan Watan",
+    "date": "Kwanan Wata",
+    "amount": "Adadin Kudi",
+    "status": "Matsayi",
+    "noRepayments": "Babu bayanan biyan bashi a wannan watan.",
+    "completed": "An gama",
+    "pending": "Ana jiran",
+    "failed": "An kasa",
+    "previous": "Na baya",
+    "next": "Na gaba",
+    "perPage": "A shafi"
+  },
+  "recyclablesRepaymentTable": {
+    "note": "Don Allah a lura: Duk kayan sake amfani da kuka bayar ana juyar da su zuwa kudin su. Ci gaban biyan bashinku yana dogara ne akan darajar kudin (a cikin ₦) da kuka biya - ba tare da la'akari da nau'in abu ba.",
+    "thisMonth": "Wannan Watan",
+    "date": "Kwanan Wata",
+    "type": "Nau'i",
+    "quantity": "Yawan Abu",
+    "amount": "Adadin Kudi",
+    "status": "Matsayi",
+    "noRepayments": "Babu bayanan biyan bashi a wannan watan.",
+    "completed": "An gama",
+    "pending": "Ana jiran",
+    "failed": "An kasa",
+    "previous": "Na baya",
+    "next": "Na gaba",
+    "perPage": "A shafi"
+  },
+    "mixedRepaymentsTable": {
+    "note": "Don Allah a lura: Duk kayan sake amfani da kuka bayar ana juyar da su zuwa kudin su. Ci gaban biyan bashinku yana dogara ne akan darajar kudin (a cikin ₦) da kuka biya - ba tare da la'akari da nau'in abu ba.",
+    "thisMonth": "Wannan Watan",
+    "date": "Kwanan Wata",
+    "type": "Nau'i",
+    "quantity": "Yawan Abu",
+    "amount": "Adadin Kudi",
+    "status": "Matsayi",
+    "noRepayments": "Babu bayanan biyan bashi a wannan watan.",
+    "completed": "An gama",
+    "pending": "Ana jiran",
+    "failed": "An kasa",
+    "previous": "Na baya",
+    "next": "Na gaba",
+    "perPage": "A shafi"
+  }
 }

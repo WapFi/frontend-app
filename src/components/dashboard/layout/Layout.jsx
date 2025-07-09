@@ -1,76 +1,3 @@
-// // src/components/Layout/Layout.jsx
-// import { Outlet } from "react-router-dom";
-// import HeaderBar from "./HeaderBar";
-// import Sidebar from "./Sidebar";
-// import MobileMenu from "./MobileMenu";
-// import { fetchUserMe } from "../../../api/apiData";
-// import { useState, useEffect } from "react";
-// import PageLoader from "../../PageLoader";
-// import { useTranslation } from "react-i18next";
-
-// function Layout() {
-//   const { t } = useTranslation();
-
-//   const [userData, setUserData] = useState(null);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     const loadData = async () => {
-//       try {
-//         const res = await fetchUserMe();
-//         if (res.status) {
-//           // console.log(res.data);
-//           localStorage.setItem("bank_account_name", res.data.full_name);
-//           setUserData(res.data);
-//         }
-//       } catch (error) {
-//         // console.log("Failed to load dashboard data: ", error);
-//         setError(
-//           "Unable to fetch your personal information. Please try again."
-//         );
-//       }
-//     };
-
-//     loadData();
-//   }, []);
-
-//   if (error) return <div className="p-4 text-red-600">{t("layout.error")}</div>;
-
-//   if (!userData) return <PageLoader />;
-
-//   return (
-//     <div className="flex gap-3.5 min-h-screen">
-//       {/* Sidebar for desktop */}
-//       <aside className="md:w-[30%] hidden lg:block lg:w-[23%]">
-//         <Sidebar />
-//       </aside>
-
-//       {/* Main content area */}
-//       <div className="md:w-[75%] w-[95%] mx-auto flex-1 flex flex-col">
-//         {/* Top bar: HeaderBar on desktop, MobileMenu on mobile */}
-//         <header>
-//           <div className="hidden lg:block">
-//             <HeaderBar userName={userData} />
-//           </div>
-//           <div className="lg:hidden">
-//             <MobileMenu userName={userData} />
-//           </div>
-//         </header>
-
-//         {/* Page content goes here */}
-//         <main className="pt-4 flex-1 overflow-y-auto">
-//           <Outlet />
-//           {/* <h1>Hi</h1> */}
-//         </main>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Layout;
-
-
-
 import { Outlet, useNavigate } from "react-router-dom";
 import HeaderBar from "./HeaderBar";
 import Sidebar from "./Sidebar";
@@ -80,6 +7,8 @@ import { useState, useEffect } from "react";
 import PageLoader from "../../PageLoader";
 import { useTranslation } from "react-i18next";
 import { useDashboard } from "../../../context/DashboardContext";
+// import RepaymentsSection from "../RepaymentsSection";
+// import Repayments from "../../repayments/Repayments";
 
 function Layout() {
   const { t } = useTranslation();
@@ -87,7 +16,9 @@ function Layout() {
 
   // Your existing user data loading
   const [userData, setUserData] = useState(null);
+  // const [newUserRepayments, setNewUserRepayments] = false;
   const [error, setError] = useState(null);
+  const [logoutError, setLogoutError] = useState(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -116,6 +47,8 @@ function Layout() {
     if (dashboardData?.active_loan) {
       // User has an existing active loan
       setShowActiveLoanModal(true);
+    } else if (dashboardData.credit_score.current_score === 0) {
+      navigate("/take-a-loan/enter-bvn");
     } else {
       // User is eligible
       navigate("/take-a-loan/form/loan-amount-purpose");
@@ -126,11 +59,22 @@ function Layout() {
   if (error) return <div className="p-4 text-red-600">{t("layout.error")}</div>;
   if (!userData) return <PageLoader />;
 
+  {
+    logoutError && (
+      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 text-center">
+        {logoutError}
+      </div>
+    );
+  }
+
   return (
     <div className="flex gap-3.5 min-h-screen relative">
       {/* Sidebar for desktop */}
       <aside className="md:w-[30%] hidden lg:block lg:w-[23%]">
-        <Sidebar onTakeLoanClick={handleTakeLoanClick} />
+        <Sidebar
+          onTakeLoanClick={handleTakeLoanClick}
+          setLogoutError={setLogoutError}
+        />
       </aside>
 
       {/* Main content area */}
@@ -141,7 +85,11 @@ function Layout() {
             <HeaderBar userName={userData} />
           </div>
           <div className="lg:hidden">
-            <MobileMenu userName={userData} onTakeLoanClick={handleTakeLoanClick} />
+            <MobileMenu
+              userName={userData}
+              onTakeLoanClick={handleTakeLoanClick}
+              setLogoutError={setLogoutError}
+            />
           </div>
         </header>
 
@@ -159,7 +107,7 @@ function Layout() {
               {t("layout.activeLoanModal.title")}
             </h2>
             <p className="mb-6 text-[#444]">
-               {t("layout.activeLoanModal.body")}
+              {t("layout.activeLoanModal.body")}
             </p>
             <button
               onClick={() => {

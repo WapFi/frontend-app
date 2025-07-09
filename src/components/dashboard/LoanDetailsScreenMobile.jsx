@@ -39,7 +39,8 @@ import LoanDetails from "./LoanDetails";
 import calendarIcon from "../../assets/calendar icon.svg";
 import DateDisplay from "./DateDisplay";
 import { useTranslation } from "react-i18next";
-// import { fetchRepayments } from "../../api/mockApi";
+import { getLoanDetails } from "../../api/apiData";
+import { fetchRepayments } from "../../api/apiData";
 
 function LoanDetailsScreenMobile() {
   const { t } = useTranslation();
@@ -51,6 +52,25 @@ function LoanDetailsScreenMobile() {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [repayments, setRepayments] = useState([]);
   const [selectedLoanId, setSelectedLoanId] = useState(id);
+  const [loanDetails, setLoanDetails] = useState(null);
+
+    useEffect(() => {
+      // get loan by ID and render loan details
+      const getLoanByID = async (loanID) => {
+        try {
+          const response = await getLoanDetails(loanID);
+          if (response) {
+            setLoanDetails(response.data);
+            // console.log("Loan Details: ", response.data);
+          }
+        } catch (error) {
+          console.log("Error: ", error);
+        }
+      };
+      if (selectedLoanId) {
+        getLoanByID(selectedLoanId);
+      }
+    }, [selectedLoanId]);
 
   useEffect(() => {
     fetchRepayments().then((res) => {
@@ -200,8 +220,8 @@ function LoanDetailsScreenMobile() {
         )}
       </div>
 
-      {selectedLoanId && (
-        <LoanDetails loanId={selectedLoanId} isVisible={true} />
+      {loanDetails && (
+        <LoanDetails loanDetails={loanDetails} isVisible={true} />
       )}
 
       <button

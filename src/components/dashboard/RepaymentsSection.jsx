@@ -196,7 +196,8 @@
 
 // export default RepaymentsSection;
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import calendarIcon from "../../assets/calendar icon.svg";
 import searchIcon from "../../assets/search icon.svg";
@@ -204,14 +205,25 @@ import RepaymentsList from "./RepaymentsList";
 import LoanDetails from "./LoanDetails";
 import { fetchRepayments } from "../../api/apiData";
 import { useTranslation } from "react-i18next";
+import { recordPayment } from "../../api/apiData";
+import { getLoanDetails } from "../../api/apiData";
+// import { useDashboard } from "../../context/DashboardContext";
+import { useRepayments } from "../../context/RepaymentsContext";
+import PageLoader from "../PageLoader";
 
 function RepaymentsSection() {
+  // const navigate = useNavigate();
+  // const { dashboardData, setDashboardData } = useDashboard();
+  const { setRepaymentsData } = useRepayments();
+
   const { t } = useTranslation();
 
   const [selectedLoan, setSelectedLoan] = useState(null);
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState("");
+  const [loanDetails, setLoanDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -222,25 +234,68 @@ function RepaymentsSection() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    // get loan by ID and render loan details
+    const getLoanByID = async (loanID) => {
+      try {
+        const response = await getLoanDetails(loanID);
+        if (response) {
+          setLoanDetails(response.data);
+          console.log("Loan Details: ", response.data);
+        }
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    };
+    if (selectedLoan) {
+      getLoanByID(selectedLoan);
+    }
+  }, [selectedLoan]);
+
+  useEffect(() => {
+    const testRecordPayment = async () => {
+      try {
+        const response = await recordPayment(dashboardData);
+        console.log("I'm here");
+        if (response) {
+          console.log(response.data);
+        }
+      } catch (error) {
+        console.log("Error making payment: ", error);
+      }
+
+      navigate("/dashboard");
+    };
+    testRecordPayment();
+  }, []);
+
   // Get latest repayment month once
   useEffect(() => {
-    fetchRepayments().then((res) => {
-      if (res.status && res.data.repayments.length > 0) {
-        const sorted = [...res.data.repayments].sort(
-          (a, b) => new Date(b.repayment_date) - new Date(a.repayment_date)
-        );
-        const latestDate = new Date(sorted[0].repayment_date);
-        const monthString = `${latestDate.getFullYear()}-${String(
-          latestDate.getMonth() + 1
-        ).padStart(2, "0")}`;
-        setSelectedMonth(monthString);
-      }
-    });
+    fetchRepayments()
+      .then((res) => {
+        if (res.status && res.data.repayments.length > 0) {
+          setRepaymentsData(res.data.repayments);
+          const sorted = [...res.data.repayments].sort(
+            (a, b) => new Date(b.repayment_date) - new Date(a.repayment_date)
+          );
+          const latestDate = new Date(sorted[0].repayment_date);
+          const monthString = `${latestDate.getFullYear()}-${String(
+            latestDate.getMonth() + 1
+          ).padStart(2, "0")}`;
+          setSelectedMonth(monthString);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }, []);
 
   const handleSelectLoan = (loanId) => {
     setSelectedLoan(loanId);
   };
+
+  if (loading) return <PageLoader />;
 
   return (
     <div className="rounded-xl flex flex-col self-stretch justify-center w-full items-start gap-6 border-[rgba(255,255,255,0.80)] border-1 bg-[#fff] p-6">
@@ -304,9 +359,11 @@ function RepaymentsSection() {
       {/* MOBILE HEADER */}
       <div className="flex flex-col md:hidden w-full">
         <div className="flex justify-between items-center self-stretch mb-4">
-          <p className="font-raleway font-semibold text-[24px]">{t("repaymentsSection.mobileTitle")}</p>
+          <p className="font-raleway font-semibold text-[24px]">
+            {t("repaymentsSection.mobileTitle")}
+          </p>
           <Link className="text-[14px] md:text-[16px] text-[#2D6157] text-center font-semibold">
-             {t("repaymentsSection.viewAll")}
+            {t("repaymentsSection.viewAll")}
           </Link>
         </div>
 
@@ -330,17 +387,17 @@ function RepaymentsSection() {
               onSelect={handleSelectLoan}
               selectedMonth={selectedMonth}
             />
-            {selectedLoan && <LoanDetails />}
+            {loanDetails && <LoanDetails loanDetails={loanDetails} />}
           </>
         ) : (
           <>
-            {!selectedLoan ? (
+            {!loanDetails ? (
               <RepaymentsList
                 onSelect={handleSelectLoan}
                 selectedMonth={selectedMonth}
               />
             ) : (
-              <LoanDetails />
+              <LoanDetails loanDetails={loanDetails} />
             )}
           </>
         )}

@@ -1,253 +1,5 @@
-// import { useState, useEffect } from "react";
-// import { NavLink, useLocation } from "react-router-dom";
-// import { useTranslation } from "react-i18next";
-// import WapfiLogo from "../../WapfiLogo";
-// import bellIcon from "../../../assets/bell icon.svg";
-// import menuIcon from "../../../assets/menuIcon.svg";
-// import closeIcon from "../../../assets/closeIcon.svg";
-// import { useLanguage } from "../../../context/LanguageContext";
-// import UKFlag from "../../../assets/UK Flag.svg";
-// import NigerianFlag from "../../../assets/Nigerian Flag.svg";
-// import logoutIcon from "../../../assets/logout icon.svg";
-// // import { fetchUserMe } from "../../../api/mockApi";
-
-// function MobileMenu({ userName }) {
-//   const location = useLocation();
-//   const isTakeLoanActive = location.pathname.startsWith("/take-a-loan");
-//   const { t } = useTranslation();
-
-//   const [menuOpen, setMenuOpen] = useState(false);
-//   const { language, setLanguage } = useLanguage();
-
-//   // const [user, setUser] = useState(null);
-
-//   // useEffect(() => {
-//   //   fetchUserMe().then((res) => {
-//   //     if (res.status) {
-//   //       setUser(res.data);
-//   //     }
-//   //   });
-//   // }, []);
-
-//   const nameParts = userName.full_name?.split(" ");
-//   const initials = nameParts
-//     ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
-//     : "";
-
-//   return (
-//     <div className={`${menuOpen ? "bg-white h-screen" : "bg-[#f1f1f1]"}`}>
-//       <div className="lg:hidden bg-white border-b border-b-[rgba(0,0,0,0.08)] h-[50px] flex justify-between items-center shrink-0 py-10 px-2.5">
-//         <WapfiLogo />
-//         <div className="flex justify-center items-center gap-6 cursor-pointer">
-//           {!menuOpen && (
-//             <>
-//               <div className="rounded-full py-2 px-[8px] bg-[#fff] text-white text-center font-medium relative">
-//                 <img src={bellIcon} alt="notification bell" />
-//                 <span className="border-[rgba(229,62,62,0.30)] bg-[rgba(229,62,62,0.08)] absolute -top-1 -right-[3px] text-[#E53E3E] text-[12px] w-5 h-5 p-[1px] gap-[10px] flex items-center justify-center rounded-[6px] font-semibold">
-//                   4
-//                 </span>
-//               </div>
-//               <div className="rounded-full py-1 px-[7px] bg-[#171717] text-white text-center font-medium">
-//                 <p>{initials}</p>
-//               </div>
-//             </>
-//           )}
-
-//           <button type="button" onClick={() => setMenuOpen(!menuOpen)}>
-//             <img
-//               src={menuOpen ? closeIcon : menuIcon}
-//               alt="Menu toggle"
-//               className="w-6 h-6"
-//             />
-//           </button>
-//         </div>
-//       </div>
-//       {menuOpen && (
-//         <div className="flex flex-col items-start self-stretch mt-8 px-2.5 gap-4 grow shrink-0 basis-0">
-//           <NavLink
-//             to="/dashboard"
-//             onClick={() => setMenuOpen(false)}
-//             className={({ isActive }) =>
-//               `flex items-center gap-3 self-stretch h-[40px] py-[8px] px-[16px] ${
-//                 isActive ? "text-[#439182]" : "text-[#A0B0AB]"
-//               }`
-//             }
-//           >
-//             <svg
-//               xmlns="http://www.w3.org/2000/svg"
-//               width="19"
-//               height="22"
-//               viewBox="0 0 19 22"
-//               fill="none"
-//             >
-//               <path
-//                 d="M3.26631 20.5628C2.01469 20.5628 1 19.5215 1 18.2359V8.88379C1 8.17723 1.31344 7.50786 1.85 7.06692L8.08369 1.94779C8.48197 1.61798 8.98288 1.4375 9.5 1.4375C10.0171 1.4375 10.518 1.61798 10.9163 1.94779L17.1489 7.06692C17.6866 7.50786 18 8.17723 18 8.88379V18.2359C18 19.5215 16.9853 20.5628 15.7337 20.5628H3.26631Z"
-//                 stroke="currentColor"
-//                 stroke-width="1.5"
-//                 stroke-linecap="round"
-//                 stroke-linejoin="round"
-//               />
-//               <path
-//                 d="M6.84375 20.5625V14.7188C6.84375 14.1552 7.06763 13.6147 7.46615 13.2161C7.86466 12.8176 8.40516 12.5937 8.96875 12.5938H10.0312C10.5948 12.5938 11.1353 12.8176 11.5339 13.2161C11.9324 13.6147 12.1562 14.1552 12.1562 14.7188V20.5625"
-//                 stroke="currentColor"
-//                 stroke-width="1.5"
-//                 stroke-linecap="round"
-//                 stroke-linejoin="round"
-//               />
-//             </svg>
-//             <p>{t("mobile_menu.dashboard")}</p>
-//           </NavLink>
-//           <NavLink
-//             to="/take-a-loan/enter-bvn"
-//             onClick={() => setMenuOpen(false)}
-//             className={
-//               `flex items-center gap-3 self-stretch h-[40px] py-[8px] px-[16px] ${
-//                 isTakeLoanActive ? "text-[#439182]" : "text-[#A0B0AB]"
-//               }`
-//             }
-//           >
-//             <svg
-//               xmlns="http://www.w3.org/2000/svg"
-//               width="20"
-//               height="20"
-//               viewBox="0 0 20 20"
-//               fill="none"
-//             >
-//               <path
-//                 d="M10 1V19M1 10H19"
-//                 stroke="currentColor"
-//                 stroke-width="1.5"
-//                 stroke-linecap="round"
-//                 stroke-linejoin="round"
-//               />
-//             </svg>
-//             <p>{t("mobile_menu.takeLoan")}</p>
-//           </NavLink>
-//           <NavLink
-//             to="/"
-//             onClick={() => setMenuOpen(false)}
-//             className={({ isActive }) =>
-//               `flex items-center gap-3 self-stretch h-[40px] rounded-[12px] py-[8px] px-[16px] ${
-//                 isActive ? "text-[#439182]" : "text-[#A0B0AB]"
-//               }`
-//             }
-//           >
-//             <svg
-//               xmlns="http://www.w3.org/2000/svg"
-//               width="18"
-//               height="16"
-//               viewBox="0 0 18 16"
-//               fill="none"
-//             >
-//               <path
-//                 d="M0 3.56818C0 2.75445 0.304782 1.97405 0.847298 1.39865C1.38981 0.823254 2.12562 0.5 2.89286 0.5H15.1071C15.8744 0.5 16.6102 0.823254 17.1527 1.39865C17.6952 1.97405 18 2.75445 18 3.56818V12.4318C18 13.2455 17.6952 14.026 17.1527 14.6013C16.6102 15.1767 15.8744 15.5 15.1071 15.5H2.89286C2.12562 15.5 1.38981 15.1767 0.847298 14.6013C0.304782 14.026 0 13.2455 0 12.4318V3.56818ZM2.89286 1.86364C2.46662 1.86364 2.05783 2.04322 1.75644 2.36289C1.45504 2.68255 1.28571 3.11611 1.28571 3.56818V4.59091H16.7143V3.56818C16.7143 3.11611 16.545 2.68255 16.2436 2.36289C15.9422 2.04322 15.5334 1.86364 15.1071 1.86364H2.89286ZM1.28571 12.4318C1.28571 12.8839 1.45504 13.3174 1.75644 13.6371C2.05783 13.9568 2.46662 14.1364 2.89286 14.1364H15.1071C15.5334 14.1364 15.9422 13.9568 16.2436 13.6371C16.545 13.3174 16.7143 12.8839 16.7143 12.4318V5.95455H1.28571V12.4318ZM12.2143 10.0455H14.1429C14.3134 10.0455 14.4769 10.1173 14.5974 10.2452C14.718 10.373 14.7857 10.5464 14.7857 10.7273C14.7857 10.9081 14.718 11.0815 14.5974 11.2094C14.4769 11.3373 14.3134 11.4091 14.1429 11.4091H12.2143C12.0438 11.4091 11.8803 11.3373 11.7597 11.2094C11.6392 11.0815 11.5714 10.9081 11.5714 10.7273C11.5714 10.5464 11.6392 10.373 11.7597 10.2452C11.8803 10.1173 12.0438 10.0455 12.2143 10.0455Z"
-//                 fill="currentColor"
-//               />
-//             </svg>
-//             <p>{t("mobile_menu.repayments")}</p>
-//           </NavLink>
-//           <NavLink
-//             to="/"
-//             onClick={() => setMenuOpen(false)}
-//             className={({ isActive }) =>
-//               `h-[40px] flex items-center gap-3 self-stretch rounded-[12px] py-[8px] px-[16px] ${
-//                 isActive ? "text-[#439182]" : "text-[#A0B0AB]"
-//               }`
-//             }
-//           >
-//             <svg
-//               xmlns="http://www.w3.org/2000/svg"
-//               width="14"
-//               height="20"
-//               viewBox="0 0 14 20"
-//               fill="none"
-//             >
-//               <path
-//                 fill-rule="evenodd"
-//                 clip-rule="evenodd"
-//                 d="M7 20C5.14348 20 3.36301 19.2625 2.05025 17.9497C0.737498 16.637 0 14.8565 0 13C0 11.1435 0.737498 9.36301 2.05025 8.05025C3.36301 6.7375 5.14348 6 7 6C8.85652 6 10.637 6.7375 11.9497 8.05025C13.2625 9.36301 14 11.1435 14 13C14 14.8565 13.2625 16.637 11.9497 17.9497C10.637 19.2625 8.85652 20 7 20ZM7 18C8.32608 18 9.59785 17.4732 10.5355 16.5355C11.4732 15.5979 12 14.3261 12 13C12 11.6739 11.4732 10.4021 10.5355 9.46447C9.59785 8.52678 8.32608 8 7 8C5.67392 8 4.40215 8.52678 3.46447 9.46447C2.52678 10.4021 2 11.6739 2 13C2 14.3261 2.52678 15.5979 3.46447 16.5355C4.40215 17.4732 5.67392 18 7 18ZM7 6C6.73478 6 6.48043 5.89464 6.29289 5.70711C6.10536 5.51957 6 5.26522 6 5C6 4.73478 6.10536 4.48043 6.29289 4.29289C6.48043 4.10536 6.73478 4 7 4C7.26522 4 7.51957 4.10536 7.70711 4.29289C7.89464 4.48043 8 4.73478 8 5C8 5.26522 7.89464 5.51957 7.70711 5.70711C7.51957 5.89464 7.26522 6 7 6ZM4 0H6V4C4.9 4 4 3.1 4 2V0ZM8 0H10V2C10 3.1 9.1 4 8 4V0Z"
-//                 fill="currentColor"
-//               />
-//             </svg>
-//             <p>{t("mobile_menu.creditScore")}</p>
-//           </NavLink>
-//           <NavLink
-//             to="/"
-//             onClick={() => setMenuOpen(false)}
-//             className={({ isActive }) =>
-//               `flex items-center gap-3 self-stretch h-[40px] rounded-[12px] py-[8px] px-[16px] ${
-//                 isActive ? "text-[#439182]" : "text-[#A0B0AB]"
-//               }`
-//             }
-//           >
-//             <svg
-//               xmlns="http://www.w3.org/2000/svg"
-//               width="18"
-//               height="20"
-//               viewBox="0 0 18 20"
-//               fill="none"
-//             >
-//               <path
-//                 fill-rule="evenodd"
-//                 clip-rule="evenodd"
-//                 d="M8.9999 6.70703C8.12049 6.70703 7.2771 7.05391 6.65526 7.67135C6.03343 8.28879 5.68408 9.12622 5.68408 9.99942C5.68408 10.8726 6.03343 11.71 6.65526 12.3275C7.2771 12.9449 8.12049 13.2918 8.9999 13.2918C9.87931 13.2918 10.7227 12.9449 11.3445 12.3275C11.9664 11.71 12.3157 10.8726 12.3157 9.99942C12.3157 9.12622 11.9664 8.28879 11.3445 7.67135C10.7227 7.05391 9.87931 6.70703 8.9999 6.70703ZM7.01041 9.99942C7.01041 9.4755 7.22002 8.97304 7.59312 8.60258C7.96622 8.23211 8.47225 8.02398 8.9999 8.02398C9.52755 8.02398 10.0336 8.23211 10.4067 8.60258C10.7798 8.97304 10.9894 9.4755 10.9894 9.99942C10.9894 10.5233 10.7798 11.0258 10.4067 11.3963C10.0336 11.7667 9.52755 11.9748 8.9999 11.9748C8.47225 11.9748 7.96622 11.7667 7.59312 11.3963C7.22002 11.0258 7.01041 10.5233 7.01041 9.99942Z"
-//                 fill="currentColor"
-//               />
-//               <path
-//                 fill-rule="evenodd"
-//                 clip-rule="evenodd"
-//                 d="M8.97789 0.561523C8.58442 0.561523 8.25637 0.561523 7.98757 0.579083C7.71277 0.590072 7.44173 0.646448 7.18559 0.745897C6.89048 0.867135 6.62231 1.04491 6.39641 1.26907C6.1705 1.49322 5.99128 1.75937 5.86898 2.05231C5.74077 2.3596 5.70629 2.68445 5.69214 3.0374C5.69056 3.16644 5.65608 3.29299 5.59191 3.40522C5.52774 3.51745 5.43598 3.61171 5.32519 3.67919C5.21097 3.74093 5.08285 3.77291 4.95281 3.77214C4.82276 3.77138 4.69503 3.73789 4.58156 3.6748C4.26678 3.50974 3.96615 3.37717 3.63368 3.33327C3.31708 3.29192 2.99538 3.3129 2.68695 3.395C2.37851 3.4771 2.08938 3.61871 1.83607 3.81177C1.62155 3.98251 1.43717 4.18754 1.2905 4.41844C1.14019 4.64145 0.975722 4.92327 0.779426 5.26129L0.75732 5.29992C0.560139 5.63794 0.396559 5.91977 0.278074 6.16033C0.154283 6.41143 0.0570194 6.65902 0.0216507 6.93295C-0.0627034 7.56771 0.11032 8.20975 0.502665 8.71786C0.70692 8.98213 0.973069 9.1744 1.2737 9.36229C1.38567 9.42821 1.47897 9.52126 1.54485 9.63274C1.61073 9.74422 1.64704 9.87048 1.65038 9.99969C1.64704 10.1289 1.61073 10.2552 1.54485 10.3666C1.47897 10.4781 1.38567 10.5712 1.2737 10.6371C0.973069 10.825 0.707804 11.0173 0.502665 11.2815C0.308241 11.5331 0.165614 11.8201 0.0829297 12.1264C0.000245315 12.4326 -0.0208777 12.7521 0.0207666 13.0664C0.0570195 13.3404 0.153399 13.5879 0.27719 13.839C0.396559 14.0796 0.560139 14.3614 0.75732 14.6995L0.779426 14.7381C0.975722 15.0761 1.14019 15.3579 1.2905 15.5809C1.44701 15.8118 1.61501 16.0199 1.83607 16.1867C2.08931 16.3799 2.37841 16.5217 2.68685 16.604C2.99529 16.6862 3.31702 16.7073 3.63368 16.6661C3.96615 16.6222 4.26678 16.4905 4.58156 16.3246C4.69493 16.2617 4.82249 16.2282 4.95237 16.2275C5.08224 16.2267 5.2102 16.2586 5.32431 16.3202C5.436 16.3868 5.52856 16.4809 5.59313 16.5932C5.6577 16.7056 5.6921 16.8326 5.69303 16.962C5.70629 17.3149 5.74077 17.6398 5.86987 17.9471C5.99197 18.2401 6.17101 18.5064 6.39676 18.7307C6.62252 18.955 6.89056 19.1329 7.18559 19.2544C7.44201 19.3597 7.70727 19.401 7.98757 19.4194C8.25637 19.4379 8.58442 19.4379 8.97789 19.4379H9.02211C9.41558 19.4379 9.74363 19.4379 10.0124 19.4203C10.2936 19.401 10.558 19.3597 10.8144 19.2535C11.1095 19.1322 11.3777 18.9545 11.6036 18.7303C11.8295 18.5062 12.0087 18.24 12.131 17.9471C12.2592 17.6398 12.2937 17.3149 12.3079 16.962C12.3093 16.8328 12.3437 16.7061 12.4079 16.5937C12.4721 16.4813 12.5639 16.3869 12.6748 16.3193C12.7891 16.2577 12.9173 16.2259 13.0473 16.2268C13.1774 16.2277 13.305 16.2614 13.4184 16.3246C13.7332 16.4896 14.0339 16.6222 14.3663 16.6652C15.0056 16.749 15.6522 16.5772 16.1639 16.1876C16.385 16.019 16.553 15.8118 16.7095 15.5809C16.8598 15.3579 17.0243 15.0761 17.2206 14.7381L17.2427 14.6995C17.4399 14.3614 17.6034 14.0796 17.7219 13.839C17.8457 13.5879 17.943 13.3395 17.9783 13.0664C18.0627 12.4317 17.8897 11.7896 17.4973 11.2815C17.2931 11.0173 17.0269 10.825 16.7263 10.6371C16.6143 10.5712 16.521 10.4781 16.4552 10.3666C16.3893 10.2552 16.353 10.1289 16.3496 9.99969C16.3496 9.75562 16.484 9.5133 16.7263 9.36229C17.0269 9.1744 17.2922 8.98213 17.4973 8.71786C17.6918 8.46633 17.8344 8.17925 17.9171 7.87299C17.9998 7.56673 18.0209 7.24731 17.9792 6.93295C17.9376 6.66305 17.8509 6.40194 17.7228 6.16033C17.5718 5.86865 17.4117 5.58171 17.2427 5.29992L17.2206 5.26129C17.0591 4.97514 16.8886 4.69406 16.7095 4.41844C16.5627 4.18785 16.3784 3.98312 16.1639 3.81264C15.9107 3.61944 15.6216 3.47766 15.3131 3.39541C15.0047 3.31316 14.683 3.29204 14.3663 3.33327C14.0339 3.37717 13.7332 3.50887 13.4184 3.6748C13.3051 3.73773 13.1775 3.77113 13.0476 3.7719C12.9178 3.77267 12.7898 3.74078 12.6757 3.67919C12.5646 3.61192 12.4725 3.51775 12.408 3.40551C12.3435 3.29326 12.3087 3.16661 12.307 3.0374C12.2937 2.68445 12.2592 2.3596 12.1301 2.05231C12.008 1.75929 11.829 1.49302 11.6032 1.26872C11.3775 1.04441 11.1094 0.866454 10.8144 0.745019C10.558 0.639663 10.2927 0.598398 10.0124 0.579961C9.74363 0.561523 9.41558 0.561523 9.02211 0.561523H8.97789ZM7.69313 1.96188C7.76121 1.93379 7.86466 1.90833 8.07776 1.8934C8.29616 1.87848 8.57911 1.87848 9 1.87848C9.42089 1.87848 9.70384 1.87848 9.92224 1.8934C10.1353 1.90833 10.2388 1.93379 10.3069 1.96188C10.5783 2.07339 10.7932 2.28673 10.9055 2.55627C10.9409 2.64055 10.97 2.77313 10.9815 3.08656C11.0081 3.78191 11.3697 4.4518 12.0116 4.81967C12.6536 5.18754 13.4184 5.16384 14.0383 4.83899C14.3177 4.69237 14.4477 4.6511 14.5396 4.63969C14.8301 4.60157 15.124 4.67958 15.3566 4.85655C15.415 4.90132 15.4893 4.97771 15.6086 5.1533C15.7316 5.33416 15.873 5.57736 16.0835 5.93908C16.2939 6.30081 16.4345 6.54488 16.5309 6.73979C16.6255 6.93031 16.6547 7.03216 16.6635 7.10503C16.7019 7.3935 16.6233 7.6853 16.4451 7.91627C16.3885 7.98914 16.2877 8.08045 16.0207 8.24726C15.4265 8.61777 15.0233 9.26395 15.0233 9.99969C15.0233 10.7354 15.4265 11.3816 16.0207 11.7521C16.2877 11.9189 16.3885 12.0102 16.4451 12.0831C16.6237 12.314 16.7015 12.6055 16.6635 12.8944C16.6547 12.9672 16.6246 13.0699 16.5309 13.2596C16.4345 13.4554 16.2939 13.6986 16.0835 14.0603C15.873 14.422 15.7307 14.6652 15.6086 14.8461C15.4893 15.0217 15.415 15.0981 15.3566 15.1428C15.124 15.3198 14.8301 15.3978 14.5396 15.3597C14.4477 15.3483 14.3186 15.307 14.0383 15.1604C13.4193 14.8355 12.6536 14.811 12.0116 15.1788C11.3697 15.5467 11.0081 16.2175 10.9815 16.9128C10.97 17.2263 10.9409 17.3588 10.9055 17.4431C10.8499 17.5764 10.7685 17.6975 10.6658 17.7995C10.5631 17.9015 10.4411 17.9823 10.3069 18.0375C10.2388 18.0656 10.1353 18.0911 9.92224 18.106C9.70384 18.1209 9.42089 18.1209 9 18.1209C8.57911 18.1209 8.29616 18.1209 8.07776 18.106C7.86466 18.0911 7.76121 18.0656 7.69313 18.0375C7.55891 17.9823 7.43695 17.9015 7.33423 17.7995C7.23152 17.6975 7.15006 17.5764 7.09451 17.4431C7.05914 17.3588 7.02996 17.2263 7.01847 16.9128C6.99194 16.2175 6.6303 15.5476 5.98835 15.1797C5.34641 14.8118 4.58156 14.8355 3.96173 15.1604C3.68231 15.307 3.55233 15.3483 3.46037 15.3597C3.16985 15.3978 2.87597 15.3198 2.64336 15.1428C2.585 15.0981 2.51072 15.0217 2.39136 14.8461C2.22502 14.589 2.06667 14.327 1.91653 14.0603C1.70609 13.6986 1.5655 13.4545 1.46912 13.2596C1.3745 13.0691 1.34532 12.9672 1.33648 12.8944C1.29809 12.6059 1.37665 12.3141 1.55488 12.0831C1.61147 12.0102 1.71228 11.9189 1.97931 11.7521C2.5735 11.3816 2.97671 10.7354 2.97671 9.99969C2.97671 9.26395 2.5735 8.61777 1.97931 8.24726C1.71228 8.08045 1.61147 7.98914 1.55488 7.91627C1.37665 7.6853 1.29809 7.3935 1.33648 7.10503C1.34532 7.03216 1.37539 6.92943 1.46912 6.73979C1.5655 6.544 1.70609 6.30081 1.91653 5.93908C2.12697 5.57736 2.26933 5.33416 2.39136 5.1533C2.51072 4.97771 2.585 4.90132 2.64336 4.85655C2.87597 4.67958 3.16985 4.60157 3.46037 4.63969C3.55233 4.6511 3.68143 4.69237 3.96173 4.83899C4.58068 5.16384 5.34641 5.18842 5.98835 4.81967C6.6303 4.4518 6.99194 3.78191 7.01847 3.08656C7.02996 2.77313 7.05914 2.64055 7.09451 2.55627C7.20681 2.28673 7.42167 2.07339 7.69313 1.96188Z"
-//                 fill="currentColor"
-//               />
-//             </svg>
-//             <p>{t("mobile_menu.settings")}</p>
-//           </NavLink>
-//           <div className="flex flex-col gap-2.5 mt-3">
-//             <div
-//               className="flex items-center gap-2.5 py-[8px] px-[16px]"
-//               onClick={() => setLanguage("en")}
-//             >
-//               <img src={UKFlag} alt="Flag of the UK" className="w-6 h-4" />
-//               <span
-//                 className={`md:text-[16px]  ${
-//                   language === "en" ? "text-[#2D6157]" : "text-[#222]"
-//                 }`}
-//               >
-//                 English
-//               </span>
-//             </div>
-//             <div
-//               className="flex items-center gap-2.5 cursor-pointer py-[8px] px-[16px]"
-//               onClick={() => setLanguage("ha")}
-//             >
-//               <img
-//                 src={NigerianFlag}
-//                 alt="Flag of Nigeria"
-//                 className="w-6 h-4"
-//               />
-//               <span
-//                 className={`md:text-[16px]  ${
-//                   language === "ha" ? "text-[#2D6157]" : "text-[#222]"
-//                 }`}
-//               >
-//                 Hausa
-//               </span>
-//             </div>
-//           </div>
-//           <NavLink className="text-[#2D6157] flex items-center gap-3 self-stretch h-[40px] px-[16px] mt-20">
-//             <img src={logoutIcon} alt="log out icon" />
-//             <p>{t("mobile_menu.logout")}</p>
-//           </NavLink>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default MobileMenu;
-
 import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import WapfiLogo from "../../WapfiLogo";
 import bellIcon from "../../../assets/bell icon.svg";
@@ -257,19 +9,42 @@ import { useLanguage } from "../../../context/LanguageContext";
 import UKFlag from "../../../assets/UK Flag.svg";
 import NigerianFlag from "../../../assets/Nigerian Flag.svg";
 import logoutIcon from "../../../assets/logout icon.svg";
+import { logOut } from "../../../api/apiData";
 
-function MobileMenu({ userName, onTakeLoanClick }) {
+function MobileMenu({ userName, onTakeLoanClick, setLogoutError }) {
+  const navigate = useNavigate();
+
   const location = useLocation();
   const isTakeLoanActive = location.pathname.startsWith("/take-a-loan");
   const { t } = useTranslation();
 
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // const [error, setError] = useState(false);
   const { language, setLanguage } = useLanguage();
 
   const nameParts = userName.full_name?.split(" ");
   const initials = nameParts
     ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
     : "";
+
+  const handleRepaymentsClick = () => {
+    setMenuOpen(false);
+    navigate("/repayments");
+  };
+
+  const handleLogOut = async () => {
+    try {
+      const response = await logOut();
+      if (response) {
+        localStorage.removeItem("dashboardData");
+        localStorage.removeItem("repaymentsData");
+        navigate("/sign-in");
+      }
+    } catch (error) {
+      setLogoutError(t("mobile_menu.logoutError"));
+    }
+  };
 
   return (
     <div className={`${menuOpen ? "bg-white h-screen" : "bg-[#f1f1f1]"}`}>
@@ -371,7 +146,7 @@ function MobileMenu({ userName, onTakeLoanClick }) {
             </svg>
             <p>{t("mobile_menu.takeLoan")}</p>
           </div>
-          <NavLink
+          {/* <NavLink
             to="/"
             onClick={() => setMenuOpen(false)}
             className={({ isActive }) =>
@@ -393,7 +168,42 @@ function MobileMenu({ userName, onTakeLoanClick }) {
               />
             </svg>
             <p>{t("mobile_menu.repayments")}</p>
-          </NavLink>
+          </NavLink> */}
+
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={handleRepaymentsClick}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleRepaymentsClick();
+              }
+            }}
+            className={`2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] px-[16px] cursor-pointer outline-none ${
+              location.pathname.startsWith("/repayments")
+                ? "text-[#439182]"
+                : "text-[#A0B0AB]"
+            }`}
+            aria-current={
+              location.pathname.startsWith("/repayments") ? "page" : undefined
+            }
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="16"
+              viewBox="0 0 18 16"
+              fill="none"
+            >
+              <path
+                d="M0 3.56818C0 2.75445 0.304782 1.97405 0.847298 1.39865C1.38981 0.823254 2.12562 0.5 2.89286 0.5H15.1071C15.8744 0.5 16.6102 0.823254 17.1527 1.39865C17.6952 1.97405 18 2.75445 18 3.56818V12.4318C18 13.2455 17.6952 14.026 17.1527 14.6013C16.6102 15.1767 15.8744 15.5 15.1071 15.5H2.89286C2.12562 15.5 1.38981 15.1767 0.847298 14.6013C0.304782 14.026 0 13.2455 0 12.4318V3.56818ZM2.89286 1.86364C2.46662 1.86364 2.05783 2.04322 1.75644 2.36289C1.45504 2.68255 1.28571 3.11611 1.28571 3.56818V4.59091H16.7143V3.56818C16.7143 3.11611 16.545 2.68255 16.2436 2.36289C15.9422 2.04322 15.5334 1.86364 15.1071 1.86364H2.89286ZM1.28571 12.4318C1.28571 12.8839 1.45504 13.3174 1.75644 13.6371C2.05783 13.9568 2.46662 14.1364 2.89286 14.1364H15.1071C15.5334 14.1364 15.9422 13.9568 16.2436 13.6371C16.545 13.3174 16.7143 12.8839 16.7143 12.4318V5.95455H1.28571V12.4318ZM12.2143 10.0455H14.1429C14.3134 10.0455 14.4769 10.1173 14.5974 10.2452C14.718 10.373 14.7857 10.5464 14.7857 10.7273C14.7857 10.9081 14.718 11.0815 14.5974 11.2094C14.4769 11.3373 14.3134 11.4091 14.1429 11.4091H12.2143C12.0438 11.4091 11.8803 11.3373 11.7597 11.2094C11.6392 11.0815 11.5714 10.9081 11.5714 10.7273C11.5714 10.5464 11.6392 10.373 11.7597 10.2452C11.8803 10.1173 12.0438 10.0455 12.2143 10.0455Z"
+                fill="currentColor"
+              />
+            </svg>
+            {/* ...icon and label... */}
+            <p>{t("sidebar.repayments")}</p>
+          </div>
           <NavLink
             to="/"
             onClick={() => setMenuOpen(false)}
@@ -419,7 +229,7 @@ function MobileMenu({ userName, onTakeLoanClick }) {
             </svg>
             <p>{t("mobile_menu.creditScore")}</p>
           </NavLink>
-          
+
           <NavLink
             to="/"
             onClick={() => setMenuOpen(false)}
@@ -451,10 +261,17 @@ function MobileMenu({ userName, onTakeLoanClick }) {
             </svg>
             <p>{t("mobile_menu.settings")}</p>
           </NavLink>
-          <NavLink className="text-[#2D6157] flex items-center gap-3 self-stretch h-[40px] px-[16px] mt-20">
+          <div
+            role="button"
+            tabIndex={0}
+            className="text-[#2D6157] flex items-center gap-3 self-stretch h-[40px] px-[16px] mt-20 cursor-pointer"
+            onClick={() => {
+              handleLogOut();
+            }}
+          >
             <img src={logoutIcon} alt="log out icon" />
             <p>{t("mobile_menu.logout")}</p>
-          </NavLink>
+          </div>
           <div className="flex flex-col gap-2.5 mt-3">
             <div
               className="flex items-center gap-2.5 py-[8px] px-[16px]"

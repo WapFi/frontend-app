@@ -125,3 +125,36 @@ export const confirmLoanApplication = async (loan_id, password) => {
   });
   return response;
 };
+
+// record a payment
+export const recordPayment = async (dashboardData) => {
+  console.log(dashboardData);
+
+  const response = await axios.post("/loans/repayments", {
+    loan_id: dashboardData.active_loan._id,
+    repayment_method: dashboardData.active_loan.repayment_method,
+    plastic_weight_kg:
+      dashboardData.active_loan_repayment_method === "RECYCLABLES" || dashboardData.active_loan.repayment_method === "BOTH"
+        ? (40 / 100) * dashboardData.active_loan.loan_amount
+        : 0,
+    cash_amount:
+      dashboardData.active_loan.repayment_method === "CASH" || dashboardData.active_loan.repayment_method === "BOTH"
+        ? (40 / 100) * dashboardData.active_loan.loan_amount
+        : 0,
+    drop_off_location: "Lagos Collection Center",
+    receipt_number: "RCP001",
+  });
+  return response.data;
+};
+
+// get loan by ID
+export const getLoanDetails = async (loanID) => {
+  const response = await axios.get(`/loans/${loanID}`);
+  return response;
+};
+
+// log user out
+export const logOut = async () => {
+  const response = await axios.post("/auth/logout");
+  return response;
+}

@@ -170,6 +170,12 @@ import Step4Summary from "../components/take a loan/Step4Summary";
 import LoanRepaymentOverview from "../components/take a loan/LoanRepaymentOverview";
 // import LoanApprovalModal from "../components/take a loan/LoanApprovalModal";
 
+// repayments
+import { RepaymentsProvider } from "../context/RepaymentsContext";
+import Repayments from "../components/repayments/Repayments";
+import RecyclablesRepaymentTable from "../components/repayments/RecyclabesRepaymentTable";
+import RepaymentsHistoryWrapper from "../components/repayments/RepaymentsHistoryWrapper";
+
 const router = createBrowserRouter([
   // Public routes
   {
@@ -216,8 +222,29 @@ const router = createBrowserRouter([
         element: <DashboardWrapper />,
       },
       {
+        path: "repayments",
+        element: (
+          <RepaymentsProvider>
+            <Repayments />
+          </RepaymentsProvider>
+        ),
+      },
+
+      {
         path: "repayments/:id",
-        element: <LoanDetailsScreenMobile />,
+        element: (
+          <RepaymentsProvider>
+            <LoanDetailsScreenMobile />
+          </RepaymentsProvider>
+        ),
+      },
+      {
+        path: "repayments/repayment-history/:id",
+        element: (
+          <RepaymentsProvider>
+            <RepaymentsHistoryWrapper />
+          </RepaymentsProvider>
+        ),
       },
 
       // Loan flow
@@ -228,6 +255,10 @@ const router = createBrowserRouter([
       {
         path: "take-a-loan/verify-phone",
         element: <VerifyPhoneNumber />,
+      },
+      {
+        path: "/repayments-header",
+        element: <RecyclablesRepaymentTable />,
       },
       {
         path: "take-a-loan/form",

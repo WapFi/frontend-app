@@ -115,7 +115,8 @@
     "repayments": "Repayments",
     "creditScore": "Credit Score",
     "settings": "Settings",
-    "logout": "Log Out"
+    "logout": "Log Out",
+    "logoutError": "Logout failed. Please try again."
   },
   "mobile_menu": {
     "dashboard": "Dashboard",
@@ -123,7 +124,8 @@
     "repayments": "Repayments",
     "creditScore": "Credit Score",
     "settings": "Settings",
-    "logout": "Log Out"
+    "logout": "Log Out",
+    "logoutError": "Logout failed. Please try again."
   },
   "header_bar": {
     "today": "Today"
@@ -137,6 +139,12 @@
     "activeLoan": "Active Loan",
     "dueBy": "Due by"
   },
+
+  "dashboardWrapper": {
+    "failedLoad": "Failed to load dashboard data.",
+    "unableLoad": "Unable to load dashboard. Please try again."
+  },
+
   "repaymentsSection": {
     "title": "Repayments",
     "mobileTitle": "Repayment",
@@ -174,11 +182,11 @@
   },
   "layout": {
     "error": "Unable to fetch your personal information. Please try again.",
-     "activeLoanModal": {
-    "title": "Loan Not Eligible",
-    "body": "You already have an active loan. Please complete your repayment before applying for a new one.",
-    "button": "Go to Dashboard"
-  }
+    "activeLoanModal": {
+      "title": "Loan Not Eligible",
+      "body": "You already have an active loan. Please complete your repayment before applying for a new one.",
+      "button": "Go to Dashboard"
+    }
   },
   "newUserDashboard": {
     "title": "Dashboard",
@@ -372,16 +380,67 @@
     "button": "Confirm and Receive Loan"
   },
   "loanApprovalModal": {
-  "title": "Loan Approved & Sent!",
-  "message": "Your loan of ₦{{loan_amount}} has been successfully disbursed to your bank account. You'll repay with {{total_plastic_to_repay_kg}} kg of recyclable plastics based on your selected repayment plan."
-},
-"cancelApplicationModal": {
-  "error": "Something went wrong. Please try again.",
-  "title": "Cancel Application?",
-  "body": "Are you sure you want to cancel? Any information you've entered so far will be lost.",
-  "noButton": "No, go back",
-  "yesButton": "Yes, cancel"
-}
+    "title": "Loan Approved & Sent!",
+    "message": "Your loan of ₦{{loan_amount}} has been successfully disbursed to your bank account. You'll repay with {{total_plastic_to_repay_kg}} kg of recyclable plastics based on your selected repayment plan."
+  },
+  "cancelApplicationModal": {
+    "error": "Something went wrong. Please try again.",
+    "title": "Cancel Application?",
+    "body": "Are you sure you want to cancel? Any information you've entered so far will be lost.",
+    "noButton": "No, go back",
+    "yesButton": "Yes, cancel"
+  },
+  "repaymentsHistoryWrapper": {
+    "noRepaymentData": "No repayment data found for this loan."
+  },
+  "repaymentsHistoryHeader": {
+    "title": "Repayment History",
+    "selectMonth": "Select Month"
+  },
 
-
+  "cashRepaymentsTable": {
+    "thisMonth": "This Month",
+    "date": "Date",
+    "amount": "Amount",
+    "status": "Status",
+    "noRepayments": "No repayments found for this month.",
+    "completed": "Completed",
+    "pending": "Pending",
+    "failed": "Failed",
+    "previous": "Previous",
+    "next": "Next",
+    "perPage": "Per page"
+  },
+    "recyclablesRepaymentTable": {
+    "note": "Please Note: All recyclables you submit are converted to their cash value. Your repayment progress is calculated based on how much value (in ₦) you've repaid — regardless of the material type.",
+    "thisMonth": "This Month",
+    "date": "Date",
+    "type": "Type",
+    "quantity": "Quantity",
+    "amount": "Amount",
+    "status": "Status",
+    "noRepayments": "No repayments found for this month.",
+    "completed": "Completed",
+    "pending": "Pending",
+    "failed": "Failed",
+    "previous": "Previous",
+    "next": "Next",
+    "perPage": "Per page"
+  },
+    "mixedRepaymentsTable": {
+    "note": "Please Note: All recyclables you submit are converted to their cash value. Your repayment progress is calculated based on how much value (in ₦) you've repaid — regardless of the material type.",
+    "thisMonth": "This Month",
+    "date": "Date",
+    "type": "Type",
+    "quantity": "Quantity",
+    "amount": "Amount",
+    "status": "Status",
+    "noRepayments": "No repayments found for this month.",
+    "completed": "Completed",
+    "pending": "Pending",
+    "failed": "Failed",
+    "previous": "Previous",
+    "next": "Next",
+    "perPage": "Per page"
+  }
 }
