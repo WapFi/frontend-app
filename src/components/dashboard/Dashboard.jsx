@@ -71,14 +71,14 @@ function Dashboard({ dashboardData }) {
           <RepaymentProgressBar />
         </div> */}
 
-        <div
+        <button
           className="text-[14px] flex self-end font-medium text-[#2D6157] cursor-pointer"
           role="button"
           tabIndex={0}
           onClick={() => handleRepaymentHistoryClick()}
         >
           {t("dashboard.repaymentHistory")}
-        </div>
+        </button>
       </div>
 
       <Overview

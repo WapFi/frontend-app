@@ -95,14 +95,14 @@ function LoanDetails({ loanDetails }) {
             )}
           </div>
 
-          <div
+          <button
             role="button"
             tabIndex={0}
             onClick={() => handleRepaymentHistoryClick()}
-            className="text-[14px] text-right block font-medium text-[#2D6157] cursor-pointer"
+            className="text-[14px] text-right flex font-medium text-[#2D6157] cursor-pointer justify-self-end"
           >
             {t("loanDetails.repaymentHistory")}
-          </div>
+          </button>
         </div>
         <div className="flex justify-between items-center py-[12px] bg-[#f9f9f9] self-stretch rounded-xl border border-[rgba(255,255,255,0.68)]">
           <div>
