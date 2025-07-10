@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import PageLoader from "../../PageLoader";
 import { useTranslation } from "react-i18next";
 import { useDashboard } from "../../../context/DashboardContext";
+import { use_UserData } from "../../../context/UserContext";
 // import RepaymentsSection from "../RepaymentsSection";
 // import Repayments from "../../repayments/Repayments";
 
@@ -15,7 +16,8 @@ function Layout() {
   const navigate = useNavigate();
 
   // Your existing user data loading
-  const [userData, setUserData] = useState(null);
+  // const [userData, setUserData] = useState(null);
+  const { userData, setUserData } = use_UserData();
   // const [newUserRepayments, setNewUserRepayments] = false;
   const [error, setError] = useState(null);
   const [logoutError, setLogoutError] = useState(null);
@@ -25,7 +27,8 @@ function Layout() {
       try {
         const res = await fetchUserMe();
         if (res.status) {
-          localStorage.setItem("bank_account_name", res.data.full_name);
+          // localStorage.setItem("bank_account_name", res.data.full_name);
+          localStorage.setItem("userData", JSON.stringify(res.data));
           setUserData(res.data);
         }
       } catch (error) {

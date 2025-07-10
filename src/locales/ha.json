@@ -269,7 +269,7 @@
   "loanStep1": {
     "title": "Nawa kake son aro?",
     "placeholder": "Shigar da adadin da kake son aro",
-    "limitNote": "Iyakar adadin da zaka iya aro shine ₦50,000",
+    "limitNote": "Iyakar adadin da zaka iya aro shine ₦{{limit}}",
     "purposeLabel": "Me zaka yi da rancen?",
     "purposePlaceholder": "Zaɓi dalilin rance",
     "otherPurposeLabel": "Sauran",

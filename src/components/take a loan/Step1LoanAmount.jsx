@@ -256,10 +256,13 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLoanForm } from "../../context/LoanFormContext";
 import { useTranslation } from "react-i18next";
+import { use_UserData } from "../../context/UserContext";
 
 export default function Step1LoanAmount() {
   const { t } = useTranslation();
-  const { loanFormData, updateLoanFormData, setHasUnsavedChanges } = useLoanForm();
+  const { userData } = use_UserData();
+  const { loanFormData, updateLoanFormData, setHasUnsavedChanges } =
+    useLoanForm();
   const navigate = useNavigate();
   const location = useLocation();
   const fromSummary = location.state?.fromSummary;
@@ -277,12 +280,16 @@ export default function Step1LoanAmount() {
   const schema = yup.object({
     loanAmount: yup
       .number()
-      .typeError(t('loanStep1.errors.loanAmountType'))
-      .required(t('loanStep1.errors.loanAmountRequired'))
-      .min(1000, t('loanStep1.errors.loanAmountMin'))
-      .max(1000000, t('loanStep1.errors.loanAmountMax')),
-    loanPurpose: yup.string().required(t('loanStep1.errors.loanPurposeRequired')),
-    wapanMembership: yup.string().required(t('loanStep1.errors.membershipRequired')),
+      .typeError(t("loanStep1.errors.loanAmountType"))
+      .required(t("loanStep1.errors.loanAmountRequired"))
+      .min(1000, t("loanStep1.errors.loanAmountMin"))
+      .max(1000000, t("loanStep1.errors.loanAmountMax")),
+    loanPurpose: yup
+      .string()
+      .required(t("loanStep1.errors.loanPurposeRequired")),
+    wapanMembership: yup
+      .string()
+      .required(t("loanStep1.errors.membershipRequired")),
     otherPurpose: yup.string(),
   });
 
@@ -341,11 +348,13 @@ export default function Step1LoanAmount() {
 
   return (
     <div
-      className={`${fadeIn ? "opacity-100" : "opacity-0"} w-[95%] mx-auto md:w-[75%]`}
+      className={`${
+        fadeIn ? "opacity-100" : "opacity-0"
+      } w-[95%] mx-auto md:w-[75%]`}
     >
       {formError && (
         <p className="text-red-500 mb-3">
-          {t('loanStep1.errors.invalidEntries')}
+          {t("loanStep1.errors.invalidEntries")}
         </p>
       )}
 
@@ -354,11 +363,11 @@ export default function Step1LoanAmount() {
         className="w-full flex flex-col gap-1.5 self-stretch md:text-[18px]"
       >
         <div>
-          <label className="text-[#222]">{t('loanStep1.title')}</label>
+          <label className="text-[#222]">{t("loanStep1.title")}</label>
           <input
             type="text"
             {...register("loanAmount")}
-            placeholder={t('loanStep1.placeholder')}
+            placeholder={t("loanStep1.placeholder")}
             className="mt-2 border border-[rgba(0,0,0,0.15)] rounded-lg w-full p-3 text-[rgba(34,34,34,0.50)]"
           />
           {errors.loanAmount && (
@@ -367,14 +376,14 @@ export default function Step1LoanAmount() {
             </p>
           )}
           <p className="text-sm text-[#999] mt-1">
-            {t('loanStep1.limitNote')}
+            {t("loanStep1.limitNote", { limit: userData.borrowing_limit })}
           </p>
         </div>
 
         <br />
 
         <div>
-          <label className="text-[#222]">{t('loanStep1.purposeLabel')}</label>
+          <label className="text-[#222]">{t("loanStep1.purposeLabel")}</label>
           <div
             className={`flex items-center justify-between cursor-pointer mt-2 bg-white ${
               displayLoanPurposeForm ? "rounded-t-lg" : "rounded-[8px]"
@@ -382,7 +391,7 @@ export default function Step1LoanAmount() {
             onClick={() => setDisplayLoanPurposeForm(!displayLoanPurposeForm)}
           >
             <p className="text-[rgba(34,34,34,0.50)]">
-              {t('loanStep1.purposePlaceholder')}
+              {t("loanStep1.purposePlaceholder")}
             </p>
             <img
               src={displayLoanPurposeForm ? chevronUp : chevronDown}
@@ -420,11 +429,13 @@ export default function Step1LoanAmount() {
 
         {loanPurpose === "OTHER" && (
           <div className="mt-4">
-            <label className="text-[#222]">{t('loanStep1.otherPurposeLabel')}</label>
+            <label className="text-[#222]">
+              {t("loanStep1.otherPurposeLabel")}
+            </label>
             <input
               type="text"
               {...register("otherPurpose")}
-              placeholder={t('loanStep1.otherPurposePlaceholder')}
+              placeholder={t("loanStep1.otherPurposePlaceholder")}
               className="mt-2 border border-[rgba(0,0,0,0.15)] rounded-lg w-full p-3 text-[rgba(34,34,34,0.50)]"
             />
             {errors.otherPurpose && (
@@ -438,7 +449,9 @@ export default function Step1LoanAmount() {
         <br />
 
         <div>
-          <label className="text-[#222]">{t('loanStep1.membershipLabel')}</label>
+          <label className="text-[#222]">
+            {t("loanStep1.membershipLabel")}
+          </label>
           <div
             className={`flex items-center justify-between cursor-pointer mt-2 bg-white ${
               displayMembershipForm ? "rounded-t-lg" : "rounded-[8px]"
@@ -446,7 +459,7 @@ export default function Step1LoanAmount() {
             onClick={() => setDisplayMembershipForm(!displayMembershipForm)}
           >
             <p className="text-[rgba(34,34,34,0.50)] text-[16px]">
-              {t('loanStep1.membershipPlaceholder')}
+              {t("loanStep1.membershipPlaceholder")}
             </p>
             <img
               src={displayMembershipForm ? chevronUp : chevronDown}
@@ -463,7 +476,7 @@ export default function Step1LoanAmount() {
                   {...register("wapanMembership")}
                   className="mr-2 accent-[#2D6157]"
                 />
-                {t('loanStep1.options.yes')}
+                {t("loanStep1.options.yes")}
               </label>
               <label className="block text-[#222]">
                 <input
@@ -472,7 +485,7 @@ export default function Step1LoanAmount() {
                   {...register("wapanMembership")}
                   className="mr-2 accent-[#2D6157]"
                 />
-                {t('loanStep1.options.no')}
+                {t("loanStep1.options.no")}
               </label>
             </div>
           )}
@@ -492,7 +505,7 @@ export default function Step1LoanAmount() {
             loading ? "duration-300 cursor-not-allowed" : "cursor-pointer"
           }`}
         >
-          {loading ? <LoadingSpinner /> : t('loanStep1.button')}
+          {loading ? <LoadingSpinner /> : t("loanStep1.button")}
         </button>
       </form>
     </div>

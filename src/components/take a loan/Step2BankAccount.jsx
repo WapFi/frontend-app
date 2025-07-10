@@ -146,6 +146,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLoanForm } from "../../context/LoanFormContext";
 import { useTranslation } from "react-i18next";
+import { use_UserData } from "../../context/UserContext";
 
 export default function Step2BankAccount() {
   const { t } = useTranslation();
@@ -159,6 +160,8 @@ export default function Step2BankAccount() {
   const [loading, setLoading] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
   const [formError, setFormError] = useState(false);
+
+  const { userData } = use_UserData();
 
   useEffect(() => {
     setFadeIn(true);
@@ -196,7 +199,8 @@ export default function Step2BankAccount() {
 
     try {
       updateLoanFormData({
-        account_name: localStorage.getItem("bank_account_name"),
+        // account_name: localStorage.getItem("bank_account_name"),
+        account_name: userData.full_name,
         account_number: data.account_number,
         bank_name: data.bank_name.trim(),
       });
@@ -239,7 +243,8 @@ export default function Step2BankAccount() {
             {t("loanStep2.accountNameLabel")}
           </label>
           <p className="mt-2 border border-[rgba(0,0,0,0.15)] rounded-lg w-full p-3 text-[rgba(34,34,34,0.50)]">
-            {localStorage.getItem("bank_account_name")}
+            {/* {localStorage.getItem("bank_account_name")} */}
+            {userData.full_name}
           </p>
         </div>
 

@@ -272,7 +272,7 @@
   "loanStep1": {
     "title": "How much would you like to borrow?",
     "placeholder": "Enter the amount you want to borrow",
-    "limitNote": "Your borrowing limit is ₦50,000",
+    "limitNote": "Your borrowing limit is ₦{{limit}}",
     "purposeLabel": "What do you need the loan for?",
     "purposePlaceholder": "Select loan purpose",
     "otherPurposeLabel": "Others",

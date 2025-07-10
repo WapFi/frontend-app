@@ -184,8 +184,13 @@ import AddressVerified from "./AddressVerified";
 import CreditScoreStarIcon from "../../assets/credit score star icon.svg";
 // import { fetchDashboardData } from "../../api/mockApi";
 import { useTranslation } from "react-i18next";
+import { use_UserData } from "../../context/UserContext";
 
 function CreditScore({ userCreditScore }) {
+  const { userData } = use_UserData();
+  const bvn_verified = userData.bvn_verified;
+  const nin_verified = userData.nin_verified;
+  const address_verified = userData.address_verified;
   // console.log(userCreditScore);
   const tier = userCreditScore.tier;
 
@@ -335,10 +340,14 @@ function CreditScore({ userCreditScore }) {
           </p>
         </div>
 
-        {tier === 0 && <BVNUnverified />}
-        {tier === 1 && <BVNVerified />}
-        {tier === 2 && <AddressUnverified />}
-        {tier >= 3 && <AddressVerified />}
+        {!bvn_verified && <BVNUnverified />}
+        {bvn_verified && !nin_verified && <BVNVerified />}
+        {bvn_verified && nin_verified && !address_verified && (
+          <AddressUnverified />
+        )}
+        {bvn_verified && nin_verified && address_verified && (
+          <AddressVerified />
+        )}
       </div>
     </div>
   );

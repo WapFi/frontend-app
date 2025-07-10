@@ -168,7 +168,7 @@ function New_User_Dashboard({ dashboardData }) {
 
   const { t } = useTranslation();
 
-  console.log("dasboard data: ", dashboardData);
+  // console.log("dasboard data: ", dashboardData);
 
 
   const [currentMonth, setCurrentMonth] = useState("");

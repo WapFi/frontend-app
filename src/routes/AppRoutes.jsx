@@ -176,6 +176,9 @@ import Repayments from "../components/repayments/Repayments";
 import RecyclablesRepaymentTable from "../components/repayments/RecyclabesRepaymentTable";
 import RepaymentsHistoryWrapper from "../components/repayments/RepaymentsHistoryWrapper";
 
+// credit scores
+import CreditScore from "../components/credit score/CreditScore";
+
 const router = createBrowserRouter([
   // Public routes
   {
@@ -216,11 +219,13 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      // Dashboard home
+      // Dashboard 
       {
         path: "dashboard",
         element: <DashboardWrapper />,
       },
+
+      // repayments routes
       {
         path: "repayments",
         element: (
@@ -290,6 +295,14 @@ const router = createBrowserRouter([
         path: "take-a-loan/loan-repayment-overview",
         element: <LoanRepaymentOverview />,
       },
+
+      // credit score routes
+      {
+        path: "/credit-score",
+        element: <CreditScore />
+      }
+
+
       // {
       //   path: "take-a-loan/loan-approval-modal",
       //   element: <LoanApprovalModal />,
