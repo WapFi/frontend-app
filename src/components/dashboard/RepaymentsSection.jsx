@@ -197,7 +197,7 @@
 // export default RepaymentsSection;
 
 import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import calendarIcon from "../../assets/calendar icon.svg";
 import searchIcon from "../../assets/search icon.svg";
@@ -207,13 +207,13 @@ import { fetchRepayments } from "../../api/apiData";
 import { useTranslation } from "react-i18next";
 import { recordPayment } from "../../api/apiData";
 import { getLoanDetails } from "../../api/apiData";
-// import { useDashboard } from "../../context/DashboardContext";
+import { useDashboard } from "../../context/DashboardContext";
 import { useRepayments } from "../../context/RepaymentsContext";
 import PageLoader from "../PageLoader";
 
 function RepaymentsSection() {
-  // const navigate = useNavigate();
-  // const { dashboardData, setDashboardData } = useDashboard();
+  const navigate = useNavigate();
+  const { dashboardData, setDashboardData } = useDashboard();
   const { setRepaymentsData } = useRepayments();
 
   const { t } = useTranslation();
@@ -241,7 +241,7 @@ function RepaymentsSection() {
         const response = await getLoanDetails(loanID);
         if (response) {
           setLoanDetails(response.data);
-          console.log("Loan Details: ", response.data);
+          // console.log("Loan Details: ", response.data);
         }
       } catch (error) {
         console.log("Error: ", error);
@@ -252,22 +252,22 @@ function RepaymentsSection() {
     }
   }, [selectedLoan]);
 
-  useEffect(() => {
-    const testRecordPayment = async () => {
-      try {
-        const response = await recordPayment(dashboardData);
-        console.log("I'm here");
-        if (response) {
-          console.log(response.data);
-        }
-      } catch (error) {
-        console.log("Error making payment: ", error);
-      }
+  // useEffect(() => {
+  //   const testRecordPayment = async () => {
+  //     try {
+  //       const response = await recordPayment(dashboardData);
+  //       // console.log("I'm here");
+  //       if (response) {
+  //         // console.log(response.data);
+  //       }
+  //     } catch (error) {
+  //       console.log("Error making payment: ", error);
+  //     }
 
-      navigate("/dashboard");
-    };
-    testRecordPayment();
-  }, []);
+  //     navigate("/dashboard");
+  //   };
+  //   testRecordPayment();
+  // }, []);
 
   // Get latest repayment month once
   useEffect(() => {

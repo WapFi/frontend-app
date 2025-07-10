@@ -51,7 +51,7 @@ function DashboardWrapper() {
 
   if (!dashboardData || !dashboardData.credit_score) return <PageLoader />;
 
-  return dashboardData.credit_score.current_score === 0 ? (
+  return dashboardData.credit_score.current_score === 0 || !dashboardData.active_loan ? (
     <New_User_Dashboard dashboardData={dashboardData} />
   ) : (
     <Dashboard dashboardData={dashboardData} />

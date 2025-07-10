@@ -294,7 +294,7 @@ function SignIn() {
       }`}
     >
       {/* <WapfiLogo /> */}
-      <div>
+      <div className="px-3">
         <WapfiLogo />
         <div className="mx-auto flex flex-col items-center gap-[40px] w-full mb-12 max-w-[95%] md:text-[18px] md:max-w-[75%] lg:max-w-[511px] lg:gap-[40px] lg:self-center lg:mx-12 xl:mx-14 2xl:ml-32">
           <form

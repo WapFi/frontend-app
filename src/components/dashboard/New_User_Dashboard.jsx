@@ -168,7 +168,25 @@ function New_User_Dashboard({ dashboardData }) {
 
   const { t } = useTranslation();
 
+  console.log("dasboard data: ", dashboardData);
+
+
   const [currentMonth, setCurrentMonth] = useState("");
+  const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
+
+  // --- NEW: Take a Loan Click Handler ---
+  const handleTakeLoanClick = () => {
+    if (dashboardData?.active_loan) {
+      // User has an existing active loan
+      setShowActiveLoanModal(true);
+    } else if (dashboardData.credit_score.current_score === 0) {
+      navigate("/take-a-loan/enter-bvn");
+    } else {
+      // User is eligible
+      navigate("/take-a-loan/form/loan-amount-purpose");
+    }
+  };
+
   const loadData = async () => {
     try {
       const res = await fetchRepayments();
@@ -320,9 +338,8 @@ function New_User_Dashboard({ dashboardData }) {
             {t("newUserRepayments.ctaMessage")}
           </p>
           <button
-          onClick={() => navigate("/take-a-loan/enter-bvn")}
+            onClick={() => handleTakeLoanClick()}
             className="flex justify-center items-center gap-2.5 bg-[#439182] rounded-[40px] py-2.5 px-6 cursor-pointer hover:opacity-80"
-            
           >
             <img src={plusIcon} alt="plus icon" />
             <span className="text-white text-[16px] font-medium">
@@ -333,6 +350,28 @@ function New_User_Dashboard({ dashboardData }) {
       </div>
 
       <CreditScore userCreditScore={dashboardData.credit_score} />
+
+      {showActiveLoanModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-lg max-w-sm w-full p-6 text-center">
+            <h2 className="text-xl font-bold mb-4 text-[#2D6157]">
+              {t("layout.activeLoanModal.title")}
+            </h2>
+            <p className="mb-6 text-[#444]">
+              {t("layout.activeLoanModal.body")}
+            </p>
+            <button
+              onClick={() => {
+                setShowActiveLoanModal(false);
+                navigate("/dashboard");
+              }}
+              className="w-full rounded-[50px] text-white font-medium bg-[#439182] py-2 px-3 hover:opacity-80 transition-opacity duration-300"
+            >
+              {t("layout.activeLoanModal.button")}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

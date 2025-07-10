@@ -20,6 +20,8 @@ function Dashboard({ dashboardData }) {
     navigate(`/repayments/repayment-history/${loanID}`);
   };
 
+  console.log("dashboard data: ", dashboardData);
+
   const dueDate = new Date(dashboardData.active_loan.due_date);
   const targetTime = dueDate.getTime(); // milliseconds
 

@@ -72,7 +72,7 @@ function Sidebar({ onTakeLoanClick, setLogoutError }) {
           <p>{t("sidebar.dashboard")}</p>
         </NavLink>
 
-        {/* Take a Loan item as div with manual active state and click handler */}
+     
         <div
           role="button"
           tabIndex={0}

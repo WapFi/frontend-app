@@ -26,6 +26,21 @@ export default function Repayments() {
 
   const { repaymentsData, setRepaymentsData } = useRepayments();
 
+  const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
+
+  // --- NEW: Take a Loan Click Handler ---
+  const handleTakeLoanClick = () => {
+    if (dashboardData?.active_loan) {
+      // User has an existing active loan
+      setShowActiveLoanModal(true);
+    } else if (dashboardData.credit_score.current_score === 0) {
+      navigate("/take-a-loan/enter-bvn");
+    } else {
+      // User is eligible
+      navigate("/take-a-loan/form/loan-amount-purpose");
+    }
+  };
+
   useEffect(() => {
     const loadRepayments = async () => {
       try {
@@ -204,12 +219,7 @@ export default function Repayments() {
               {t("newUserRepayments.ctaMessage")}
             </p>
             <button
-              onClick={() => {
-                // console.log("dashboard: ", dashboardData);
-                dashboardData.credit_score.current_score === 0
-                  ? navigate("/take-a-loan/enter-bvn")
-                  : navigate("take-a-loan/form/loan-amount-purpose");
-              }}
+              onClick={() => {handleTakeLoanClick()}}
               className="flex justify-center items-center gap-2.5 bg-[#439182] rounded-[40px] py-2.5 px-6 cursor-pointer hover:opacity-80"
             >
               <img src={plusIcon} alt="plus icon" />
