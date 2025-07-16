@@ -321,21 +321,23 @@ export default function VerifyPhoneNumber() {
       setLoading(true);
       const response = await verifyIdentity("phone", code);
 
-      // refresh user data to make sure we get the latest data
-      await refreshUserData();
+      if (response.status) {
+        // Simulate verification and move to next screen
+        setShowFormError(false);
+        setLoading(false);
+        setShowVerificationSuccess(true);
 
-      // Simulate verification and move to next screen
-      setShowFormError(false);
-      setLoading(false);
-      setShowVerificationSuccess(true);
+        // refresh user data to make sure we get the latest data
+        const updatedUserData = await refreshUserData();
 
-      setTimeout(() => {
-        if (!userData.active_loan) {
-          navigate("/take-a-loan/form/loan-amount-purpose");
-        } else if (userData.active_loan.status === "PENDING") {
-          navigate("/take-a-loan/loan-repayment-overview");
-        }
-      }, 1000);
+        setTimeout(() => {
+          if (!updatedUserData.active_loan) {
+            navigate("/take-a-loan/form/loan-amount-purpose");
+          } else if (updatedUserData.active_loan.status === "PENDING") {
+            navigate("/take-a-loan/loan-repayment-overview");
+          }
+        }, 1000);
+      }
     } catch (error) {
       console.log("Error verifying phone number");
       setShowFormError(true);
