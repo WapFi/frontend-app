@@ -20,7 +20,7 @@ function Dashboard({ dashboardData }) {
     navigate(`/repayments/repayment-history/${loanID}`);
   };
 
-  // console.log("dashboard data: ", dashboardData);
+  console.log("dashboard data: ", dashboardData);
 
   const dueDate = new Date(dashboardData.active_loan.due_date);
   const targetTime = dueDate.getTime(); // milliseconds
@@ -31,41 +31,42 @@ function Dashboard({ dashboardData }) {
         {t("dashboard.title")}
       </p>
 
-      <div className="rounded-xl flex flex-col self-start justify-center w-full items-start gap-6 border-[#008F4C] border-[1.2px] bg-[#fff] pt-6 pr-[18px] pb-8 pl-[18px]">
-        {/* <div className="md:flex self-stretch items-center gap-4">
+      {dashboardData.active_loan.status === "DISBURSED" && (
+        <div className="rounded-xl flex flex-col self-start justify-center w-full items-start gap-6 border-[#008F4C] border-[1.2px] bg-[#fff] pt-6 pr-[18px] pb-8 pl-[18px]">
+          {/* <div className="md:flex self-stretch items-center gap-4">
           <p>Time left to next repayment:</p>
           <p>Days</p>
         </div> */}
-        <CountdownTimer targetTime={targetTime} />
-        <div className="flex flex-col flex-start gap-2">
-          <p>{t("dashboard.outstandingLoanBalance")}</p>
-          <div className="flex items-center gap-2">
-            <img src={NairaIcon} alt="Naira Icon" />
-            <p className="md:text-[24px] font-semibold">
-              {dashboardData.active_loan.outstanding_balance}
-            </p>
+          <CountdownTimer targetTime={targetTime} />
+          <div className="flex flex-col flex-start gap-2">
+            <p>{t("dashboard.outstandingLoanBalance")}</p>
+            <div className="flex items-center gap-2">
+              <img src={NairaIcon} alt="Naira Icon" />
+              <p className="md:text-[24px] font-semibold">
+                {dashboardData.active_loan.outstanding_balance}
+              </p>
+            </div>
           </div>
-        </div>
-        {/* <div className="relative">
+          {/* <div className="relative">
           <p className="absolute left-[71%] md:left-[74%] top-[30%] flex gap-1 items-center font-raleway font-medium text-[#444]">
             <img src={NairaIcon} alt="naira icon" />
             <span>20,000</span>
           </p>
           <RepaymentProgressBar />
         </div> */}
-        <div className="w-full">
-          <div className="flex justify-between items-center mb-2">
-            {/* <p className="flex gap-1 items-center font-raleway font-medium text-[#444]">
+          <div className="w-full">
+            <div className="flex justify-between items-center mb-2">
+              {/* <p className="flex gap-1 items-center font-raleway font-medium text-[#444]">
               <img src={NairaIcon} alt="naira icon" />
               <span>20,000</span>
             </p> */}
+            </div>
+            <RepaymentProgressBar
+              amountRepaid={dashboardData.active_loan.amount_paid}
+              loanAmount={dashboardData.active_loan.loan_amount}
+            />
           </div>
-          <RepaymentProgressBar
-            amountRepaid={dashboardData.active_loan.amount_paid}
-            loanAmount={dashboardData.active_loan.loan_amount}
-          />
-        </div>
-        {/* <div className="relative">
+          {/* <div className="relative">
           <p className="absolute left-[71%] md:left-[74%] top-[30%] flex gap-1 items-center font-raleway font-medium text-[#444]">
             <img src={NairaIcon} alt="naira icon" />
             <span>20,000</span>
@@ -73,21 +74,24 @@ function Dashboard({ dashboardData }) {
           <RepaymentProgressBar />
         </div> */}
 
-        <button
-          className="text-[14px] flex self-end font-medium text-[#2D6157] cursor-pointer"
-          role="button"
-          tabIndex={0}
-          onClick={() => handleRepaymentHistoryClick()}
-        >
-          {t("dashboard.repaymentHistory")}
-        </button>
-      </div>
+          <button
+            className="text-[14px] flex self-end font-medium text-[#2D6157] cursor-pointer"
+            role="button"
+            tabIndex={0}
+            onClick={() => handleRepaymentHistoryClick()}
+          >
+            {t("dashboard.repaymentHistory")}
+          </button>
+        </div>
+      )}
 
-      <Overview
-        totalLoanTaken={dashboardData.total_loans_taken}
-        amountRepaid={dashboardData.amount_repaid}
-        activeLoan={dashboardData.active_loan}
-      />
+      {dashboardData.active_loan.status === "DISBURSED" && (
+        <Overview
+          totalLoanTaken={dashboardData.total_loans_taken}
+          amountRepaid={dashboardData.amount_repaid}
+          activeLoan={dashboardData.active_loan}
+        />
+      )}
 
       {/* <RepaymentsSection /> */}
       <RepaymentsProvider>

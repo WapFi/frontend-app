@@ -5,12 +5,16 @@
 // import * as yup from "yup";
 // import { yupResolver } from "@hookform/resolvers/yup";
 // import { useForm } from "react-hook-form";
-// import { useNavigate } from "react-router-dom";
+// import { useNavigate, useLocation } from "react-router-dom";
 // import { useLoanForm } from "../../context/LoanFormContext";
-// import { useLocation } from "react-router-dom";
+// import { useTranslation } from "react-i18next";
+// import { use_UserData } from "../../context/UserContext";
 
 // export default function Step1LoanAmount() {
-//   const { loanFormData, updateLoanFormData } = useLoanForm();
+//   const { t } = useTranslation();
+//   const { userData } = use_UserData();
+//   const { loanFormData, updateLoanFormData, setHasUnsavedChanges } =
+//     useLoanForm();
 //   const navigate = useNavigate();
 //   const location = useLocation();
 //   const fromSummary = location.state?.fromSummary;
@@ -28,23 +32,24 @@
 //   const schema = yup.object({
 //     loanAmount: yup
 //       .number()
-//       .typeError("Please enter a valid number.")
-//       .required("Please enter the amount you want to borrow.")
-//       .min(1000, "Minimum loan amount is ₦1,000")
-//       .max(1000000, "Maximum loan amount is ₦1,000,000"),
-//     loanPurpose: yup.string().required("Please select a purpose for the loan."),
+//       .typeError(t("loanStep1.errors.loanAmountType"))
+//       .required(t("loanStep1.errors.loanAmountRequired"))
+//       .min(1000, t("loanStep1.errors.loanAmountMin"))
+//       .max(1000000, t("loanStep1.errors.loanAmountMax")),
+//     loanPurpose: yup
+//       .string()
+//       .required(t("loanStep1.errors.loanPurposeRequired")),
 //     wapanMembership: yup
 //       .string()
-//       .required("Please indicate your membership status."),
+//       .required(t("loanStep1.errors.membershipRequired")),
 //     otherPurpose: yup.string(),
 //   });
 
 //   const {
 //     register,
 //     handleSubmit,
-//     formState: { errors },
+//     formState: { errors, isDirty },
 //     watch,
-//     reset,
 //   } = useForm({
 //     resolver: yupResolver(schema),
 //     defaultValues: {
@@ -57,22 +62,27 @@
 
 //   const loanPurpose = watch("loanPurpose");
 
+//   useEffect(() => {
+//     if (setHasUnsavedChanges) {
+//       setHasUnsavedChanges(isDirty);
+//     }
+//   }, [isDirty, setHasUnsavedChanges]);
+
 //   const onSubmit = async (data) => {
 //     setLoading(true);
 //     setFormError(false);
 
 //     try {
-//       //   console.log(data);
-//       // store form data
-//       // Save this step's data to context
 //       updateLoanFormData({
 //         loan_amount: data.loanAmount,
 //         loan_purpose: data.loanPurpose,
-//         other_purpose: data.otherPurpose?.trim() || "",
 //         wapan_member: data.wapanMembership === "true",
 //       });
 
-//       // Navigate to Step 2
+//       if (setHasUnsavedChanges) {
+//         setHasUnsavedChanges(false);
+//       }
+
 //       setTimeout(() => {
 //         if (fromSummary) {
 //           navigate("/take-a-loan/form/loan-form-summary");
@@ -95,20 +105,21 @@
 //       } w-[95%] mx-auto md:w-[75%]`}
 //     >
 //       {formError && (
-//         <p className="text-red-500 mb-3">Invalid entries. Please try again.</p>
+//         <p className="text-red-500 mb-3">
+//           {t("loanStep1.errors.invalidEntries")}
+//         </p>
 //       )}
+
 //       <form
 //         onSubmit={handleSubmit(onSubmit)}
 //         className="w-full flex flex-col gap-1.5 self-stretch md:text-[18px]"
 //       >
 //         <div>
-//           <label className="text-[#222]">
-//             How much would you like to borrow?
-//           </label>
+//           <label className="text-[#222]">{t("loanStep1.title")}</label>
 //           <input
 //             type="text"
 //             {...register("loanAmount")}
-//             placeholder="Enter the amount you want to borrow"
+//             placeholder={t("loanStep1.placeholder")}
 //             className="mt-2 border border-[rgba(0,0,0,0.15)] rounded-lg w-full p-3 text-[rgba(34,34,34,0.50)]"
 //           />
 //           {errors.loanAmount && (
@@ -117,21 +128,23 @@
 //             </p>
 //           )}
 //           <p className="text-sm text-[#999] mt-1">
-//             Your borrowing limit is ₦50,000
+//             {t("loanStep1.limitNote", { limit: userData.borrowing_limit })}
 //           </p>
 //         </div>
 
 //         <br />
 
 //         <div>
-//           <label className="text-[#222]">What do you need the loan for?</label>
+//           <label className="text-[#222]">{t("loanStep1.purposeLabel")}</label>
 //           <div
 //             className={`flex items-center justify-between cursor-pointer mt-2 bg-white ${
 //               displayLoanPurposeForm ? "rounded-t-lg" : "rounded-[8px]"
 //             }  p-[14px] border border-[rgba(0,0,0,0.08)]`}
 //             onClick={() => setDisplayLoanPurposeForm(!displayLoanPurposeForm)}
 //           >
-//             <p className="text-[rgba(34,34,34,0.50)]">Select loan purpose</p>
+//             <p className="text-[rgba(34,34,34,0.50)]">
+//               {t("loanStep1.purposePlaceholder")}
+//             </p>
 //             <img
 //               src={displayLoanPurposeForm ? chevronUp : chevronDown}
 //               alt="toggle"
@@ -141,12 +154,11 @@
 //           {displayLoanPurposeForm && (
 //             <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
 //               {[
-//                 "School fees",
-//                 "Health expenses",
-//                 "Business needs",
-//                 "Rent",
-//                 "Emergency",
-//                 "Other",
+//                 "BUSINESS_NEEDS",
+//                 "COLLECTION_ADVANCE",
+//                 "PURCHASE_EQUIPMENT",
+//                 "RENT",
+//                 "OTHER",
 //               ].map((option) => (
 //                 <label key={option} className="block text-[#222]">
 //                   <input
@@ -155,7 +167,7 @@
 //                     {...register("loanPurpose")}
 //                     className="mr-2 accent-[#2D6157]"
 //                   />
-//                   {option}
+//                   {t(`loanStep1.options.${option}`)}
 //                 </label>
 //               ))}
 //             </div>
@@ -167,13 +179,15 @@
 //           )}
 //         </div>
 
-//         {loanPurpose === "Other" && (
+//         {loanPurpose === "OTHER" && (
 //           <div className="mt-4">
-//             <label className="text-[#222]">Others</label>
+//             <label className="text-[#222]">
+//               {t("loanStep1.otherPurposeLabel")}
+//             </label>
 //             <input
 //               type="text"
 //               {...register("otherPurpose")}
-//               placeholder="Enter purpose"
+//               placeholder={t("loanStep1.otherPurposePlaceholder")}
 //               className="mt-2 border border-[rgba(0,0,0,0.15)] rounded-lg w-full p-3 text-[rgba(34,34,34,0.50)]"
 //             />
 //             {errors.otherPurpose && (
@@ -185,8 +199,11 @@
 //         )}
 
 //         <br />
+
 //         <div>
-//           <label className="text-[#222]">Are you a member of WAPAN?</label>
+//           <label className="text-[#222]">
+//             {t("loanStep1.membershipLabel")}
+//           </label>
 //           <div
 //             className={`flex items-center justify-between cursor-pointer mt-2 bg-white ${
 //               displayMembershipForm ? "rounded-t-lg" : "rounded-[8px]"
@@ -194,7 +211,7 @@
 //             onClick={() => setDisplayMembershipForm(!displayMembershipForm)}
 //           >
 //             <p className="text-[rgba(34,34,34,0.50)] text-[16px]">
-//               Select Option
+//               {t("loanStep1.membershipPlaceholder")}
 //             </p>
 //             <img
 //               src={displayMembershipForm ? chevronUp : chevronDown}
@@ -211,7 +228,7 @@
 //                   {...register("wapanMembership")}
 //                   className="mr-2 accent-[#2D6157]"
 //                 />
-//                 Yes
+//                 {t("loanStep1.options.yes")}
 //               </label>
 //               <label className="block text-[#222]">
 //                 <input
@@ -220,7 +237,7 @@
 //                   {...register("wapanMembership")}
 //                   className="mr-2 accent-[#2D6157]"
 //                 />
-//                 No
+//                 {t("loanStep1.options.no")}
 //               </label>
 //             </div>
 //           )}
@@ -240,12 +257,13 @@
 //             loading ? "duration-300 cursor-not-allowed" : "cursor-pointer"
 //           }`}
 //         >
-//           {loading ? <LoadingSpinner /> : "Continue"}
+//           {loading ? <LoadingSpinner /> : t("loanStep1.button")}
 //         </button>
 //       </form>
 //     </div>
 //   );
 // }
+
 import chevronDown from "../../assets/chevron-down.svg";
 import chevronUp from "../../assets/chevron-up.svg";
 import LoadingSpinner from "../LoadingSpinner";
@@ -256,11 +274,12 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLoanForm } from "../../context/LoanFormContext";
 import { useTranslation } from "react-i18next";
-import { use_UserData } from "../../context/UserContext";
+// import { use_UserData } from "../../context/UserContext";
+import { getBorrowingLimit } from "../../api/apiData";
 
 export default function Step1LoanAmount() {
   const { t } = useTranslation();
-  const { userData } = use_UserData();
+  // const { userData } = use_UserData();
   const { loanFormData, updateLoanFormData, setHasUnsavedChanges } =
     useLoanForm();
   const navigate = useNavigate();
@@ -272,9 +291,18 @@ export default function Step1LoanAmount() {
   const [displayLoanPurposeForm, setDisplayLoanPurposeForm] = useState(false);
   const [displayMembershipForm, setDisplayMembershipForm] = useState(false);
   const [formError, setFormError] = useState(false);
+  const [borrowingLimit, setBorrowingLimit] = useState(0);
 
   useEffect(() => {
     setFadeIn(true);
+  }, []);
+
+  useEffect(() => {
+    const fetchBorrowingLimit = async () => {
+      const response = await getBorrowingLimit();
+      setBorrowingLimit(response.data.borrowing_limit);
+    };
+    fetchBorrowingLimit();
   }, []);
 
   const schema = yup.object({
@@ -283,7 +311,10 @@ export default function Step1LoanAmount() {
       .typeError(t("loanStep1.errors.loanAmountType"))
       .required(t("loanStep1.errors.loanAmountRequired"))
       .min(1000, t("loanStep1.errors.loanAmountMin"))
-      .max(1000000, t("loanStep1.errors.loanAmountMax")),
+      .max(
+        borrowingLimit,
+        t("loanStep1.errors.loanAmountMax", { limit: borrowingLimit })
+      ),
     loanPurpose: yup
       .string()
       .required(t("loanStep1.errors.loanPurposeRequired")),
@@ -296,9 +327,11 @@ export default function Step1LoanAmount() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    setValue,
     watch,
+    formState: { errors, isDirty },
   } = useForm({
+    mode: "onChange",
     resolver: yupResolver(schema),
     defaultValues: {
       loanAmount: loanFormData.loan_amount,
@@ -309,6 +342,7 @@ export default function Step1LoanAmount() {
   });
 
   const loanPurpose = watch("loanPurpose");
+  const wapanMembership = watch("wapanMembership");
 
   useEffect(() => {
     if (setHasUnsavedChanges) {
@@ -324,6 +358,7 @@ export default function Step1LoanAmount() {
       updateLoanFormData({
         loan_amount: data.loanAmount,
         loan_purpose: data.loanPurpose,
+        other_purpose: data.otherPurpose,
         wapan_member: data.wapanMembership === "true",
       });
 
@@ -376,7 +411,9 @@ export default function Step1LoanAmount() {
             </p>
           )}
           <p className="text-sm text-[#999] mt-1">
-            {t("loanStep1.limitNote", { limit: userData.borrowing_limit })}
+            {t("loanStep1.limitNote", {
+              limit: new Intl.NumberFormat("en-NG").format(borrowingLimit),
+            })}
           </p>
         </div>
 
@@ -391,7 +428,9 @@ export default function Step1LoanAmount() {
             onClick={() => setDisplayLoanPurposeForm(!displayLoanPurposeForm)}
           >
             <p className="text-[rgba(34,34,34,0.50)]">
-              {t("loanStep1.purposePlaceholder")}
+              {loanPurpose
+                ? t(`loanStep1.options.${loanPurpose}`)
+                : t("loanStep1.purposePlaceholder")}
             </p>
             <img
               src={displayLoanPurposeForm ? chevronUp : chevronDown}
@@ -408,15 +447,17 @@ export default function Step1LoanAmount() {
                 "RENT",
                 "OTHER",
               ].map((option) => (
-                <label key={option} className="block text-[#222]">
-                  <input
-                    type="radio"
-                    value={option}
-                    {...register("loanPurpose")}
-                    className="mr-2 accent-[#2D6157]"
-                  />
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => {
+                    setValue("loanPurpose", option, { shouldValidate: true });
+                    setDisplayLoanPurposeForm(false);
+                  }}
+                  className="text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"
+                >
                   {t(`loanStep1.options.${option}`)}
-                </label>
+                </button>
               ))}
             </div>
           )}
@@ -459,7 +500,11 @@ export default function Step1LoanAmount() {
             onClick={() => setDisplayMembershipForm(!displayMembershipForm)}
           >
             <p className="text-[rgba(34,34,34,0.50)] text-[16px]">
-              {t("loanStep1.membershipPlaceholder")}
+              {wapanMembership === "Yes"
+                ? t("loanStep1.options.yes")
+                : wapanMembership === "No"
+                ? t("loanStep1.options.no")
+                : t("loanStep1.membershipPlaceholder")}
             </p>
             <img
               src={displayMembershipForm ? chevronUp : chevronDown}
@@ -469,24 +514,25 @@ export default function Step1LoanAmount() {
           </div>
           {displayMembershipForm && (
             <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
-              <label className="block text-[#222]">
-                <input
-                  type="radio"
-                  value="true"
-                  {...register("wapanMembership")}
-                  className="mr-2 accent-[#2D6157]"
-                />
-                {t("loanStep1.options.yes")}
-              </label>
-              <label className="block text-[#222]">
-                <input
-                  type="radio"
-                  value="false"
-                  {...register("wapanMembership")}
-                  className="mr-2 accent-[#2D6157]"
-                />
-                {t("loanStep1.options.no")}
-              </label>
+              {["true", "false"].map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => {
+                    setValue(
+                      "wapanMembership",
+                      value === "true" ? "Yes" : "No",
+                      { shouldValidate: true }
+                    );
+                    setDisplayMembershipForm(false);
+                  }}
+                  className="text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"
+                >
+                  {value === "true"
+                    ? t("loanStep1.options.yes")
+                    : t("loanStep1.options.no")}
+                </button>
+              ))}
             </div>
           )}
           {errors.wapanMembership && (

@@ -153,7 +153,8 @@ import { useTranslation } from "react-i18next";
 
 export default function Step4Summary() {
   const { t } = useTranslation();
-  const { loanFormData, clearLoanFormData } = useLoanForm();
+  const { loanFormData, clearLoanFormData, setLoanConfirmationData } =
+    useLoanForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState(false);
@@ -169,10 +170,16 @@ export default function Step4Summary() {
       console.log("api data: ", response.data);
       console.log(loanFormData);
 
-      clearLoanFormData();
-      navigate("/take-a-loan/loan-repayment-overview", {
-        state: response.data,
-      });
+      // clearLoanFormData();
+      // navigate("/take-a-loan/loan-repayment-overview", {
+      //   state: response.data,
+      // });
+      setLoanConfirmationData(response.data);
+      localStorage.setItem(
+        "loanConfirmationData",
+        JSON.stringify(response.data)
+      );
+      navigate("/take-a-loan/loan-repayment-overview");
     } catch (error) {
       console.log("Something went wrong: ", error);
       setFormError(true);
@@ -209,8 +216,13 @@ export default function Step4Summary() {
           <span className="text-[rgba(34,34,34,0.50)]">
             {t("loanStep4.howMuchToBorrowLabel")}
           </span>
+          {/* <span className="font-medium">₦{loanFormData.loan_amount}</span> */}
           <span className="font-medium">
-            ₦{loanFormData.loan_amount || "0"}
+            {new Intl.NumberFormat("en-NG", {
+              style: "currency",
+              currency: "NGN",
+              minimumFractionDigits: 2,
+            }).format(loanFormData.loan_amount) || "N/A"}
           </span>
         </p>
         <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
@@ -228,7 +240,7 @@ export default function Step4Summary() {
           <span className="font-medium">
             {loanFormData.wapan_member === true
               ? t("loanStep4.yes")
-              : t("loanStep4.no")}
+              : t("loanStep4.no") || "N/A"}
           </span>
         </p>
       </div>
@@ -323,6 +335,14 @@ export default function Step4Summary() {
             </span>
           </p>
         )}
+         <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
+          <span className="text-[rgba(34,34,34,0.50)]">
+            {t("loanStep3.repaymentScheduleLabel")}
+          </span>
+          <span className="font-medium">
+            {loanFormData.repayment_schedule || "N/A"}
+          </span>
+        </p>
       </div>
 
       <button

@@ -95,11 +95,20 @@
 import { useLocation } from "react-router-dom";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import BackArrow from "../../assets/back arrow.svg";
+// import { useLoanForm } from "../../context/LoanFormContext";
+import { useNavigate } from "react-router-dom";
 
 export default function LoanFlowStepper() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const location = useLocation();
+  // const { attemptNavigation } = useLoanForm();
+
+  const handleBackArrowClick = () => {
+    navigate(-1);
+  };
 
   const steps = [
     {
@@ -126,9 +135,19 @@ export default function LoanFlowStepper() {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <p className="text-center text-[#10172E] text-[24px] pt-9 pb-16 lg:py-0 lg:my-14 font-raleway font-bold md:text-[28px]">
-         {t("loanStepper.title")}
-      </p>
+      <div className="my-6 w-full lg:flex lg:items-center">
+        <button
+          className="cursor-pointer ml-6 lg:ml-12"
+          aria-label="Go Back"
+          onClick={handleBackArrowClick}
+        >
+          <img src={BackArrow} alt="back arrow" />
+        </button>
+        <p className="flex-1 text-center text-[#10172E] text-[24px] pt-9 pb-16 lg:py-0 lg:my-14 font-raleway font-bold md:text-[28px]">
+          {t("loanStepper.title")}
+        </p>
+        {/* <div>for symmetry</div> */}
+      </div>
 
       {/* Step Labels (Desktop Only) */}
       <div className="hidden md:flex justify-between w-[98%] mx-auto md:w-[95%] mb-4">

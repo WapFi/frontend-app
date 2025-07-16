@@ -47,11 +47,19 @@ function Layout() {
 
   // --- NEW: Take a Loan Click Handler ---
   const handleTakeLoanClick = () => {
-    if (dashboardData?.active_loan) {
+    console.log("user data: ", userData);
+    if (dashboardData?.active_loan?.status === "DISBURSED") {
       // User has an existing active loan
       setShowActiveLoanModal(true);
+    } else if (
+      dashboardData?.active_loan?.status === "PENDING" &&
+      userData.phone_verified === true
+    ) {
+      navigate("/take-a-loan/loan-repayment-overview");
     } else if (dashboardData.credit_score.current_score === 0) {
       navigate("/take-a-loan/enter-bvn");
+    } else if (userData.phone_verified === false) {
+      navigate("/take-a-loan/verify-phone");
     } else {
       // User is eligible
       navigate("/take-a-loan/form/loan-amount-purpose");

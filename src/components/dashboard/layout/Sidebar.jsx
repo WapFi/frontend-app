@@ -24,6 +24,10 @@ function Sidebar({ onTakeLoanClick, setLogoutError }) {
     navigate("/credit-score");
   };
 
+   const handleSettingsClick = () => {
+    navigate("/settings");
+  };
+
   const handleLogOut = async () => {
     try {
       const response = await logOut();
@@ -205,14 +209,23 @@ function Sidebar({ onTakeLoanClick, setLogoutError }) {
           </svg>
           <p>{t("sidebar.creditScore")}</p>
         </div>
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            `2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] ${
-              isActive
-                ? "bg-[#439182] text-white p-6 rounded-[12px]"
-                : "text-[#A0B0AB] py-[8px] px-[16px]"
-            }`
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={handleSettingsClick}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleSettingsClick();
+            }
+          }}
+          className={`2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] cursor-pointer outline-none ${
+            location.pathname.startsWith("/settings")
+              ? "bg-[#439182] text-white p-6 rounded-[12px]"
+              : "text-[#A0B0AB] py-[8px] px-[16px]"
+          }`}
+          aria-current={
+            location.pathname.startsWith("/settings") ? "page" : undefined
           }
         >
           <svg
@@ -236,7 +249,7 @@ function Sidebar({ onTakeLoanClick, setLogoutError }) {
             />
           </svg>
           <p>{t("sidebar.settings")}</p>
-        </NavLink>
+        </div>
 
         <div
           role="button"

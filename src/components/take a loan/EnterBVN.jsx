@@ -4,8 +4,10 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
 import LoadingSpinner from "../LoadingSpinner";
-import axios from "../../api/axios";
+// import axios from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import { verifyIdentity } from "../../api/apiData";
+import { use_UserData } from "../../context/UserContext";
 
 export default function EnterBVN() {
   const navigate = useNavigate();
@@ -15,6 +17,8 @@ export default function EnterBVN() {
   const [fadeIn, setFadeIn] = useState(false);
   const [formError, setFormError] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  const { refreshUserData } = use_UserData();
 
   useEffect(() => {
     setFadeIn(true);
@@ -31,18 +35,18 @@ export default function EnterBVN() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schema) });
+  } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
   const onSubmit = async (data) => {
     setLoading(true);
     setFormError(false);
 
     try {
-      const response = await axios.patch("/users/verify-identity", {
-        identity_type: "bvn",
-        identity_value: data.bvn,
-      });
+      const response = await verifyIdentity("bvn", data.bvn);
       console.log("BVN Verification Success: ", response);
+
+      // refresh user data to make sure we get the latest data
+      await refreshUserData();
       setShowSuccessMessage(true);
       setTimeout(() => {
         navigate("/take-a-loan/verify-phone");

@@ -87,10 +87,12 @@
 
 //       setTimeout(() => {
 //         navigate("/take-a-loan/form/loan-amount-purpose");
+//         setLoading(false);
 //       }, 2000);
 //     } catch (error) {
 //       console.error("Code verification error:", error);
 //       setShowFormError(true);
+//       setLoading(false);
 //     } finally {
 //       setLoading(false);
 //     }
@@ -225,8 +227,6 @@
 //   );
 // }
 
-
-
 import arrowTimer from "../../assets/arrow-timer.svg";
 import { useState, useEffect, useRef } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -234,12 +234,14 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
 import LoadingSpinner from "../LoadingSpinner";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { verifyIdentity } from "../../api/apiData";
+import { use_UserData } from "../../context/UserContext";
 
 export default function VerifyPhoneNumber() {
   const [fadeIn, setFadeIn] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { userData, refreshUserData } = use_UserData();
 
   // Refs for inputs
   const firstRef = useRef(null);
@@ -264,21 +266,18 @@ export default function VerifyPhoneNumber() {
       .test("is-digit", t("verifyPhone.errors.invalid_digit"), (value) => {
         return /^\d{1}$/.test(value);
       }),
-
     secondDigit: yup
       .string()
       .required(t("verifyPhone.errors.digit_required"))
       .test("is-digit", t("verifyPhone.errors.invalid_digit"), (value) => {
         return /^\d{1}$/.test(value);
       }),
-
     thirdDigit: yup
       .string()
       .required(t("verifyPhone.errors.digit_required"))
       .test("is-digit", t("verifyPhone.errors.invalid_digit"), (value) => {
         return /^\d{1}$/.test(value);
       }),
-
     fourthDigit: yup
       .string()
       .required(t("verifyPhone.errors.digit_required"))
@@ -304,31 +303,43 @@ export default function VerifyPhoneNumber() {
 
   const { register, handleSubmit } = useForm({ resolver: yupResolver(schema) });
 
-  const onSubmit = async (otpCode) => {
-    setLoading(true);
+  // Merge react-hook-form ref and your ref
+  function mergeRefs(rhfRef, userRef) {
+    return (el) => {
+      rhfRef(el);
+      userRef.current = el;
+    };
+  }
 
+  const onSubmit = async (otpCode) => {
     const code =
       otpCode.firstDigit +
       otpCode.secondDigit +
       otpCode.thirdDigit +
       otpCode.fourthDigit;
-
     try {
-      // const response = await axios.get(`/auth/verify/${code}`);
-      //   const otpCode = localStorage.setItem("otpCode", code);
+      setLoading(true);
+      const response = await verifyIdentity("phone", code);
 
-      // console.log("Code verification success:", response.data);
+      // refresh user data to make sure we get the latest data
+      await refreshUserData();
+
+      // Simulate verification and move to next screen
       setShowFormError(false);
+      setLoading(false);
       setShowVerificationSuccess(true);
 
-      //   localStorage.removeItem("userIdentifier");
-
       setTimeout(() => {
-        navigate("/take-a-loan/form/loan-amount-purpose");
-      }, 2000);
+        if (!userData.active_loan) {
+          navigate("/take-a-loan/form/loan-amount-purpose");
+        } else if (userData.active_loan.status === "PENDING") {
+          navigate("/take-a-loan/loan-repayment-overview");
+        }
+      }, 1000);
     } catch (error) {
-      console.error("Code verification error:", error);
+      console.log("Error verifying phone number");
       setShowFormError(true);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -337,14 +348,9 @@ export default function VerifyPhoneNumber() {
   const handleResend = async () => {
     setResending(true);
     try {
-      // const identifier = localStorage.getItem("userIdentifier");
-      // await axios.post("/auth/request_reset", {
-      //   identifier,
-      // });
       setShowResendSuccess(true);
       setSecondsLeft(60);
     } catch (error) {
-      // should probably display an error message on the screen and navigate to 'Forgot Password' page
       console.error("Failed to resend code:", error);
     } finally {
       setResending(false);
@@ -413,7 +419,7 @@ export default function VerifyPhoneNumber() {
             type="text"
             maxLength={1}
             {...register("firstDigit")}
-            ref={firstRef}
+            ref={mergeRefs(register("firstDigit").ref, firstRef)}
             onChange={(e) => handleInput(e, secondRef)}
             onKeyDown={(e) => handleInput(e, secondRef)}
             className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
@@ -423,7 +429,7 @@ export default function VerifyPhoneNumber() {
             type="text"
             maxLength={1}
             {...register("secondDigit")}
-            ref={secondRef}
+            ref={mergeRefs(register("secondDigit").ref, secondRef)}
             onChange={(e) => handleInput(e, thirdRef, firstRef)}
             onKeyDown={(e) => handleInput(e, thirdRef, firstRef)}
             className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
@@ -433,7 +439,7 @@ export default function VerifyPhoneNumber() {
             type="text"
             maxLength={1}
             {...register("thirdDigit")}
-            ref={thirdRef}
+            ref={mergeRefs(register("thirdDigit").ref, thirdRef)}
             onChange={(e) => handleInput(e, fourthRef, secondRef)}
             onKeyDown={(e) => handleInput(e, fourthRef, secondRef)}
             className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
@@ -443,7 +449,7 @@ export default function VerifyPhoneNumber() {
             type="text"
             maxLength={1}
             {...register("fourthDigit")}
-            ref={fourthRef}
+            ref={mergeRefs(register("fourthDigit").ref, fourthRef)}
             onChange={(e) => handleInput(e, null, thirdRef)}
             onKeyDown={(e) => handleInput(e, null, thirdRef)}
             className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
@@ -470,7 +476,9 @@ export default function VerifyPhoneNumber() {
           type="button"
         >
           <img src={arrowTimer} alt="Arrow Timer" className="block" />
-          <p className="text-[18px] text-[#2D6157]">{t("verifyPhone.resend")}</p>
+          <p className="text-[18px] text-[#2D6157]">
+            {t("verifyPhone.resend")}
+          </p>
         </button>
       </form>
     </div>

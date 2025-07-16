@@ -116,16 +116,21 @@ export default function LoanFlowWrapper() {
   const { hasUnsavedChanges, clearLoanFormData } = useLoanForm();
   const [showModal, setShowModal] = useState(false);
 
+  // Modern navigation blocking
   const blocker = useBlocker(
     useCallback(
       ({ currentLocation, nextLocation }) => {
-        const isStillInFormFlow = nextLocation.pathname.startsWith("/take-a-loan/form");
-        const isFormFlowPage = currentLocation.pathname.startsWith("/take-a-loan/form");
-        const isSubmissionRoute = nextLocation.pathname === "/take-a-loan/loan-repayment-overview";
-        
-        return isFormFlowPage && !isStillInFormFlow && !isSubmissionRoute;
+        // Only block if there are unsaved changes AND
+        // user is navigating away from the loan form flow
+        const isStillInFormFlow =
+          nextLocation.pathname.startsWith("/take-a-loan/form") ||
+          nextLocation.pathname.startsWith(
+            "/take-a-loan/loan-repayment-overview"
+          );
+
+        return hasUnsavedChanges && !isStillInFormFlow;
       },
-      []
+      [hasUnsavedChanges]
     )
   );
 
@@ -141,7 +146,7 @@ export default function LoanFlowWrapper() {
   // Handle browser events (refresh/close)
   useEffect(() => {
     const handleBeforeUnload = (e) => {
-      if (window.location.pathname.startsWith("/take-a-loan/form")) {
+      if (hasUnsavedChanges) {
         e.preventDefault();
         e.returnValue = "";
       }
@@ -149,7 +154,7 @@ export default function LoanFlowWrapper() {
 
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, []);
+  }, [hasUnsavedChanges]);
 
   const confirmLeave = () => {
     setShowModal(false);

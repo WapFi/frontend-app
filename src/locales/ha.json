@@ -291,7 +291,7 @@
       "loanAmountType": "Da fatan za a shigar da lamba mai kyau.",
       "loanAmountRequired": "Da fatan za a shigar da adadin da kake son aro.",
       "loanAmountMin": "Mafi karancin adadin rance shine ₦1,000",
-      "loanAmountMax": "Mafi girman adadin rance shine ₦1,000,000",
+      "loanAmountMax": "Mafi girman adadin rance shine ₦{{limit}}",
       "loanPurposeRequired": "Da fatan za a zaɓi dalilin rance.",
       "membershipRequired": "Da fatan za a nuna matsayin membobinku."
     }
@@ -304,6 +304,7 @@
     "bankNameLabel": "Sunan Banki",
     "bankNamePlaceholder": "Shigar da sunan banki",
     "button": "Ci gaba",
+    "selectBankPlaceholder": "Zaɓi bankinka",
     "errors": {
       "accountNumberRequired": "Da fatan za a shigar da lambar asusu.",
       "accountNumberInvalid": "Lambar asusu dole ta kasance lambobi 10.",
@@ -329,11 +330,18 @@
       "Kubwa": "Kubwa",
       "Maitama": "Maitama"
     },
+    "repaymentScheduleLabel": "Zaɓi tsarin biyan kuɗin da kake so",
+    "repaymentScheduleOptions": {
+      "Weekly": "A kowane mako",
+      "Biweekly": "Kowane mako biyu",
+      "Monthly": "Kowane wata"
+    },
     "errors": {
       "repaymentMethodRequired": "Da fatan zaɓi hanyar biyan kuɗi.",
       "knowDropOffRequired": "Da fatan ka nuna idan ka san inda zaka biya.",
       "repaymentLocationRequired": "Da fatan zaɓi wurin biyan kuɗi.",
-      "invalidEntries": "An samu kuskuren shigarwa. Da fatan a sake gwadawa."
+      "invalidEntries": "An samu kuskuren shigarwa. Da fatan a sake gwadawa.",
+      "repaymentScheduleRequired": "Da fatan zaɓi tsarin biyan kuɗi."
     }
   },
   "loanStep4": {
@@ -394,7 +402,7 @@
     "title": "Tarihin Biyan Bashi",
     "selectMonth": "Zaɓi Wata"
   },
-    "cashRepaymentsTable": {
+  "cashRepaymentsTable": {
     "thisMonth": "Wannan Watan",
     "date": "Kwanan Wata",
     "amount": "Adadin Kudi",
@@ -423,7 +431,7 @@
     "next": "Na gaba",
     "perPage": "A shafi"
   },
-    "mixedRepaymentsTable": {
+  "mixedRepaymentsTable": {
     "note": "Don Allah a lura: Duk kayan sake amfani da kuka bayar ana juyar da su zuwa kudin su. Ci gaban biyan bashinku yana dogara ne akan darajar kudin (a cikin ₦) da kuka biya - ba tare da la'akari da nau'in abu ba.",
     "thisMonth": "Wannan Watan",
     "date": "Kwanan Wata",

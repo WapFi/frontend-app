@@ -271,6 +271,7 @@ function RepaymentsSection() {
 
   // Get latest repayment month once
   useEffect(() => {
+    console.log("In repayments")
     fetchRepayments()
       .then((res) => {
         if (res.status && res.data.repayments.length > 0) {
@@ -350,7 +351,10 @@ function RepaymentsSection() {
               <img src={searchIcon} alt="search icon" />
             </button>
           </div>
-          <Link className="text-[14px] md:text-[16px] text-[#2D6157] text-center font-semibold shrink-0">
+          <Link
+            to="/repayments"
+            className="text-[14px] md:text-[16px] text-[#2D6157] text-center font-semibold shrink-0"
+          >
             {t("repaymentsSection.viewAll")}
           </Link>
         </div>
@@ -362,7 +366,10 @@ function RepaymentsSection() {
           <p className="font-raleway font-semibold text-[24px]">
             {t("repaymentsSection.mobileTitle")}
           </p>
-          <Link className="text-[14px] md:text-[16px] text-[#2D6157] text-center font-semibold">
+          <Link
+            to="/repayments"
+            className="text-[14px] md:text-[16px] text-[#2D6157] text-center font-semibold"
+          >
             {t("repaymentsSection.viewAll")}
           </Link>
         </div>

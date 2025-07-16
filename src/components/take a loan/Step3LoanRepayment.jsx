@@ -7,10 +7,13 @@
 // import { useForm } from "react-hook-form";
 // import { useNavigate } from "react-router-dom";
 // import { useLoanForm } from "../../context/LoanFormContext";
+// import { useTranslation } from "react-i18next";
 
 // export default function Step3RepaymentUnderstanding() {
-//   const { loanFormData, updateLoanFormData } = useLoanForm();
+//   const { loanFormData, updateLoanFormData, setHasUnsavedChanges } =
+//     useLoanForm();
 //   const navigate = useNavigate();
+//   const { t } = useTranslation();
 
 //   const [loading, setLoading] = useState(false);
 //   const [fadeIn, setFadeIn] = useState(false);
@@ -27,39 +30,51 @@
 //   const schema = yup.object({
 //     repayment_method: yup
 //       .string()
-//       .required("Please select your repayment method."),
+//       .required(t("loanStep3.errors.repaymentMethodRequired")),
 //     know_drop_off: yup
 //       .string()
-//       .required("Please indicate if you know where to pay."),
-//     repayment_location: yup.string().notRequired(),
+//       .required(t("loanStep3.errors.knowDropOffRequired")),
+//     repayment_location: yup.string().when("know_drop_off", {
+//       is: "false",
+//       then: (schema) =>
+//         schema.required(t("loanStep3.errors.repaymentLocationRequired")),
+//       otherwise: (schema) => schema.notRequired(),
+//     }),
+//     repayment_schedule: yup
+//       .string()
+//       .required(t("loanStep3.errors.repaymentScheduleRequired")),
 //   });
 
 //   const {
 //     register,
 //     handleSubmit,
-//     formState: { errors },
+//     formState: { errors, isDirty },
 //     watch,
-//     reset,
 //   } = useForm({
 //     resolver: yupResolver(schema),
 //     defaultValues: {
 //       repayment_method: loanFormData.repayment_method,
 //       know_drop_off:
-//         loanFormData.recyclable_drop_off_known === true ? "Yes" : "No",
+//         loanFormData.recyclable_drop_off_known === true ? "true" : "false",
 //       repayment_location: loanFormData.repayment_location,
+//       repayment_schedule: loanFormData.repayment_schedule,
 //     },
 //   });
 
-//   // Watch for repayment method and drop off knowledge
+//   useEffect(() => {
+//     if (setHasUnsavedChanges) {
+//       setHasUnsavedChanges(isDirty);
+//     }
+//   }, [isDirty, setHasUnsavedChanges]);
+
 //   const repaymentMethod = watch("repayment_method");
 //   const knowDropOff = watch("know_drop_off");
 
-//   // Dynamic label for drop-off question
-//   let dropOffLabel = "Do you know where to make your repayment?";
-//   if (repaymentMethod === "Recylables (e.g plastics)") {
-//     dropOffLabel = "Do you know where to drop off recyclables to repay?";
-//   } else if (repaymentMethod === "Cash") {
-//     dropOffLabel = "Do you know where to make your cash repayment?";
+//   let dropOffLabel = t("loanStep3.dropOffLabelDefault");
+//   if (repaymentMethod === "RECYCLABLES") {
+//     dropOffLabel = t("loanStep3.dropOffLabelRecyclables");
+//   } else if (repaymentMethod === "CASH") {
+//     dropOffLabel = t("loanStep3.dropOffLabelCash");
 //   }
 
 //   const onSubmit = async (data) => {
@@ -70,8 +85,12 @@
 //       updateLoanFormData({
 //         repayment_method: data.repayment_method,
 //         recyclable_drop_off_known: data.know_drop_off === "true",
-//         repayment_location: data.repayment_location || "",
+//         repayment_schedule: data.repayment_schedule,
 //       });
+
+//       if (setHasUnsavedChanges) {
+//         setHasUnsavedChanges(false);
+//       }
 
 //       setTimeout(() => {
 //         navigate("/take-a-loan/form/loan-form-summary");
@@ -91,7 +110,9 @@
 //       } w-[95%] mx-auto md:w-[75%]`}
 //     >
 //       {formError && (
-//         <p className="text-red-500 mb-3">Invalid entries. Please try again.</p>
+//         <p className="text-red-500 mb-3">
+//           {t("loanStep3.errors.invalidEntries")}
+//         </p>
 //       )}
 //       <form
 //         onSubmit={handleSubmit(onSubmit)}
@@ -99,9 +120,7 @@
 //       >
 //         {/* Repayment Method */}
 //         <div>
-//           <label className="text-[#222]">
-//             How would you like to repay this loan?
-//           </label>
+//           <label className="text-[#222]">{t("loanStep3.formTitle")}</label>
 //           <div
 //             className={`flex items-center justify-between cursor-pointer mt-2 bg-white ${
 //               displayRepaymentMethodForm ? "rounded-t-lg" : "rounded-[8px]"
@@ -110,7 +129,9 @@
 //               setDisplayRepaymentMethodForm(!displayRepaymentMethodForm)
 //             }
 //           >
-//             <p className="text-[rgba(34,34,34,0.50)]">Select Option</p>
+//             <p className="text-[rgba(34,34,34,0.50)]">
+//               {t("loanStep3.selectOption")}
+//             </p>
 //             <img
 //               src={displayRepaymentMethodForm ? chevronUp : chevronDown}
 //               alt="toggle"
@@ -119,19 +140,15 @@
 //           </div>
 //           {displayRepaymentMethodForm && (
 //             <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
-//               {["Recylables (e.g plastics)", "Cash", "Both"].map((option) => (
+//               {["RECYCLABLES", "CASH", "BOTH"].map((option) => (
 //                 <label key={option} className="block text-[#222]">
 //                   <input
 //                     type="radio"
-//                     value={
-//                       option === "Recylables (e.g plastics)"
-//                         ? "Recyclables"
-//                         : option
-//                     }
+//                     value={option}
 //                     {...register("repayment_method")}
 //                     className="mr-2 accent-[#2D6157]"
 //                   />
-//                   {option}
+//                   {t(`loanStep3.repaymentOptions.${option}`)}
 //                 </label>
 //               ))}
 //             </div>
@@ -155,7 +172,7 @@
 //             onClick={() => setDisplayDropOffForm(!displayDropOffForm)}
 //           >
 //             <p className="text-[rgba(34,34,34,0.50)] text-[16px]">
-//               Select Option
+//               {t("loanStep3.selectOption")}
 //             </p>
 //             <img
 //               src={displayDropOffForm ? chevronUp : chevronDown}
@@ -172,7 +189,7 @@
 //                   {...register("know_drop_off")}
 //                   className="mr-2 accent-[#2D6157]"
 //                 />
-//                 Yes
+//                 {t("loanStep3.yes")}
 //               </label>
 //               <label className="block">
 //                 <input
@@ -181,7 +198,7 @@
 //                   {...register("know_drop_off")}
 //                   className="mr-2 accent-[#2D6157]"
 //                 />
-//                 No
+//                 {t("loanStep3.no")}
 //               </label>
 //             </div>
 //           )}
@@ -197,14 +214,18 @@
 //         {/* Location - only if user said No */}
 //         {knowDropOff === "false" && (
 //           <div className="mb-4">
-//             <label className="text-[#222]">Location</label>
+//             <label className="text-[#222]">
+//               {t("loanStep3.locationLabel")}
+//             </label>
 //             <div
 //               className={`flex items-center justify-between cursor-pointer mt-2 bg-white ${
 //                 displayLocationForm ? "rounded-t-lg" : "rounded-[8px]"
 //               }  p-[14px] border border-[rgba(0,0,0,0.08)]`}
 //               onClick={() => setDisplayLocationForm(!displayLocationForm)}
 //             >
-//               <p className="text-[rgba(34,34,34,0.50)]">Select Option</p>
+//               <p className="text-[rgba(34,34,34,0.50)]">
+//                 {t("loanStep3.selectOption")}
+//               </p>
 //               <img
 //                 src={displayLocationForm ? chevronUp : chevronDown}
 //                 alt="toggle"
@@ -221,13 +242,65 @@
 //                       {...register("repayment_location")}
 //                       className="mr-2 accent-[#2D6157]"
 //                     />
-//                     {option}
+//                     {t(`loanStep3.locations.${option}`)}
 //                   </label>
 //                 ))}
 //               </div>
 //             )}
+//             {errors.repayment_location && (
+//               <p className="text-red-600 text-sm mt-1">
+//                 {errors.repayment_location.message}
+//               </p>
+//             )}
 //           </div>
 //         )}
+
+//         <br />
+
+//         {/* Repayment Schedule */}
+
+//         <div className="mb-7">
+//           <label className="text-[#222]">
+//             {t("loanStep3.repaymentScheduleLabel")}
+//           </label>
+//           <div
+//             className={`flex items-center justify-between cursor-pointer mt-2 bg-white ${
+//               displayRepaymentMethodForm ? "rounded-t-lg" : "rounded-[8px]"
+//             }  p-[14px] border border-[rgba(0,0,0,0.08)]`}
+//             onClick={() =>
+//               setDisplayRepaymentMethodForm(!displayRepaymentMethodForm)
+//             }
+//           >
+//             <p className="text-[rgba(34,34,34,0.50)]">
+//               {t("loanStep3.selectOption")}
+//             </p>
+//             <img
+//               src={displayRepaymentMethodForm ? chevronUp : chevronDown}
+//               alt="toggle"
+//               className="ml-2"
+//             />
+//           </div>
+//           {displayRepaymentMethodForm && (
+//             <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
+//               {["WEEKLY", "BIWEEKLY", "MONTHLY"].map((option) => (
+//                 <label key={option} className="block text-[#222]">
+//                   <input
+//                     type="radio"
+//                     value={option}
+//                     {...register("repayment_schedule")}
+//                     className="mr-2 accent-[#2D6157]"
+//                   />
+//                   {t(`loanStep3.repaymentScheduleOptions.${option}`)}
+//                 </label>
+//               ))}
+//             </div>
+//           )}
+//           {errors.repayment_schedule && (
+//             <p className="text-red-600 text-sm mt-1">
+//               {errors.repayment_schedule.message}
+//             </p>
+//           )}
+//         </div>
 
 //         <button
 //           disabled={loading}
@@ -242,6 +315,7 @@
 //     </div>
 //   );
 // }
+
 import chevronDown from "../../assets/chevron-down.svg";
 import chevronUp from "../../assets/chevron-up.svg";
 import LoadingSpinner from "../LoadingSpinner";
@@ -265,6 +339,7 @@ export default function Step3RepaymentUnderstanding() {
     useState(false);
   const [displayDropOffForm, setDisplayDropOffForm] = useState(false);
   const [displayLocationForm, setDisplayLocationForm] = useState(false);
+  const [displayScheduleForm, setDisplayScheduleForm] = useState(false);
   const [formError, setFormError] = useState(false);
 
   useEffect(() => {
@@ -284,11 +359,15 @@ export default function Step3RepaymentUnderstanding() {
         schema.required(t("loanStep3.errors.repaymentLocationRequired")),
       otherwise: (schema) => schema.notRequired(),
     }),
+    repayment_schedule: yup
+      .string()
+      .required(t("loanStep3.errors.repaymentScheduleRequired")),
   });
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isDirty },
     watch,
   } = useForm({
@@ -298,6 +377,7 @@ export default function Step3RepaymentUnderstanding() {
       know_drop_off:
         loanFormData.recyclable_drop_off_known === true ? "true" : "false",
       repayment_location: loanFormData.repayment_location,
+      repayment_schedule: loanFormData.repayment_schedule,
     },
   });
 
@@ -309,6 +389,8 @@ export default function Step3RepaymentUnderstanding() {
 
   const repaymentMethod = watch("repayment_method");
   const knowDropOff = watch("know_drop_off");
+  const repaymentLocation = watch("repayment_location");
+  const repaymentSchedule = watch("repayment_schedule");
 
   let dropOffLabel = t("loanStep3.dropOffLabelDefault");
   if (repaymentMethod === "RECYCLABLES") {
@@ -325,6 +407,8 @@ export default function Step3RepaymentUnderstanding() {
       updateLoanFormData({
         repayment_method: data.repayment_method,
         recyclable_drop_off_known: data.know_drop_off === "true",
+        repayment_location: data.repayment_location,
+        repayment_schedule: data.repayment_schedule,
       });
 
       if (setHasUnsavedChanges) {
@@ -369,7 +453,9 @@ export default function Step3RepaymentUnderstanding() {
             }
           >
             <p className="text-[rgba(34,34,34,0.50)]">
-              {t("loanStep3.selectOption")}
+              {repaymentMethod
+                ? t(`loanStep3.repaymentOptions.${repaymentMethod}`)
+                : t("loanStep3.selectOption")}
             </p>
             <img
               src={displayRepaymentMethodForm ? chevronUp : chevronDown}
@@ -380,15 +466,19 @@ export default function Step3RepaymentUnderstanding() {
           {displayRepaymentMethodForm && (
             <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
               {["RECYCLABLES", "CASH", "BOTH"].map((option) => (
-                <label key={option} className="block text-[#222]">
-                  <input
-                    type="radio"
-                    value={option}
-                    {...register("repayment_method")}
-                    className="mr-2 accent-[#2D6157]"
-                  />
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => {
+                    setValue("repayment_method", option, {
+                      shouldValidate: true,
+                    });
+                    setDisplayRepaymentMethodForm(false);
+                  }}
+                  className="text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"
+                >
                   {t(`loanStep3.repaymentOptions.${option}`)}
-                </label>
+                </button>
               ))}
             </div>
           )}
@@ -411,7 +501,11 @@ export default function Step3RepaymentUnderstanding() {
             onClick={() => setDisplayDropOffForm(!displayDropOffForm)}
           >
             <p className="text-[rgba(34,34,34,0.50)] text-[16px]">
-              {t("loanStep3.selectOption")}
+              {knowDropOff === "true"
+                ? t("loanStep3.yes")
+                : knowDropOff === "false"
+                ? t("loanStep3.no")
+                : t("loanStep3.selectOption")}
             </p>
             <img
               src={displayDropOffForm ? chevronUp : chevronDown}
@@ -421,24 +515,19 @@ export default function Step3RepaymentUnderstanding() {
           </div>
           {displayDropOffForm && (
             <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
-              <label className="block text-[#222]">
-                <input
-                  type="radio"
-                  value="true"
-                  {...register("know_drop_off")}
-                  className="mr-2 accent-[#2D6157]"
-                />
-                {t("loanStep3.yes")}
-              </label>
-              <label className="block">
-                <input
-                  type="radio"
-                  value="false"
-                  {...register("know_drop_off")}
-                  className="mr-2 accent-[#2D6157]"
-                />
-                {t("loanStep3.no")}
-              </label>
+              {["true", "false"].map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => {
+                    setValue("know_drop_off", value, { shouldValidate: true });
+                    setDisplayDropOffForm(false);
+                  }}
+                  className="text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"
+                >
+                  {value === "true" ? t("loanStep3.yes") : t("loanStep3.no")}
+                </button>
+              ))}
             </div>
           )}
           {errors.know_drop_off && (
@@ -463,7 +552,9 @@ export default function Step3RepaymentUnderstanding() {
               onClick={() => setDisplayLocationForm(!displayLocationForm)}
             >
               <p className="text-[rgba(34,34,34,0.50)]">
-                {t("loanStep3.selectOption")}
+                {repaymentLocation
+                  ? t(`loanStep3.locations.${repaymentLocation}`)
+                  : t("loanStep3.selectOption")}
               </p>
               <img
                 src={displayLocationForm ? chevronUp : chevronDown}
@@ -474,15 +565,19 @@ export default function Step3RepaymentUnderstanding() {
             {displayLocationForm && (
               <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
                 {["Gwagwalada", "Kubwa", "Maitama"].map((option) => (
-                  <label key={option} className="block text-[#222]">
-                    <input
-                      type="radio"
-                      value={option}
-                      {...register("repayment_location")}
-                      className="mr-2 accent-[#2D6157]"
-                    />
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => {
+                      setValue("repayment_location", option, {
+                        shouldValidate: true,
+                      });
+                      setDisplayLocationForm(false);
+                    }}
+                    className="text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"
+                  >
                     {t(`loanStep3.locations.${option}`)}
-                  </label>
+                  </button>
                 ))}
               </div>
             )}
@@ -493,6 +588,56 @@ export default function Step3RepaymentUnderstanding() {
             )}
           </div>
         )}
+
+        <br />
+
+        {/* Repayment Schedule */}
+        <div className="mb-7">
+          <label className="text-[#222]">
+            {t("loanStep3.repaymentScheduleLabel")}
+          </label>
+          <div
+            className={`flex items-center justify-between cursor-pointer mt-2 bg-white ${
+              displayScheduleForm ? "rounded-t-lg" : "rounded-[8px]"
+            }  p-[14px] border border-[rgba(0,0,0,0.08)]`}
+            onClick={() => setDisplayScheduleForm(!displayScheduleForm)}
+          >
+            <p className="text-[rgba(34,34,34,0.50)]">
+              {repaymentSchedule
+                ? t(`loanStep3.repaymentScheduleOptions.${repaymentSchedule}`)
+                : t("loanStep3.selectOption")}
+            </p>
+            <img
+              src={displayScheduleForm ? chevronUp : chevronDown}
+              alt="toggle"
+              className="ml-2"
+            />
+          </div>
+          {displayScheduleForm && (
+            <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
+              {["Weekly", "Biweekly", "Monthly"].map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => {
+                    setValue("repayment_schedule", option, {
+                      shouldValidate: true,
+                    });
+                    setDisplayScheduleForm(false);
+                  }}
+                  className="text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"
+                >
+                  {t(`loanStep3.repaymentScheduleOptions.${option}`)}
+                </button>
+              ))}
+            </div>
+          )}
+          {errors.repayment_schedule && (
+            <p className="text-red-600 text-sm mt-1">
+              {errors.repayment_schedule.message}
+            </p>
+          )}
+        </div>
 
         <button
           disabled={loading}

@@ -38,6 +38,11 @@ function MobileMenu({ userName, onTakeLoanClick, setLogoutError }) {
     navigate("/credit-score");
   };
 
+    const handleSettingsClick = () => {
+    setMenuOpen(false);
+    navigate("/settings");
+  };
+
   const handleLogOut = async () => {
     try {
       const response = await logOut();
@@ -249,12 +254,27 @@ function MobileMenu({ userName, onTakeLoanClick, setLogoutError }) {
             <p>{t("mobile_menu.creditScore")}</p>
           </div>
 
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `flex items-center gap-3 self-stretch h-[40px] rounded-[12px] py-[8px] px-[16px] ${
-                isActive ? "text-[#439182]" : "text-[#A0B0AB]"
-              }`
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => {
+              setMenuOpen(false);
+              if (handleSettingsClick) handleSettingsClick();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setMenuOpen(false);
+                if (handleSettingsClick) handleSettingsClick();
+              }
+            }}
+            className={`2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] px-[16px] cursor-pointer outline-none ${
+              location.pathname.startsWith("/settings")
+                ? "text-[#439182]"
+                : "text-[#A0B0AB]"
+            }`}
+            aria-current={
+              location.pathname.startsWith("/settings") ? "page" : undefined
             }
           >
             <svg
@@ -278,7 +298,7 @@ function MobileMenu({ userName, onTakeLoanClick, setLogoutError }) {
               />
             </svg>
             <p>{t("mobile_menu.settings")}</p>
-          </NavLink>
+          </div>
           <div
             role="button"
             tabIndex={0}

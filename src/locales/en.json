@@ -291,10 +291,10 @@
     "button": "Continue",
     "errors": {
       "invalidEntries": "Invalid entries. Please try again.",
-      "loanAmountType": "Please enter a valid number.",
+      "loanAmountType": "Please enter a valid amount.",
       "loanAmountRequired": "Please enter the amount you want to borrow.",
       "loanAmountMin": "Minimum loan amount is ₦1,000",
-      "loanAmountMax": "Maximum loan amount is ₦1,000,000",
+      "loanAmountMax": "Maximum loan amount is ₦{{limit}}",
       "loanPurposeRequired": "Please select a purpose for the loan.",
       "membershipRequired": "Please indicate your membership status."
     }
@@ -307,6 +307,7 @@
     "bankNameLabel": "Bank Name",
     "bankNamePlaceholder": "Enter bank name",
     "button": "Continue",
+    "selectBankPlaceholder": "Select your bank",
     "errors": {
       "accountNumberRequired": "Please enter account number.",
       "accountNumberInvalid": "Account number must be 10 digits.",
@@ -332,11 +333,18 @@
       "Kubwa": "Kubwa",
       "Maitama": "Maitama"
     },
+    "repaymentScheduleLabel": "Select your preferred repayment schedule",
+    "repaymentScheduleOptions": {
+      "Weekly": "Weekly",
+      "Biweekly": "Biweekly",
+      "Monthly": "Monthly"
+    },
     "errors": {
       "repaymentMethodRequired": "Please select your repayment method.",
       "knowDropOffRequired": "Please indicate if you know where to pay.",
       "repaymentLocationRequired": "Please select your repayment location.",
-      "invalidEntries": "Invalid entries. Please try again."
+      "invalidEntries": "Invalid entries. Please try again.",
+      "repaymentScheduleRequired": "Please select your repayment schedule."
     }
   },
   "loanStep4": {
@@ -411,7 +419,7 @@
     "next": "Next",
     "perPage": "Per page"
   },
-    "recyclablesRepaymentTable": {
+  "recyclablesRepaymentTable": {
     "note": "Please Note: All recyclables you submit are converted to their cash value. Your repayment progress is calculated based on how much value (in ₦) you've repaid — regardless of the material type.",
     "thisMonth": "This Month",
     "date": "Date",
@@ -427,7 +435,7 @@
     "next": "Next",
     "perPage": "Per page"
   },
-    "mixedRepaymentsTable": {
+  "mixedRepaymentsTable": {
     "note": "Please Note: All recyclables you submit are converted to their cash value. Your repayment progress is calculated based on how much value (in ₦) you've repaid — regardless of the material type.",
     "thisMonth": "This Month",
     "date": "Date",

@@ -160,7 +160,7 @@ function ForgotPassword() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ mode: "onTouched", resolver: yupResolver(schema) });
+  } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
   // const onSubmit = (data) => {
   //   console.log(data);

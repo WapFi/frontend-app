@@ -114,11 +114,22 @@ export const fetchRepayments = async () => {
   return response.data;
 };
 
+// verify identiy, verifies BVN, NIN, Phone
+export const verifyIdentity = async (identity, value) => {
+  const response = await axios.patch("/users/verify-identity", {
+    identity_type: identity,
+    identity_value: value,
+  });
+  return response;
+};
+
+// apply for a loan
 export const applyForLoan = async (loanFormData) => {
   const response = await axios.post("/loans/apply", loanFormData);
   return response.data;
 };
 
+// confirm loan application
 export const confirmLoanApplication = async (loan_id, password) => {
   const response = await axios.post("/loans/confirm", {
     loan_id: loan_id,
@@ -131,15 +142,17 @@ export const confirmLoanApplication = async (loan_id, password) => {
 export const recordPayment = async (dashboardData) => {
   console.log(dashboardData);
 
-  const response = await axios.post("/loans/repayments", {
-    loan_id: dashboardData.active_loan._id,
+  const response = await axios.post("", {
+    loan_id: dashboardData.active_loan.loan_id,
     repayment_method: dashboardData.active_loan.repayment_method,
     plastic_weight_kg:
-      dashboardData.active_loan_repayment_method === "RECYCLABLES" || dashboardData.active_loan.repayment_method === "BOTH"
+      dashboardData.active_loan_repayment_method === "RECYCLABLES" ||
+      dashboardData.active_loan.repayment_method === "BOTH"
         ? (40 / 100) * dashboardData.active_loan.loan_amount
         : 0,
     cash_amount:
-      dashboardData.active_loan.repayment_method === "CASH" || dashboardData.active_loan.repayment_method === "BOTH"
+      dashboardData.active_loan.repayment_method === "CASH" ||
+      dashboardData.active_loan.repayment_method === "BOTH"
         ? (40 / 100) * dashboardData.active_loan.loan_amount
         : 0,
     drop_off_location: "Lagos Collection Center",
@@ -154,8 +167,14 @@ export const getLoanDetails = async (loanID) => {
   return response;
 };
 
+// get borrowing limit
+export const getBorrowingLimit = async () => {
+  const response = await axios.get("/loans/borrowing-limit");
+  return response.data;
+};
+
 // log user out
 export const logOut = async () => {
   const response = await axios.post("/auth/logout");
   return response;
-}
+};

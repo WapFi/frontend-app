@@ -1,14 +1,20 @@
+
+
 // import LoadingSpinner from "../LoadingSpinner";
 // import { useState, useEffect } from "react";
 // import * as yup from "yup";
 // import { yupResolver } from "@hookform/resolvers/yup";
 // import { useForm } from "react-hook-form";
-// import { useNavigate } from "react-router-dom";
+// import { useNavigate, useLocation } from "react-router-dom";
 // import { useLoanForm } from "../../context/LoanFormContext";
-// import { useLocation } from "react-router-dom";
+// import { useTranslation } from "react-i18next";
+// import { use_UserData } from "../../context/UserContext";
+// import banks from "../../data/banks.json";
 
 // export default function Step2BankAccount() {
-//   const { loanFormData, updateLoanFormData } = useLoanForm();
+//   const { t } = useTranslation();
+//   const { loanFormData, updateLoanFormData, setHasUnsavedChanges } =
+//     useLoanForm();
 //   const location = useLocation();
 //   const fromSummary = location.state?.fromSummary;
 
@@ -18,6 +24,8 @@
 //   const [fadeIn, setFadeIn] = useState(false);
 //   const [formError, setFormError] = useState(false);
 
+//   const { userData } = use_UserData();
+
 //   useEffect(() => {
 //     setFadeIn(true);
 //   }, []);
@@ -25,17 +33,17 @@
 //   const schema = yup.object({
 //     account_number: yup
 //       .string()
-//       .required("Please enter account number.")
-//       .matches(/^\d{10}$/, "Account number must be 10 digits."),
-//     bank_name: yup.string().required("Please enter bank name."),
+//       .required(t("loanStep2.errors.accountNumberRequired"))
+//       .matches(/^\d{10}$/, t("loanStep2.errors.accountNumberInvalid")),
+//     bank_name: yup.string().required(t("loanStep2.errors.bankNameRequired")),
 //   });
 
 //   const {
 //     register,
 //     handleSubmit,
-//     formState: { errors },
-//     reset,
+//     formState: { errors, isDirty },
 //   } = useForm({
+//     mode: "onChange",
 //     resolver: yupResolver(schema),
 //     defaultValues: {
 //       account_number: loanFormData.account_number,
@@ -43,20 +51,30 @@
 //     },
 //   });
 
+//   useEffect(() => {
+//     if (setHasUnsavedChanges) {
+//       setHasUnsavedChanges(isDirty);
+//     }
+//   }, [isDirty, setHasUnsavedChanges]);
+
 //   const onSubmit = async (data) => {
 //     setLoading(true);
 //     setFormError(false);
 
 //     try {
 //       updateLoanFormData({
-//         account_name: localStorage.getItem("bank_account_name"),
+//         // account_name: localStorage.getItem("bank_account_name"),
+//         account_name: userData.full_name,
 //         account_number: data.account_number,
 //         bank_name: data.bank_name.trim(),
 //       });
 
-//       // Navigate to Step 3
+//       if (setHasUnsavedChanges) {
+//         setHasUnsavedChanges(false);
+//       }
+
 //       setTimeout(() => {
-//        if (fromSummary) {
+//         if (fromSummary) {
 //           navigate("/take-a-loan/form/loan-form-summary");
 //         } else {
 //           navigate("/take-a-loan/form/loan-repayment-method");
@@ -77,27 +95,33 @@
 //       } w-[95%] mx-auto md:w-[75%]`}
 //     >
 //       {formError && (
-//         <p className="text-red-500 mb-3">Invalid entries. Please try again.</p>
+//         <p className="text-red-500 mb-3">{t("loanStep2.errorForm")}</p>
 //       )}
+
 //       <form
 //         onSubmit={handleSubmit(onSubmit)}
 //         className="w-full flex flex-col gap-1.5 self-stretch md:text-[18px]"
 //       >
 //         <div>
-//           <label className="text-[#222]">Bank Account Name</label>
+//           <label className="text-[#222]">
+//             {t("loanStep2.accountNameLabel")}
+//           </label>
 //           <p className="mt-2 border border-[rgba(0,0,0,0.15)] rounded-lg w-full p-3 text-[rgba(34,34,34,0.50)]">
-//             {localStorage.getItem("bank_account_name")}
+//             {/* {localStorage.getItem("bank_account_name")} */}
+//             {userData.full_name}
 //           </p>
 //         </div>
 
 //         <br />
 
 //         <div>
-//           <label className="text-[#222]">Bank Account Number</label>
+//           <label className="text-[#222]">
+//             {t("loanStep2.accountNumberLabel")}
+//           </label>
 //           <input
 //             type="text"
 //             {...register("account_number")}
-//             placeholder="Enter bank account number"
+//             placeholder={t("loanStep2.accountNumberPlaceholder")}
 //             className="mt-2 border border-[rgba(0,0,0,0.15)] rounded-lg w-full p-3 text-[rgba(34,34,34,0.50)]"
 //           />
 //           {errors.account_number && (
@@ -109,13 +133,25 @@
 
 //         <br />
 //         <div>
-//           <label className="text-[#222]">Bank Name</label>
-//           <input
+//           <label className="text-[#222]">{t("loanStep2.bankNameLabel")}</label>
+//           {/* <input
 //             type="text"
 //             {...register("bank_name")}
-//             placeholder="Enter bank name"
+//             placeholder={t("loanStep2.bankNamePlaceholder")}
 //             className="mt-2 border border-[rgba(0,0,0,0.15)] rounded-lg w-full p-3 text-[rgba(34,34,34,0.50)]"
-//           />
+//           /> */}
+//           <select
+//             {...register("bank_name")}
+//             className="mt-2 border border-[rgba(0,0,0,0.15)] rounded-lg w-full p-3 text-[rgba(34,34,34,0.50)]"
+//           >
+//             <option value="">{t("loanStep2.selectBankPlaceholder")}</option>
+//             {banks.map((bank) => (
+//               <option key={bank.code} value={bank.name}>
+//                 {bank.name}
+//               </option>
+//             ))}
+//           </select>
+
 //           {errors.bank_name && (
 //             <p className="text-red-600 text-sm mt-1">
 //               {errors.bank_name.message}
@@ -132,12 +168,14 @@
 //             loading ? "duration-300 cursor-not-allowed" : "cursor-pointer"
 //           }`}
 //         >
-//           {loading ? <LoadingSpinner /> : "Continue"}
+//           {loading ? <LoadingSpinner /> : t("loanStep2.button")}
 //         </button>
 //       </form>
 //     </div>
 //   );
 // }
+
+
 import LoadingSpinner from "../LoadingSpinner";
 import { useState, useEffect } from "react";
 import * as yup from "yup";
@@ -147,11 +185,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useLoanForm } from "../../context/LoanFormContext";
 import { useTranslation } from "react-i18next";
 import { use_UserData } from "../../context/UserContext";
+import banks from "../../data/banks.json";
+import chevronDown from "../../assets/chevron-down.svg";
+import chevronUp from "../../assets/chevron-up.svg";
 
 export default function Step2BankAccount() {
   const { t } = useTranslation();
-  const { loanFormData, updateLoanFormData, setHasUnsavedChanges } =
-    useLoanForm();
+  const { loanFormData, updateLoanFormData, setHasUnsavedChanges } = useLoanForm();
   const location = useLocation();
   const fromSummary = location.state?.fromSummary;
 
@@ -160,6 +200,7 @@ export default function Step2BankAccount() {
   const [loading, setLoading] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
   const [formError, setFormError] = useState(false);
+  const [displayBankDropdown, setDisplayBankDropdown] = useState(false);
 
   const { userData } = use_UserData();
 
@@ -178,8 +219,11 @@ export default function Step2BankAccount() {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isDirty },
   } = useForm({
+    mode: "onChange",
     resolver: yupResolver(schema),
     defaultValues: {
       account_number: loanFormData.account_number,
@@ -193,13 +237,15 @@ export default function Step2BankAccount() {
     }
   }, [isDirty, setHasUnsavedChanges]);
 
+  const bankName = watch("bank_name");
+  const selectedBank = banks.find((b) => b.name === bankName);
+
   const onSubmit = async (data) => {
     setLoading(true);
     setFormError(false);
 
     try {
       updateLoanFormData({
-        // account_name: localStorage.getItem("bank_account_name"),
         account_name: userData.full_name,
         account_number: data.account_number,
         bank_name: data.bank_name.trim(),
@@ -226,9 +272,7 @@ export default function Step2BankAccount() {
 
   return (
     <div
-      className={`${
-        fadeIn ? "opacity-100" : "opacity-0"
-      } w-[95%] mx-auto md:w-[75%]`}
+      className={`${fadeIn ? "opacity-100" : "opacity-0"} w-[95%] mx-auto md:w-[75%]`}
     >
       {formError && (
         <p className="text-red-500 mb-3">{t("loanStep2.errorForm")}</p>
@@ -239,11 +283,8 @@ export default function Step2BankAccount() {
         className="w-full flex flex-col gap-1.5 self-stretch md:text-[18px]"
       >
         <div>
-          <label className="text-[#222]">
-            {t("loanStep2.accountNameLabel")}
-          </label>
+          <label className="text-[#222]">{t("loanStep2.accountNameLabel")}</label>
           <p className="mt-2 border border-[rgba(0,0,0,0.15)] rounded-lg w-full p-3 text-[rgba(34,34,34,0.50)]">
-            {/* {localStorage.getItem("bank_account_name")} */}
             {userData.full_name}
           </p>
         </div>
@@ -251,9 +292,7 @@ export default function Step2BankAccount() {
         <br />
 
         <div>
-          <label className="text-[#222]">
-            {t("loanStep2.accountNumberLabel")}
-          </label>
+          <label className="text-[#222]">{t("loanStep2.accountNumberLabel")}</label>
           <input
             type="text"
             {...register("account_number")}
@@ -268,18 +307,63 @@ export default function Step2BankAccount() {
         </div>
 
         <br />
+
         <div>
           <label className="text-[#222]">{t("loanStep2.bankNameLabel")}</label>
-          <input
-            type="text"
-            {...register("bank_name")}
-            placeholder={t("loanStep2.bankNamePlaceholder")}
-            className="mt-2 border border-[rgba(0,0,0,0.15)] rounded-lg w-full p-3 text-[rgba(34,34,34,0.50)]"
-          />
+
+          <div
+            className={`flex items-center justify-between cursor-pointer mt-2 bg-white ${
+              displayBankDropdown ? "rounded-t-lg" : "rounded-[8px]"
+            } p-[14px] border border-[rgba(0,0,0,0.08)]`}
+            onClick={() => setDisplayBankDropdown(!displayBankDropdown)}
+          >
+            <div className="flex items-center gap-2">
+              {selectedBank ? (
+                <>
+                  <img
+                    src={selectedBank.logo}
+                    alt={selectedBank.name}
+                    className="h-6 w-6 object-contain"
+                  />
+                  <span className="text-[rgba(34,34,34,0.50)]">{selectedBank.name}</span>
+                </>
+              ) : (
+                <span className="text-[rgba(34,34,34,0.50)]">
+                  {t("loanStep2.selectBankPlaceholder")}
+                </span>
+              )}
+            </div>
+            <img
+              src={displayBankDropdown ? chevronUp : chevronDown}
+              alt="toggle"
+              className="ml-2"
+            />
+          </div>
+
+          {displayBankDropdown && (
+            <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3 max-h-[300px] overflow-y-auto">
+              {banks.map((bank) => (
+                <button
+                  type="button"
+                  key={bank.code}
+                  onClick={() => {
+                    setValue("bank_name", bank.name, { shouldValidate: true });
+                    setDisplayBankDropdown(false);
+                  }}
+                  className="flex items-center gap-2 text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"
+                >
+                  <img
+                    src={bank.logo}
+                    alt={bank.name}
+                    className="h-5 w-5 object-contain"
+                  />
+                  <span>{bank.name}</span>
+                </button>
+              ))}
+            </div>
+          )}
           {errors.bank_name && (
-            <p className="text-red-600 text-sm mt-1">
-              {errors.bank_name.message}
-            </p>
+            <p className="text-red-600 text-sm mt-1">{errors.bank_name.message}</p>
           )}
         </div>
 

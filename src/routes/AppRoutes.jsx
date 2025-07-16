@@ -173,11 +173,16 @@ import LoanRepaymentOverview from "../components/take a loan/LoanRepaymentOvervi
 // repayments
 import { RepaymentsProvider } from "../context/RepaymentsContext";
 import Repayments from "../components/repayments/Repayments";
-import RecyclablesRepaymentTable from "../components/repayments/RecyclabesRepaymentTable";
+// import RecyclablesRepaymentTable from "../components/repayments/RecyclabesRepaymentTable";
 import RepaymentsHistoryWrapper from "../components/repayments/RepaymentsHistoryWrapper";
 
 // credit scores
 import CreditScore from "../components/credit score/CreditScore";
+import SettingsWrapper from "../components/settings/SettingsWrapper";
+
+// settings
+import IdentityVerification from "../components/settings/IdentityVerification";
+import { UserContextProvider } from "../context/UserContext";
 
 const router = createBrowserRouter([
   // Public routes
@@ -219,7 +224,7 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      // Dashboard 
+      // Dashboard
       {
         path: "dashboard",
         element: <DashboardWrapper />,
@@ -261,10 +266,10 @@ const router = createBrowserRouter([
         path: "take-a-loan/verify-phone",
         element: <VerifyPhoneNumber />,
       },
-      {
-        path: "/repayments-header",
-        element: <RecyclablesRepaymentTable />,
-      },
+      // {
+      //   path: "/repayments-header",
+      //   element: <RecyclablesRepaymentTable />,
+      // },
       {
         path: "take-a-loan/form",
         element: (
@@ -289,24 +294,63 @@ const router = createBrowserRouter([
             path: "loan-form-summary",
             element: <Step4Summary />,
           },
+          // {
+          //   path: "loan-repayment-overview",
+          //   element: <LoanRepaymentOverview />,
+          // },
         ],
       },
       {
+        // path: "take-a-loan/form/loan-repayment-overview",
+        // element: <LoanRepaymentOverview />,
         path: "take-a-loan/loan-repayment-overview",
-        element: <LoanRepaymentOverview />,
+        element: (
+          <LoanFormProvider>
+            <LoanRepaymentOverview />
+          </LoanFormProvider>
+        ),
       },
 
       // credit score routes
       {
         path: "/credit-score",
-        element: <CreditScore />
-      }
-
+        element: <CreditScore />,
+      },
 
       // {
       //   path: "take-a-loan/loan-approval-modal",
       //   element: <LoanApprovalModal />,
       // },
+      {
+        path: "settings",
+        element: <SettingsWrapper></SettingsWrapper>,
+        children: [
+          {
+            path: "identity-verification",
+            element: (
+              <UserContextProvider>
+                <IdentityVerification />,
+              </UserContextProvider>
+            ),
+          },
+          // {
+          //   path: "bank-account-confirmation",
+          //   element: <Step2BankAccount />,
+          // },
+          // {
+          //   path: "loan-repayment-method",
+          //   element: <Step3LoanRepayment />,
+          // },
+          // {
+          //   path: "loan-form-summary",
+          //   element: <Step4Summary />,
+          // },
+          // {
+          //   path: "loan-repayment-overview",
+          //   element: <LoanRepaymentOverview />,
+          // },
+        ],
+      },
     ],
   },
 

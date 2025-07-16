@@ -501,6 +501,14 @@ function VerifyPhoneEmail() {
 
   const { register, handleSubmit } = useForm({ resolver: yupResolver(schema) });
 
+  // Merge react-hook-form ref and your ref
+  function mergeRefs(rhfRef, userRef) {
+    return (el) => {
+      rhfRef(el);
+      userRef.current = el;
+    };
+  }
+
   const onSubmit = async (otpCode) => {
     setLoading(true);
 
@@ -514,19 +522,18 @@ function VerifyPhoneEmail() {
       const response = await axios.get(`/auth/verify/${code}`, {});
       localStorage.setItem("otpCode", code);
 
-      console.log("Code verification success:", response.data);
       setShowFormError(false);
       setShowVerificationSuccess(true);
 
       localStorage.removeItem("userIdentifier");
 
       setTimeout(() => {
+        setLoading(false);
         navigate("/change-password");
       }, 2000);
     } catch (error) {
       console.error("Code verification error:", error);
       setShowFormError(true);
-    } finally {
       setLoading(false);
     }
   };
@@ -541,7 +548,6 @@ function VerifyPhoneEmail() {
       setShowResendSuccess(true);
       setSecondsLeft(60);
     } catch (error) {
-      // should probably display an error message on the screen and navigate to 'Forgot Password' page
       console.error("Failed to resend code:", error);
     } finally {
       setResending(false);
@@ -613,7 +619,7 @@ function VerifyPhoneEmail() {
                 type="text"
                 maxLength={1}
                 {...register("firstDigit")}
-                ref={firstRef}
+                ref={mergeRefs(register("firstDigit").ref, firstRef)}
                 onChange={(e) => handleInput(e, secondRef)}
                 onKeyDown={(e) => handleInput(e, secondRef)}
                 className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
@@ -623,7 +629,7 @@ function VerifyPhoneEmail() {
                 type="text"
                 maxLength={1}
                 {...register("secondDigit")}
-                ref={secondRef}
+                ref={mergeRefs(register("secondDigit").ref, secondRef)}
                 onChange={(e) => handleInput(e, thirdRef, firstRef)}
                 onKeyDown={(e) => handleInput(e, thirdRef, firstRef)}
                 className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
@@ -633,7 +639,7 @@ function VerifyPhoneEmail() {
                 type="text"
                 maxLength={1}
                 {...register("thirdDigit")}
-                ref={thirdRef}
+                ref={mergeRefs(register("thirdDigit").ref, thirdRef)}
                 onChange={(e) => handleInput(e, fourthRef, secondRef)}
                 onKeyDown={(e) => handleInput(e, fourthRef, secondRef)}
                 className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
@@ -643,7 +649,7 @@ function VerifyPhoneEmail() {
                 type="text"
                 maxLength={1}
                 {...register("fourthDigit")}
-                ref={fourthRef}
+                ref={mergeRefs(register("fourthDigit").ref, fourthRef)}
                 onChange={(e) => handleInput(e, null, thirdRef)}
                 onKeyDown={(e) => handleInput(e, null, thirdRef)}
                 className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"

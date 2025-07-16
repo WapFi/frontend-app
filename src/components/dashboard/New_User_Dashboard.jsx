@@ -162,14 +162,16 @@ import searchIcon from "../../assets/search icon.svg";
 import { fetchRepayments } from "../../api/apiData";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { use_UserData } from "../../context/UserContext";
 
 function New_User_Dashboard({ dashboardData }) {
+  const { userData } = use_UserData();
+
   const navigate = useNavigate();
 
   const { t } = useTranslation();
 
   // console.log("dasboard data: ", dashboardData);
-
 
   const [currentMonth, setCurrentMonth] = useState("");
   const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
@@ -181,6 +183,8 @@ function New_User_Dashboard({ dashboardData }) {
       setShowActiveLoanModal(true);
     } else if (dashboardData.credit_score.current_score === 0) {
       navigate("/take-a-loan/enter-bvn");
+    } else if (userData.phone_verified === false) {
+      navigate("/take-a-loan/verify-phone");
     } else {
       // User is eligible
       navigate("/take-a-loan/form/loan-amount-purpose");
