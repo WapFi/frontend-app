@@ -363,6 +363,7 @@ export default function Repayments() {
     const loadRepayments = async () => {
       try {
         const res = await fetchRepayments();
+        console.log("list: ", res.data.repayments);
         setRepaymentsData(res.status ? res.data.repayments : []);
       } catch (error) {
         setRepaymentsData([]);
