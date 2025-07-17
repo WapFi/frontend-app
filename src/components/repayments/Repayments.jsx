@@ -329,7 +329,7 @@ export default function Repayments() {
     if (dashboardData?.active_loan?.status === "DISBURSED") {
       setShowActiveLoanModal(true);
     } else if (
-      dashboardData?.active_loan?.status === "PENDING" &&
+      dashboardData?.pending_loan?.status === "PENDING" &&
       userData.phone_verified === true
     ) {
       navigate("/take-a-loan/loan-repayment-overview");
@@ -357,7 +357,7 @@ export default function Repayments() {
   const hasAnyRepayments = repaymentsData.length > 0;
   const loanIsPendingOrNone =
     !dashboardData.active_loan ||
-    dashboardData.active_loan.status === "PENDING";
+    dashboardData.pending_loan.status === "PENDING";
 
   useEffect(() => {
     const loadRepayments = async () => {

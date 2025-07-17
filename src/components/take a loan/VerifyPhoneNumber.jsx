@@ -331,9 +331,9 @@ export default function VerifyPhoneNumber() {
         const updatedUserData = await refreshUserData();
 
         setTimeout(() => {
-          if (!updatedUserData.active_loan) {
+          if (updatedUserData?.pending_loan?.status !== "PENDING") {
             navigate("/take-a-loan/form/loan-amount-purpose");
-          } else if (updatedUserData.active_loan.status === "PENDING") {
+          } else if (updatedUserData?.pending_loan.status === "PENDING") {
             navigate("/take-a-loan/loan-repayment-overview");
           }
         }, 1000);

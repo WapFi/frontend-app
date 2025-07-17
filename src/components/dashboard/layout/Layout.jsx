@@ -48,11 +48,11 @@ function Layout() {
   // --- NEW: Take a Loan Click Handler ---
   const handleTakeLoanClick = () => {
     console.log("user data: ", userData);
-    if (dashboardData?.active_loan?.status === "DISBURSED") {
+    if (dashboardData?.active_loan) {
       // User has an existing active loan
       setShowActiveLoanModal(true);
     } else if (
-      dashboardData?.active_loan?.status === "PENDING" &&
+      dashboardData?.pending_loan?.status === "PENDING" &&
       userData.phone_verified === true
     ) {
       navigate("/take-a-loan/loan-repayment-overview");

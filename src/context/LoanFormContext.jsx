@@ -10,7 +10,6 @@ export function LoanFormProvider({ children }) {
   const [loanFormData, setLoanFormData] = useState({
     loan_amount: "",
     loan_purpose: "",
-    // other_purpose: "",
     wapan_member: "",
     account_name: "",
     account_number: "",
@@ -21,13 +20,32 @@ export function LoanFormProvider({ children }) {
   });
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [formSubmitted, setFormSubmitted] = useState(false); // Track final submission
-  const [loanConfirmationData, setLoanConfirmationData] = useState(null);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
+  // On mount, restore saved loan application data if any
   useEffect(() => {
-    const stored = localStorage.getItem("loanConfirmationData");
-    if (stored) {
-      setLoanConfirmationData(JSON.parse(stored));
+    try {
+      const stored = localStorage.getItem("latestLoanApplicationData");
+      if (stored) {
+        const restoredData = JSON.parse(stored);
+
+        // Map API response structure to loanFormData shape
+        setLoanFormData({
+          loan_amount: restoredData.loan_amount ?? "",
+          loan_purpose: restoredData.loan_purpose ?? "",
+          wapan_member: restoredData.wapan_member ?? false,
+          account_name: restoredData.account_name ?? "",
+          account_number: restoredData.account_number ?? "",
+          bank_name: restoredData.bank_name ?? "",
+          repayment_method: restoredData.repayment_method ?? "",
+          recyclable_drop_off_known: restoredData.recyclable_drop_off_known ?? false,
+          repayment_schedule: restoredData.repayment_schedule ?? "",
+        });
+      }
+    } catch (e) {
+      console.error("Failed to restore loan form data:", e);
+      // Clear corrupted data if needed
+      localStorage.removeItem("latestLoanApplicationData");
     }
   }, []);
 
@@ -38,7 +56,6 @@ export function LoanFormProvider({ children }) {
         setHasUnsavedChanges(true);
       }
       console.log("Updated Loan Form Data:", updated);
-
       return updated;
     });
   }
@@ -47,18 +64,17 @@ export function LoanFormProvider({ children }) {
     setLoanFormData({
       loan_amount: "",
       loan_purpose: "",
-      // other_purpose: "",
       wapan_member: "",
       account_name: "",
       account_number: "",
       bank_name: "",
       repayment_method: "",
       recyclable_drop_off_known: "",
-      // repayment_location: "",
       repayment_schedule: "",
     });
     setHasUnsavedChanges(false);
-    setFormSubmitted(true); // Mark form as fully submitted
+    setFormSubmitted(true);
+    localStorage.removeItem("latestLoanApplicationData"); // Clear saved data on clear
   }
 
   return (
@@ -67,17 +83,16 @@ export function LoanFormProvider({ children }) {
         loanFormData,
         updateLoanFormData,
         clearLoanFormData,
-        loanConfirmationData,
-        setLoanConfirmationData,
         hasUnsavedChanges,
         setHasUnsavedChanges,
-        formSubmitted, // Expose submission status
+        formSubmitted,
       }}
     >
       {children}
     </LoanFormContext.Provider>
   );
 }
+
 
 // import { createContext, useContext, useState } from "react";
 

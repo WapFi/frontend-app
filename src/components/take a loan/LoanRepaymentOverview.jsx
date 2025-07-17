@@ -1,172 +1,38 @@
-// import LoadingSpinner from "../LoadingSpinner";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import { useState } from "react";
-// import { useForm } from "react-hook-form";
-// import { yupResolver } from "@hookform/resolvers/yup";
-// import * as yup from "yup";
-// import { confirmLoanApplication } from "../../api/apiData";
-
-// export default function LoanRepaymentOverview() {
-//   const location = useLocation();
-//   const apiResponse = location.state;
-
-//   const navigate = useNavigate();
-//   const schema = yup.object({
-//     password: yup
-//       .string()
-//       .required("Please enter your password")
-//       .min(8, "Password must be at least 8 characters"),
-//   });
-
-//   const {
-//     register,
-//     handleSubmit,
-//     setValue,
-//     formState: { errors },
-//   } = useForm({ mode: "onTouched", resolver: yupResolver(schema) });
-
-//   const [loading, setLoading] = useState(false);
-//   const [formError, setFormError] = useState(false);
-
-//   const onSubmit = async (passwordData) => {
-//     setLoading(true);
-//     setFormError(false);
-
-//     try {
-//       const response = await confirmLoanApplication(
-//         apiResponse._id,
-//         passwordData.password
-//       );
-
-//       setTimeout(() => {
-//         navigate("/take-a-loan/loan-approval-modal", { state: apiResponse });
-//       }, 2000);
-//     } catch (error) {
-//       console.log("Something went wrong: ", error);
-//       setFormError(true);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-//   return (
-//     <div className="w-[95%] mx-auto md:w-[80%] flex flex-col gap-3 pb-12 lg:bg-white lg:mr-34 rounded-[12px] lg:p-6 lg:my-16 border-[rgba(0,0,0,0.08)]">
-//       <div className="flex flex-col gap-2">
-//         <p className="text-[24px] text-center font-raleway font-bold md:text-[28px] py-12">
-//           Loan Terms & Repayment Overview
-//         </p>
-
-//         <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
-//           <span className="text-[rgba(34,34,34,0.50)]">
-//             How much would you like to borrow?
-//           </span>
-//           <span className="font-medium">
-//             ₦{apiResponse.loan_amount || "N/A"}
-//           </span>
-//         </p>
-//         <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
-//           <span className="text-[rgba(34,34,34,0.50)]">
-//             Loan Repayment Term
-//           </span>
-//           <span className="font-medium">
-//             {apiResponse.loan_term_months}{" "}
-//             {apiResponse.loan_term_months === 1 ? " month" : " months"}
-//           </span>
-//         </p>
-//         <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
-//           <span className="text-[rgba(34,34,34,0.50)]">
-//             Monthly Repayment (Plastics)
-//           </span>
-//           <span className="font-medium">
-//             {apiResponse.monthly_payment_plastic_kg} kg
-//           </span>
-//         </p>
-//         <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
-//           <span className="text-[rgba(34,34,34,0.50)]">
-//             Total Plastics to Repay
-//           </span>
-//           <span className="font-medium">
-//             {apiResponse.total_plastic_to_repay_kg} kg
-//           </span>
-//         </p>
-//         <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
-//           <span className="text-[rgba(34,34,34,0.50)]">Disbursement To</span>
-//           <span className="font-medium">
-//             {apiResponse.disbursement_account}
-//           </span>
-//         </p>
-//         <p className="text-[#9C6D10] font-medium">
-//           {apiResponse.early_repayment_incentive}
-//         </p>
-//       </div>
-//       <div className="flex flex-col gap-2 my-6">
-//         <p className="text-[#2D6157] pb-3">
-//           By entering your password, you confirm acceptance of the loan terms
-//           and authorize disbursement to the selected bank account.
-//         </p>
-
-//         {formError && (
-//           <p className="text-red-500 mb-3">
-//             Something went wrong. Please try again.
-//           </p>
-//         )}
-
-//         <label className="text-[#222] gap-2">
-//           Password <br />
-//           <input
-//             {...register("password")}
-//             type="password"
-//             placeholder="Enter your password"
-//             className="text-[rgba(34,34,34,0.50)] border-[#00000026] w-full gap-3 border-1 rounded-lg p-[14px] my-3"
-//           />
-//         </label>
-//         {errors.password && (
-//           <p className="text-red-500 text-sm mt-1">
-//             {errors.password?.message}
-//           </p>
-//         )}
-
-//         <form>
-//           <button
-//             disabled={loading}
-//             type="submit"
-//             onClick={handleSubmit(onSubmit)}
-//             className={`text-center w-full rounded-[50px] text-[#FFF] my-4 font-medium bg-[#439182] py-3 px-3 cursor-pointer hover:opacity-80 transition-opacity duration-300 ${
-//               loading ? "duration-300 cursor-not-allowed" : "cursor-pointer"
-//             }`}
-//           >
-//             {loading ? <LoadingSpinner /> : "Confirm and Receive Loan"}
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
-
 import BackArrow from "../../assets/back arrow.svg";
 import LoanApprovalModal from "./LoanApprovalModal";
 import { useTranslation } from "react-i18next";
 import LoadingSpinner from "../LoadingSpinner";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useLoanForm } from "../../context/LoanFormContext";
-import LoanDetails from "../dashboard/LoanDetails";
 import { confirmLoanApplication } from "../../api/apiData";
+import { useDashboard } from "../../context/DashboardContext";
+import { use_UserData } from "../../context/UserContext";
 
 export default function LoanRepaymentOverview() {
-  // const { attemptNavigation } = useLoanForm();
-  const { loanFormData, clearLoanFormData, loanConfirmationData } =
-    useLoanForm();
-
-  const account_name = loanFormData.account_name;
-
   const { t } = useTranslation();
-  // const location = useLocation();
-  // const apiResponse = location.state;
   const navigate = useNavigate();
 
+  const { loanFormData, updateLoanFormData, clearLoanFormData } = useLoanForm();
+  const { dashboardData, refreshDashboardData } = useDashboard();
+  const { userData } = use_UserData();
+
+  // This is the single source of truth for display
+  const loanDetails = dashboardData?.pending_loan;
+
+  // Local state to track if form data is ready (reconstructed if needed)
+  const [isDataReady, setIsDataReady] = useState(false);
+
+  // Local UI states
+  const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState(false);
+  const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Form validation schema
   const schema = yup.object({
     password: yup
       .string()
@@ -180,29 +46,61 @@ export default function LoanRepaymentOverview() {
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
-  const [loading, setLoading] = useState(false);
-  const [formError, setFormError] = useState(false);
-  const [showApprovalModal, setShowApprovalModal] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  // Reconstruct loanFormData from active loan and userData if empty
+  useEffect(() => {
+    // Check a key which determines if loanFormData is empty or invalid
+    if (!loanFormData.loan_amount || loanFormData.loan_amount === "") {
+      if (loanDetails) {
+        updateLoanFormData({
+          loan_amount: loanDetails.loan_amount ?? "",
+          loan_purpose: loanDetails.loan_purpose ?? "",
+          wapan_member: loanDetails.wapan_member ?? false,
+          account_name: loanDetails.bank_account.account_name ?? "",
+          account_number: loanDetails.disbursement_account ?? "",
+          bank_name: loanDetails.bank_account.bank_name ?? "",
+          repayment_method: loanDetails.repayment_method ?? "",
+          recyclable_drop_off_known:
+            loanDetails.recyclable_drop_off_known ?? false,
+          repayment_schedule: loanDetails.repayment_schedule ?? "",
+          // repayment_drop_off_location: loanDetails.repayment_location ?? "N/A",
+        });
+      }
+    }
+    setIsDataReady(true);
+  }, [loanDetails, loanFormData.loan_amount, updateLoanFormData, userData]);
+
+  // Guard rendering until form data is ready
+  if (!isDataReady) {
+    return <LoadingSpinner />;
+  }
 
   const handleBackArrowClick = () => {
-    // Explicitly go back to the summary step of the form
     navigate("/take-a-loan/form/loan-form-summary");
   };
+
   const onSubmit = async (passwordData) => {
-    console.log(loanConfirmationData);
     setLoading(true);
     setFormError(false);
 
     try {
-      await confirmLoanApplication(
-        loanConfirmationData._id,
-        passwordData.password
-      );
+      // Refresh dashboard data to ensure correct loan id
+      const freshDashboardRes = await refreshDashboardData();
+
+      localStorage.setItem("pendingLoanID", freshDashboardRes.pending_loan._id);
+
+      const loanIdToConfirm = freshDashboardRes?.pending_loan?._id;
+
+      // if (!loanIdToConfirm) {
+      //   setFormError(true);
+      //   setLoading(false);
+      //   return;
+      // }
+
+      await confirmLoanApplication(loanIdToConfirm, passwordData.password);
+
       clearLoanFormData();
-      setShowApprovalModal(true); // Show modal on success
-      // console.log("In overview page");
-      // console.log(loanConfirmationData._id);
+      localStorage.removeItem("pendingLoanID");
+      setShowApprovalModal(true);
     } catch (error) {
       setFormError(true);
     } finally {
@@ -213,7 +111,28 @@ export default function LoanRepaymentOverview() {
   const handleModalClose = () => {
     setShowApprovalModal(false);
     navigate("/dashboard");
+    refreshDashboardData();
   };
+
+  // Loading state while dashboard data fetches
+  if (dashboardData === null) {
+    return <LoadingSpinner />;
+  }
+
+  // If no active loan after loading, show this fallback
+  // if (!loanDetails) {
+  //   return (
+  //     <div className="text-center py-20">
+  //       <p className="text-xl font-semibold">{t("loanRepaymentOverview.noLoanFound")}</p>
+  //       <button
+  //         onClick={() => navigate("/take-a-loan/form/loan-amount-purpose")}
+  //         className="mt-5 text-center rounded-[50px] text-[#FFF] font-medium bg-[#439182] py-3 px-6 cursor-pointer hover:opacity-80 transition-opacity duration-300"
+  //       >
+  //         {t("loanRepaymentOverview.startNewLoan")}
+  //       </button>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -242,80 +161,66 @@ export default function LoanRepaymentOverview() {
             <span className="text-[rgba(34,34,34,0.50)]">
               {t("loanRepaymentOverview.howMuchToBorrow")}
             </span>
-            {/* <span className="font-medium">
-              ₦{apiResponse.loan_amount || "N/A"}
-              
-            </span> */}
             <span className="font-medium">
-              {
-                loanConfirmationData?.loan_amount != null // Safely access loan_amount
-                  ? new Intl.NumberFormat("en-NG", {
-                      style: "currency",
-                      currency: "NGN",
-                      minimumFractionDigits: 2,
-                    }).format(loanConfirmationData.loan_amount)
-                  : "N/A" // Placeholder if data is not available
-              }
+              {loanDetails?.loan_amount != null
+                ? new Intl.NumberFormat("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                    minimumFractionDigits: 2,
+                  }).format(loanDetails.loan_amount)
+                : "N/A"}
             </span>
           </p>
+
           <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
             <span className="text-[rgba(34,34,34,0.50)]">
               {t("loanRepaymentOverview.loanTerm")}
             </span>
-            {/* <span className="font-medium">
-              {apiResponse.loan_term_months}{" "}
-              {apiResponse.loan_term_months === 1
-                ? t("loanRepaymentOverview.oneMonth")
-                : t("loanRepaymentOverview.months")}
-            </span> */}
             <span className="font-medium">
-              {loanConfirmationData?.loan_term_months != null // Safely access loan_term_months
-                ? `${loanConfirmationData.loan_term_months} ${
-                    loanConfirmationData.loan_term_months === 1
+              {loanDetails?.loan_term_months != null
+                ? `${loanDetails.loan_term_months} ${
+                    loanDetails.loan_term_months === 1
                       ? t("loanRepaymentOverview.oneMonth")
                       : t("loanRepaymentOverview.months")
                   }`
                 : "N/A"}
             </span>
           </p>
+
           <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
             <span className="text-[rgba(34,34,34,0.50)]">
               {t("loanRepaymentOverview.monthlyRepayment")}
             </span>
-            {/* <span className="font-medium">
-              {apiResponse.monthly_payment_plastic_kg} kg
-            </span> */}
             <span className="font-medium">
-              {loanConfirmationData?.monthly_payment_plastic_kg != null // Safely access
-                ? `${loanConfirmationData.monthly_payment_plastic_kg} kg`
+              {loanDetails?.monthly_payment_plastic_kg != null
+                ? `${loanDetails.monthly_payment_plastic_kg} kg`
                 : "N/A"}
             </span>
           </p>
+
           <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
             <span className="text-[rgba(34,34,34,0.50)]">
               {t("loanRepaymentOverview.totalPlastics")}
             </span>
-            {/* <span className="font-medium">
-              {apiResponse.total_plastic_to_repay_kg} kg
-            </span> */}
             <span className="font-medium">
-              {loanConfirmationData?.total_plastic_to_repay_kg != null // Safely access
-                ? `${loanConfirmationData.total_plastic_to_repay_kg} kg`
+              {loanDetails?.total_plastic_to_repay_kg != null
+                ? `${loanDetails.total_plastic_to_repay_kg} kg`
                 : "N/A"}
             </span>
           </p>
+
           <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
             <span className="text-[rgba(34,34,34,0.50)]">
               {t("loanRepaymentOverview.disbursementTo")}
             </span>
             <span className="font-medium">
-              {account_name} (
-              {loanConfirmationData?.disbursement_account || "N/A"})
+              {loanDetails?.bank_account.account_name || "N/A"} (
+              {loanDetails?.disbursement_account || "N/A"})
             </span>
           </p>
+
           <p className="text-[#9C6D10] font-medium">
-            {/* {apiResponse.early_repayment_incentive} */}
-            {loanConfirmationData?.early_repayment_incentive || ""}
+            {loanDetails?.early_repayment_incentive || ""}
           </p>
         </div>
 
@@ -324,20 +229,8 @@ export default function LoanRepaymentOverview() {
             {t("loanRepaymentOverview.confirmationNotice")}
           </p>
 
-          {formError && (
-            <p className="text-red-500 mb-3">
-              {t("loanRepaymentOverview.formError")}
-            </p>
-          )}
-
           <label className="text-[#222] gap-2">
             {t("loanRepaymentOverview.passwordLabel")} <br />
-            {/* <input
-              {...register("password")}
-              type="password"
-              placeholder={t("loanRepaymentOverview.passwordPlaceholder")}
-              className="text-[rgba(34,34,34,0.50)] border-[#00000026] w-full gap-3 border-1 rounded-lg p-[14px] my-3"
-            /> */}
             <div className="relative w-full">
               <input
                 {...register("password")}
@@ -359,7 +252,6 @@ export default function LoanRepaymentOverview() {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    {/* Eye off icon path */}
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -375,7 +267,6 @@ export default function LoanRepaymentOverview() {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    {/* Eye icon path */}
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -399,11 +290,10 @@ export default function LoanRepaymentOverview() {
             </p>
           )}
 
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <button
               disabled={loading}
               type="submit"
-              onClick={handleSubmit(onSubmit)}
               className={`text-center w-full rounded-[50px] text-[#FFF] my-4 font-medium bg-[#439182] py-3 px-3 cursor-pointer hover:opacity-80 transition-opacity duration-300 ${
                 loading ? "duration-300 cursor-not-allowed" : "cursor-pointer"
               }`}
@@ -415,7 +305,7 @@ export default function LoanRepaymentOverview() {
       </div>
       {showApprovalModal && (
         <LoanApprovalModal
-          data={loanConfirmationData}
+          data={loanDetails} // Pass loanDetails to the modal
           onClose={handleModalClose}
         />
       )}

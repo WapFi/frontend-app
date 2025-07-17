@@ -17,6 +17,7 @@
 // }
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { fetchDashboardData } from "../api/apiData";
 
 const DashboardContext = createContext();
 
@@ -34,8 +35,33 @@ export function DashboardProvider({ children }) {
     }
   }, [dashboardData]);
 
+  const refreshDashboardData = async () => {
+    try {
+      const res = await fetchDashboardData();
+      if (res.data) {
+        setDashboardData(res.data);
+        // console.log("Dashboard data refreshed:", res.data);
+        return res.data;
+      } else {
+        console.log("Failed to fetch dashboard data:", res);
+        setDashboardData(null);
+        return null;
+      }
+    } catch (err) {
+      console.log("Error in refreshDashboardData:", err);
+      setDashboardData(null);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    refreshDashboardData();
+  }, []);
+
   return (
-    <DashboardContext.Provider value={{ dashboardData, setDashboardData }}>
+    <DashboardContext.Provider
+      value={{ dashboardData, setDashboardData, refreshDashboardData }}
+    >
       {children}
     </DashboardContext.Provider>
   );

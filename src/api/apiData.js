@@ -129,6 +129,12 @@ export const applyForLoan = async (loanFormData) => {
   return response.data;
 };
 
+// update loan details pending confirmation
+export const updatePendingLoanDetails = async (loanFormData, loanID) => {
+  const response = await axios.patch(`/loans/${loanID}/update`, loanFormData);
+  return response.data;
+}
+
 // confirm loan application
 export const confirmLoanApplication = async (loan_id, password) => {
   const response = await axios.post("/loans/confirm", {
@@ -139,27 +145,27 @@ export const confirmLoanApplication = async (loan_id, password) => {
 };
 
 // record a payment
-export const recordPayment = async (dashboardData) => {
-  console.log(dashboardData);
+// export const recordPayment = async (dashboardData) => {
+//   console.log(dashboardData);
 
-  const response = await axios.post("", {
-    loan_id: dashboardData.active_loan.loan_id,
-    repayment_method: dashboardData.active_loan.repayment_method,
-    plastic_weight_kg:
-      dashboardData.active_loan_repayment_method === "RECYCLABLES" ||
-      dashboardData.active_loan.repayment_method === "BOTH"
-        ? (40 / 100) * dashboardData.active_loan.loan_amount
-        : 0,
-    cash_amount:
-      dashboardData.active_loan.repayment_method === "CASH" ||
-      dashboardData.active_loan.repayment_method === "BOTH"
-        ? (40 / 100) * dashboardData.active_loan.loan_amount
-        : 0,
-    drop_off_location: "Lagos Collection Center",
-    receipt_number: "RCP001",
-  });
-  return response.data;
-};
+//   const response = await axios.post("", {
+//     loan_id: dashboardData.active_loan.loan_id,
+//     repayment_method: dashboardData.active_loan.repayment_method,
+//     plastic_weight_kg:
+//       dashboardData.active_loan_repayment_method === "RECYCLABLES" ||
+//       dashboardData.active_loan.repayment_method === "BOTH"
+//         ? (40 / 100) * dashboardData.active_loan.loan_amount
+//         : 0,
+//     cash_amount:
+//       dashboardData.active_loan.repayment_method === "CASH" ||
+//       dashboardData.active_loan.repayment_method === "BOTH"
+//         ? (40 / 100) * dashboardData.active_loan.loan_amount
+//         : 0,
+//     drop_off_location: "Lagos Collection Center",
+//     receipt_number: "RCP001",
+//   });
+//   return response.data;
+// };
 
 // get loan by ID
 export const getLoanDetails = async (loanID) => {
