@@ -20,11 +20,25 @@ export default function LoanRepaymentOverview() {
   const { dashboardData, refreshDashboardData } = useDashboard();
   const { userData } = use_UserData();
 
+  // Local state to track if fresh dashboard data is ready 
+  const [isDataReady, setIsDataReady] = useState(false);
+
+  useEffect(() => {
+    // Set loading to false initially to show spinner
+    setIsDataReady(false);
+
+    // Fetch the fresh dashboard data
+    const fetchData = async () => {
+      await refreshDashboardData();
+      setIsDataReady(true); // Show data after it's loaded
+    };
+
+    fetchData();
+  }, []);
+
   // This is the single source of truth for display
   const loanDetails = dashboardData?.pending_loan;
-
-  // Local state to track if form data is ready (reconstructed if needed)
-  const [isDataReady, setIsDataReady] = useState(false);
+  console.log("loan details: ", loanDetails);
 
   // Local UI states
   const [loading, setLoading] = useState(false);
@@ -66,11 +80,10 @@ export default function LoanRepaymentOverview() {
         });
       }
     }
-    setIsDataReady(true);
   }, [loanDetails, loanFormData.loan_amount, updateLoanFormData, userData]);
 
   // Guard rendering until form data is ready
-  if (!isDataReady) {
+  if (!loanDetails || !isDataReady) {
     return <LoadingSpinner />;
   }
 
@@ -113,11 +126,6 @@ export default function LoanRepaymentOverview() {
     navigate("/dashboard");
     refreshDashboardData();
   };
-
-  // Loading state while dashboard data fetches
-  if (dashboardData === null) {
-    return <LoadingSpinner />;
-  }
 
   // If no active loan after loading, show this fallback
   // if (!loanDetails) {

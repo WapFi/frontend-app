@@ -1,4 +1,3 @@
-
 import editIcon from "../../assets/edit icon.svg";
 import LoadingSpinner from "../LoadingSpinner";
 import { useLoanForm } from "../../context/LoanFormContext";
@@ -7,7 +6,7 @@ import { useState, useEffect } from "react";
 import { applyForLoan } from "../../api/apiData";
 import { useTranslation } from "react-i18next";
 import { useDashboard } from "../../context/DashboardContext";
-import {updatePendingLoanDetails} from "../../api/apiData";
+import { updatePendingLoanDetails } from "../../api/apiData";
 
 export default function Step4Summary() {
   const { t } = useTranslation();
@@ -25,20 +24,34 @@ export default function Step4Summary() {
   // };
   // getFreshDashboardData();
 
-  // console.log(loanFormData);
+  console.log("loan form data: ", loanFormData);
+  console.log("loan application data: ", localStorage.getItem("latestLoanApplicationData"));
 
-  console.log(dashboardData.pending_loan)
+  console.log("pending loan: ", dashboardData.pending_loan);
 
   const onSubmit = async () => {
     setLoading(true);
     setFormError(false);
+
+    const payload = {
+      loan_amount: loanFormData.loan_amount,
+      loan_purpose: loanFormData.loan_purpose,
+      wapan_member: loanFormData.wapan_member,
+      account_name: loanFormData.account_name,
+      account_number: loanFormData.account_number,
+      bank_name: loanFormData.bank_name,
+      recyclable_drop_off_known: loanFormData.recyclable_drop_off_known,
+      recyclable_drop_off_location: loanFormData.recyclable_drop_off_location,
+      repayment_method: loanFormData.repayment_method,
+      repayment_schedule: loanFormData.repayment_schedule,
+    };
 
     if (dashboardData.pending_loan) {
       try {
         // update loan details
         // pendingLoanID = localStorage.getItem("pendingLoanID");
         const updatedLoanDetails = await updatePendingLoanDetails(
-          loanFormData,
+          payload,
           // pendingLoanID
           dashboardData.pending_loan._id
         );
@@ -58,10 +71,10 @@ export default function Step4Summary() {
       }
     } else {
       try {
-        const response = await applyForLoan(loanFormData);
+        const response = await applyForLoan(payload);
 
         // console.log("api data: ", response.data);
-        console.log(loanFormData);
+        console.log(payload);
         localStorage.setItem(
           "latestLoanApplicationData",
           JSON.stringify(response.data)
@@ -219,7 +232,8 @@ export default function Step4Summary() {
               {t("loanStep4.repaymentLocationLabel")}
             </span>
             <span className="font-medium">
-              {loanFormData.repayment_location || "N/A"}
+              {loanFormData.recyclable_drop_off_location || "N/A"}
+
             </span>
           </p>
         )}

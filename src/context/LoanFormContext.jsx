@@ -17,6 +17,7 @@ export function LoanFormProvider({ children }) {
     repayment_method: "",
     recyclable_drop_off_known: "",
     repayment_schedule: "",
+    recyclable_drop_off_location: "",
   });
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -34,11 +35,12 @@ export function LoanFormProvider({ children }) {
           loan_amount: restoredData.loan_amount ?? "",
           loan_purpose: restoredData.loan_purpose ?? "",
           wapan_member: restoredData.wapan_member ?? false,
-          account_name: restoredData.account_name ?? "",
-          account_number: restoredData.account_number ?? "",
-          bank_name: restoredData.bank_name ?? "",
+          account_name: restoredData.bank_account?.account_name ?? "",
+          account_number: restoredData.bank_account?.account_number ?? "",
+          bank_name: restoredData.bank_account?.bank_name ?? "",
           repayment_method: restoredData.repayment_method ?? "",
           recyclable_drop_off_known: restoredData.recyclable_drop_off_known ?? false,
+          recyclable_drop_off_location: restoredData.recyclable_drop_off_location ?? "",
           repayment_schedule: restoredData.repayment_schedule ?? "",
         });
       }
@@ -71,10 +73,11 @@ export function LoanFormProvider({ children }) {
       repayment_method: "",
       recyclable_drop_off_known: "",
       repayment_schedule: "",
+      recyclable_drop_off_location: "",
     });
     setHasUnsavedChanges(false);
     setFormSubmitted(true);
-    localStorage.removeItem("latestLoanApplicationData"); // Clear saved data on clear
+    localStorage.removeItem("latestLoanApplicationData"); 
   }
 
   return (

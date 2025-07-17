@@ -357,7 +357,7 @@ export default function Repayments() {
   const hasAnyRepayments = repaymentsData.length > 0;
   const loanIsPendingOrNone =
     !dashboardData.active_loan ||
-    dashboardData.pending_loan.status === "PENDING";
+    dashboardData.pending_loan?.status === "PENDING";
 
   useEffect(() => {
     const loadRepayments = async () => {

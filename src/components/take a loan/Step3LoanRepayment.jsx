@@ -376,7 +376,7 @@ export default function Step3RepaymentUnderstanding() {
       repayment_method: loanFormData.repayment_method,
       know_drop_off:
         loanFormData.recyclable_drop_off_known === true ? "true" : "false",
-      repayment_location: loanFormData.repayment_location,
+      repayment_location: loanFormData.recyclable_drop_off_location,
       repayment_schedule: loanFormData.repayment_schedule,
     },
   });
@@ -407,7 +407,7 @@ export default function Step3RepaymentUnderstanding() {
       updateLoanFormData({
         repayment_method: data.repayment_method,
         recyclable_drop_off_known: data.know_drop_off === "true",
-        repayment_location: data.repayment_location,
+        recyclable_drop_off_location: data.repayment_location,
         repayment_schedule: data.repayment_schedule,
       });
 

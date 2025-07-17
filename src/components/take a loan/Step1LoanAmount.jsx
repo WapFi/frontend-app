@@ -337,7 +337,7 @@ export default function Step1LoanAmount() {
       loanAmount: loanFormData.loan_amount,
       loanPurpose: loanFormData.loan_purpose,
       otherPurpose: loanFormData.other_purpose,
-      wapanMembership: loanFormData.wapan_member === true ? "Yes" : "No",
+      wapanMembership: loanFormData.wapan_member,
     },
   });
 
@@ -359,7 +359,7 @@ export default function Step1LoanAmount() {
         loan_amount: data.loanAmount,
         loan_purpose: data.loanPurpose,
         other_purpose: data.otherPurpose,
-        wapan_member: data.wapanMembership === "true",
+        wapan_member: data.wapanMembership === "Yes",
       });
 
       if (setHasUnsavedChanges) {
