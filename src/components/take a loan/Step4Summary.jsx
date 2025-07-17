@@ -60,7 +60,7 @@ export default function Step4Summary() {
       try {
         const response = await applyForLoan(loanFormData);
 
-        console.log("api data: ", response.data);
+        // console.log("api data: ", response.data);
         console.log(loanFormData);
         localStorage.setItem(
           "latestLoanApplicationData",
