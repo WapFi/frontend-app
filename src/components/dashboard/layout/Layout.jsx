@@ -20,6 +20,7 @@ function Layout() {
   const { userData, setUserData } = use_UserData();
   // const [newUserRepayments, setNewUserRepayments] = false;
   const [error, setError] = useState(null);
+  const [signOut, setSignOut] = useState(null);
   const [logoutError, setLogoutError] = useState(null);
 
   useEffect(() => {
