@@ -20,38 +20,85 @@ export default function Step4Summary() {
   // useEffect to ensure loanFormData is synced from backend on mount
   useEffect(() => {
     const fetchAndSyncLoanData = async () => {
-      try {
-        const freshDashboardRes = await refreshDashboardData(); // Fetch latest from backend
-        if (freshDashboardRes && freshDashboardRes.pending_loan) {
-          // If there's a pending loan, update the context with its details
-          updateLoanFormData({
-            loan_amount: freshDashboardRes.pending_loan.loan_amount ?? "",
-            loan_purpose: freshDashboardRes.pending_loan.loan_purpose ?? "",
-            wapan_member: freshDashboardRes.pending_loan.wapan_member ?? false,
-            account_name:
-              freshDashboardRes.pending_loan.bank_account?.account_name ?? "",
-            account_number:
-              freshDashboardRes.pending_loan.disbursement_account ?? "",
-            bank_name:
-              freshDashboardRes.pending_loan.bank_account?.bank_name ?? "",
-            repayment_method:
-              freshDashboardRes.pending_loan.repayment_method ?? "",
-            recyclable_drop_off_known:
-              freshDashboardRes.pending_loan.recyclable_drop_off_known ?? false,
-            recyclable_drop_off_location:
-              freshDashboardRes.pending_loan.recyclable_drop_off_location ?? "",
-            repayment_schedule:
-              freshDashboardRes.pending_loan.repayment_schedule ?? "",
-          });
+      // 2. ADD THIS CONDITION AT THE START OF YOUR FETCH LOGIC
+      // This ensures it only runs if a pending loan exists AND it hasn't run before
+      if (dashboardData.pending_loan && !loanFormData.loan_amount) {
+        try {
+          const freshDashboardRes = await refreshDashboardData();
+          if (freshDashboardRes && freshDashboardRes.pending_loan) {
+            updateLoanFormData({
+              loan_amount: freshDashboardRes.pending_loan.loan_amount ?? "",
+              loan_purpose: freshDashboardRes.pending_loan.loan_purpose ?? "",
+              wapan_member:
+                freshDashboardRes.pending_loan.wapan_member ?? false,
+              account_name:
+                freshDashboardRes.pending_loan.bank_account?.account_name ?? "",
+              account_number:
+                freshDashboardRes.pending_loan.disbursement_account ?? "",
+              bank_name:
+                freshDashboardRes.pending_loan.bank_account?.bank_name ?? "",
+              repayment_method:
+                freshDashboardRes.pending_loan.repayment_method ?? "",
+              recyclable_drop_off_known:
+                freshDashboardRes.pending_loan.recyclable_drop_off_known ??
+                false,
+              recyclable_drop_off_location:
+                freshDashboardRes.pending_loan.recyclable_drop_off_location ??
+                "",
+              repayment_schedule:
+                freshDashboardRes.pending_loan.repayment_schedule ?? "",
+            });
+          }
+        } catch (error) {
+          console.log("Failed to refresh dashboard data for summary:", error);
         }
-      } catch (error) {
-        console.log("Failed to refresh dashboard data for summary:", error);
-        // Optionally, set an error state to inform the user
       }
     };
 
     fetchAndSyncLoanData();
-  }, [refreshDashboardData, updateLoanFormData]);
+    // Keep these dependencies. React needs to know if these change to potentially re-run.
+    // The `initialLoanDataSynced` dependency will stop the loop.
+  }, [
+    dashboardData.pending_loan,
+    refreshDashboardData,
+    updateLoanFormData,
+  ]);
+
+  // // useEffect to ensure loanFormData is synced from backend on mount
+  // useEffect(() => {
+  //   const fetchAndSyncLoanData = async () => {
+  //     try {
+  //       const freshDashboardRes = await refreshDashboardData(); // Fetch latest from backend
+  //       if (freshDashboardRes && freshDashboardRes.pending_loan) {
+  //         // If there's a pending loan, update the context with its details
+  //         updateLoanFormData({
+  //           loan_amount: freshDashboardRes.pending_loan.loan_amount ?? "",
+  //           loan_purpose: freshDashboardRes.pending_loan.loan_purpose ?? "",
+  //           wapan_member: freshDashboardRes.pending_loan.wapan_member ?? false,
+  //           account_name:
+  //             freshDashboardRes.pending_loan.bank_account?.account_name ?? "",
+  //           account_number:
+  //             freshDashboardRes.pending_loan.disbursement_account ?? "",
+  //           bank_name:
+  //             freshDashboardRes.pending_loan.bank_account?.bank_name ?? "",
+  //           repayment_method:
+  //             freshDashboardRes.pending_loan.repayment_method ?? "",
+  //           recyclable_drop_off_known:
+  //             freshDashboardRes.pending_loan.recyclable_drop_off_known ?? false,
+  //           recyclable_drop_off_location:
+  //             freshDashboardRes.pending_loan.recyclable_drop_off_location ?? "",
+  //           repayment_schedule:
+  //             freshDashboardRes.pending_loan.repayment_schedule ?? "",
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.log("Failed to refresh dashboard data for summary:", error);
+  //       // Optionally, set an error state to inform the user
+  //     }
+  //   };
+
+  //   fetchAndSyncLoanData();
+  // }, [refreshDashboardData, updateLoanFormData]);
 
   console.log("loan form data: ", loanFormData);
   console.log(
@@ -59,7 +106,7 @@ export default function Step4Summary() {
     localStorage.getItem("latestLoanApplicationData")
   );
 
-  console.log("pending loan: ", dashboardData.pending_loan);
+  // console.log("pending loan: ", dashboardData.pending_loan);
 
   const onSubmit = async () => {
     setLoading(true);
@@ -79,6 +126,7 @@ export default function Step4Summary() {
     };
 
     if (dashboardData.pending_loan) {
+      console.log("Updating loan");
       try {
         // update loan details
         // pendingLoanID = localStorage.getItem("pendingLoanID");

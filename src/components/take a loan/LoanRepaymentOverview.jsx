@@ -75,6 +75,7 @@ export default function LoanRepaymentOverview() {
           repayment_method: loanDetails.repayment_method ?? "",
           recyclable_drop_off_known:
             loanDetails.recyclable_drop_off_known ?? false,
+          recyclable_drop_off_location: loanDetails.recyclable_drop_off_location ?? "",
           repayment_schedule: loanDetails.repayment_schedule ?? "",
           // repayment_drop_off_location: loanDetails.repayment_location ?? "N/A",
         });
