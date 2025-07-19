@@ -253,7 +253,6 @@ function SignIn() {
     setLoading(true);
 
     try {
-      console.log(loginData.rememberMe);
       if (loginData.rememberMe) {
         localStorage.setItem("rememberedEmailPhone", loginData.emailPhone);
       } else {
@@ -270,16 +269,20 @@ function SignIn() {
         // { withCredentials: true }
       );
 
-      // console.log("Login success:", response.data);
       localStorage.setItem("auth_token", response.data.token);
       // console.log("Token saved:", response.data.token);
       setShowFormError(false);
       setShowSuccessMessage(true);
 
       // navigate to dashboard
-      setTimeout(() => {
+      const userRole = response.data?.role || null;
+      if (userRole === "WAPFI_SUPER_ADMIN" || userRole === "WAPFI_ADMIN") {
+        console.log("Admin user detected");
+        navigate("/admin");
+      } else {
+        console.log("User detected");
         navigate("/dashboard");
-      }, 2000);
+      }
     } catch (error) {
       console.error("Login error:", error);
       setShowFormError(true);

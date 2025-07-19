@@ -28,3 +28,6 @@ dist-ssr
 
 localhost.pem
 localhost-key.pem
+
+test.py
+combined_code.txt

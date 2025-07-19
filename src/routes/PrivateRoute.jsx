@@ -52,7 +52,7 @@ import axios from "../api/axios";
 import PageLoader from "../components/PageLoader";
 
 function PrivateRoute({ children }) {
-  const [isAuth, setIsAuth] = useState(null);
+  const [authStatus, setAuthStatus] = useState(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -60,24 +60,34 @@ function PrivateRoute({ children }) {
         const res = await axios.get("/users/me");
 
         if (res?.data?.status === true) {
-          // console.log("authenticated");
-          // console.log(res.data);
-          setIsAuth(true);
+          const userRole = res?.data?.data?.role;
+          
+          if (userRole === "WAPFI_ADMIN" || userRole === "WAPFI_SUPER_ADMIN") {
+            setAuthStatus("admin");
+          } else if (userRole === "WAPFI_USER") {
+            setAuthStatus("user");
+          } else {
+            setAuthStatus("unauthorized");
+          }
         } else {
-          setIsAuth(false);
+          setAuthStatus("unauthenticated");
         }
       } catch (error) {
         console.log("request failed.");
-        setIsAuth(false);
+        setAuthStatus("unauthenticated");
       }
     };
 
     checkAuth();
   }, []);
 
-  if (isAuth === null) return  <PageLoader />;
+  if (authStatus === null) return <PageLoader />;
 
-  if (isAuth === false) return <Navigate to="/sign-in" replace />;
+  if (authStatus === "unauthenticated") return <Navigate to="/sign-in" replace />;
+  
+  if (authStatus === "admin") return <Navigate to="/admin/dashboard" replace />;
+
+  if (authStatus === "unauthorized") return <Navigate to="/sign-in" replace />;
 
   return children;
 }
