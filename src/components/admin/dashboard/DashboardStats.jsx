@@ -38,28 +38,51 @@ function DashboardStats() {
 				if (response.status && response.data) {
 					const dashboardData = response.data;
 					
+					// Calculate percentage changes from chart data
+					const calculateChange = (data) => {
+						if (!data || data.length < 2) return { change: "0%", trend: "up" };
+						
+						const recent = data.slice(-3).reduce((sum, item) => sum + (item.value || 0), 0);
+						const previous = data.slice(-6, -3).reduce((sum, item) => sum + (item.value || 0), 0);
+						
+						if (previous === 0) return { change: "0%", trend: "up" };
+						
+						const percentageChange = ((recent - previous) / previous) * 100;
+						return {
+							change: `${percentageChange >= 0 ? '+' : ''}${percentageChange.toFixed(1)}%`,
+							trend: percentageChange >= 0 ? "up" : "down"
+						};
+					};
+
+					const loansChange = calculateChange(dashboardData.chart_data?.last_7_days);
+					const usersChange = calculateChange(dashboardData.chart_data?.user_growth);
+					const repaymentChange = calculateChange(dashboardData.chart_data?.repayment_trends);
+
 					// Format the stats with real data
 					const formattedStats = [
 						{
 							label: "Total Loans Disbursed",
 							value: `₦ ${dashboardData.total_loans_disbursed?.toLocaleString() || '0'}`,
-							change: "+0%", // You can calculate this from historical data
-							trend: "up",
-							color: "green"
+							change: loansChange.change,
+							trend: loansChange.trend,
+							color: loansChange.trend === "up" ? "green" : "red",
+							chartData: dashboardData.chart_data?.last_7_days || []
 						},
 						{
 							label: "Active Users",
 							value: dashboardData.active_users?.toLocaleString() || '0',
-							change: "+0%", // You can calculate this from historical data
-							trend: "up", 
-							color: "blue"
+							change: usersChange.change,
+							trend: usersChange.trend, 
+							color: usersChange.trend === "up" ? "blue" : "red",
+							chartData: dashboardData.chart_data?.user_growth || []
 						},
 						{
 							label: "Repayment Rate",
 							value: `${dashboardData.repayment_rate?.toFixed(1) || '0'}%`,
-							change: "0%", // You can calculate this from historical data
-							trend: dashboardData.repayment_rate > 80 ? "up" : "down",
-							color: dashboardData.repayment_rate > 80 ? "green" : "red"
+							change: repaymentChange.change,
+							trend: repaymentChange.trend,
+							color: repaymentChange.trend === "up" ? "green" : "red",
+							chartData: dashboardData.chart_data?.repayment_trends || []
 						}
 					];
 					
@@ -146,7 +169,7 @@ function DashboardStats() {
 							</div>
 
 							<div className="mt-3">
-								<DashboardChart />
+								<DashboardChart data={stat.chartData} chartType="loans" />
 							</div>
 						</div>
 					</div>
