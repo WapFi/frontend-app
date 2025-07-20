@@ -1,10 +1,49 @@
 import { useState } from "react";
+import { updateUserStatus } from "../../../api/adminApi";
+import { toast } from 'react-toastify';
 
-function UserDetailsModal({ user, onClose }) {
-  const [showBlockModal, setShowBlockModal] = useState(false);
-  const [showDeactivateModal, setShowDeactivateModal] = useState(false);
+function UserDetailsModal({ user, onClose, onUserUpdate }) {
+	const [showBlockModal, setShowBlockModal] = useState(false);
+	const [showDeactivateModal, setShowDeactivateModal] = useState(false);
+	const [loading, setLoading] = useState(false);
 
-  if (!user) return null;
+	if (!user) return null;
+
+	const handleBlockUser = async () => {
+		try {
+			setLoading(true);
+			await updateUserStatus(user.id, 'INACTIVE');
+			toast.success('User blocked successfully');
+			setShowBlockModal(false);
+			if (onUserUpdate) {
+				onUserUpdate();
+			}
+			onClose();
+		} catch (error) {
+			console.error('Error blocking user:', error);
+			toast.error('Failed to block user. Please try again.');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const handleDeactivateUser = async () => {
+		try {
+			setLoading(true);
+			await updateUserStatus(user.id, 'DEACTIVATED');
+			toast.success('User deactivated successfully');
+			setShowDeactivateModal(false);
+			if (onUserUpdate) {
+				onUserUpdate();
+			}
+			onClose();
+		} catch (error) {
+			console.error('Error deactivating user:', error);
+			toast.error('Failed to deactivate user. Please try again.');
+		} finally {
+			setLoading(false);
+		}
+	};
 
   return (
     <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -35,7 +74,7 @@ function UserDetailsModal({ user, onClose }) {
 
 				<div>
 					<h3 className="text-lg font-medium text-gray-900">{user.name}</h3>
-					<p className="text-sm text-gray-500">Tier 1</p>
+					<p className="text-sm text-gray-500">Tier {user.tier}</p>
 
 					<div className="flex items-center space-x-6">
 						{/* Phone with icon */}
@@ -64,11 +103,11 @@ function UserDetailsModal({ user, onClose }) {
 						<div className="flex flex-col">
 							<p className="text-xs text-gray-500 tracking-wide mb-1">BVN</p>
 							<div className={`flex items-center space-x-1 px-2 py-1 rounded border ${
-								user.bvn_verified_status 
+								user.bvnVerified 
 									? 'border-green-500 text-green-600' 
 									: 'border-red-500 text-red-500'
 							}`}>
-								{user.bvn_verified_status ? (
+								{user.bvnVerified ? (
 									<>
 										<div className="w-3 h-3">
 										<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,11 +135,11 @@ function UserDetailsModal({ user, onClose }) {
 						<div className="flex flex-col">
 							<span className="text-xs text-gray-500 tracking-wide mb-1">Phone Number</span>
 							<div className={`flex items-center space-x-1 px-2 py-1 rounded border ${
-								user.phone_verified_status 
+								user.phoneVerified 
 									? 'border-green-500 text-green-600' 
 									: 'border-red-500 text-red-500'
 							}`}>
-								{user.phone_verified_status ? (
+								{user.phoneVerified ? (
 									<>
 										<div className="w-3 h-3 ">
 										<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -195,15 +234,12 @@ function UserDetailsModal({ user, onClose }) {
             <p className="text-gray-600 mb-6">Are you sure you want to block this user?</p>
             <div className="flex space-x-3 pb-8">
               <button
-                onClick={() => {
-                  // Handle block user action here
-                  console.log('Blocking user:', user.id);
-                  setShowBlockModal(false);
-                }}
+                onClick={handleBlockUser}
+                disabled={loading}
                 style={{background: "#B88E00"}}
-                className="flex-1 text-white py-2 px-4 rounded-full font-medium hover:opacity-90 transition-opacity"
+                className="flex-1 text-white py-2 px-4 rounded-full font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Block User
+                {loading ? 'Blocking...' : 'Block User'}
               </button>
               <button
                 onClick={() => setShowBlockModal(false)}
@@ -224,15 +260,12 @@ function UserDetailsModal({ user, onClose }) {
             <p className="text-gray-600 mb-6">Are you sure you want to deactivate this user?</p>
             <div className="flex space-x-3 pb-8">
               <button
-                onClick={() => {
-                  // Handle deactivate user action here
-                  console.log('Deactivating user:', user.id);
-                  setShowDeactivateModal(false);
-                }}
+                onClick={handleDeactivateUser}
+                disabled={loading}
                 style={{background: "#B88E00"}}
-                className="flex-1 text-white py-2 px-4 rounded-full font-medium hover:opacity-90 transition-opacity"
+                className="flex-1 text-white py-2 px-4 rounded-full font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Deactivate User
+                {loading ? 'Deactivating...' : 'Deactivate User'}
               </button>
               <button
                 onClick={() => setShowDeactivateModal(false)}
@@ -244,6 +277,7 @@ function UserDetailsModal({ user, onClose }) {
           </div>
         </div>
       )}
+
     </div>
   );
 }

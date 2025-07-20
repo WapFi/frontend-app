@@ -5,7 +5,7 @@ function AdminHeader({ onMenuClick }) {
   const [showProfile, setShowProfile] = useState(false);
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
+    <header className="" style={{backgroundColor: "#F7F7F6"}}>
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex justify-end items-center h-16">
           {/* Mobile menu button */}

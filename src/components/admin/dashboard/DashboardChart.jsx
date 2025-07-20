@@ -8,18 +8,18 @@ function DashboardChart({ data = [], chartType = 'loans' }) {
 			 item.month ? new Date(item.month + '-01').toLocaleDateString('en-US', { month: 'short' }) : 
 			 `Day ${index + 1}`) :
 			`Point ${index + 1}`,
-		uv: item.value || 0
+		value: item.value || 0
 	}));
 
 	// If no data, use fallback data
 	const fallbackData = [
-		{ name: "Mon", uv: 4000 },
-		{ name: "Tue", uv: 3000 },
-		{ name: "Wed", uv: 2000 },
-		{ name: "Thu", uv: 2780 },
-		{ name: "Fri", uv: 1890 },
-		{ name: "Sat", uv: 2390 },
-		{ name: "Sun", uv: 3490 }
+		{ name: "Mon", value: 4000 },
+		{ name: "Tue", value: 3000 },
+		{ name: "Wed", value: 2000 },
+		{ name: "Thu", value: 2780 },
+		{ name: "Fri", value: 1890 },
+		{ name: "Sat", value: 2390 },
+		{ name: "Sun", value: 3490 }
 	];
 
 	const finalData = chartData.length > 0 ? chartData : fallbackData;
@@ -36,7 +36,7 @@ function DashboardChart({ data = [], chartType = 'loans' }) {
 				<XAxis dataKey="name" hide={true} />
 				<YAxis hide={true} />
 				<Tooltip />
-				<Area type="monotone" dataKey="uv" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)" />
+				<Area type="monotone" dataKey="value" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)" />
 				</AreaChart>
 
 			</ResponsiveContainer>

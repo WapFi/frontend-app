@@ -42,8 +42,8 @@ function DashboardStats() {
 					const calculateChange = (data) => {
 						if (!data || data.length < 2) return { change: "0%", trend: "up" };
 						
-						const recent = data.slice(-3).reduce((sum, item) => sum + (item.value || 0), 0);
-						const previous = data.slice(-6, -3).reduce((sum, item) => sum + (item.value || 0), 0);
+						const recent = data.slice(-7).reduce((sum, item) => sum + (item.value || 0), 0);
+						const previous = data.slice(-14, -7).reduce((sum, item) => sum + (item.value || 0), 0);
 						
 						if (previous === 0) return { change: "0%", trend: "up" };
 						
@@ -54,7 +54,7 @@ function DashboardStats() {
 						};
 					};
 
-					const loansChange = calculateChange(dashboardData.chart_data?.last_7_days);
+					const loansChange = calculateChange(dashboardData.chart_data?.last_30_days);
 					const usersChange = calculateChange(dashboardData.chart_data?.user_growth);
 					const repaymentChange = calculateChange(dashboardData.chart_data?.repayment_trends);
 
@@ -66,7 +66,7 @@ function DashboardStats() {
 							change: loansChange.change,
 							trend: loansChange.trend,
 							color: loansChange.trend === "up" ? "green" : "red",
-							chartData: dashboardData.chart_data?.last_7_days || []
+							chartData: dashboardData.chart_data?.last_30_days || []
 						},
 						{
 							label: "Active Users",

@@ -8,6 +8,7 @@ function AdminDashboard() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUserModal, setShowUserModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleUserClick = (user) => {
     setSelectedUser(user);
@@ -17,6 +18,11 @@ function AdminDashboard() {
   const handleCloseUserModal = () => {
     setShowUserModal(false);
     setSelectedUser(null);
+  };
+
+  const handleUserUpdate = () => {
+    // This will trigger a refresh of the user table
+    // The UserManagementTable will re-fetch data when props change
   };
 
   return (
@@ -31,7 +37,7 @@ function AdminDashboard() {
       <DashboardStats />
 
 		{/* User Management Table */}
-		<div className="bg-white rounded-lg shadow">
+		<div className="bg-white rounded-xl shadow">
 			<div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
 
 				<div>
@@ -53,6 +59,8 @@ function AdminDashboard() {
 						<input
 							type="text"
 							placeholder="Search"
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
 							className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
 						/>
 						<svg className="w-4 h-4 absolute left-2.5 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,13 +69,18 @@ function AdminDashboard() {
 					</div>
 				</div>
 
-				<div>
+				{/* <div>
 					<a className="text-white px-4 py-2 rounded-md text-sm font-medium text-yellow-500 font-bold">
 						View All
 					</a>
-				</div>
+				</div> */}
 			</div>
-			<UserManagementTable onUserClick={handleUserClick} />
+
+			<UserManagementTable 
+				onUserClick={handleUserClick} 
+				searchTerm={searchTerm}
+				selectedDate={selectedDate}
+			/>
 		</div>
 
       {/* User Details Modal */}
@@ -75,6 +88,7 @@ function AdminDashboard() {
         <UserDetailsModal 
           user={selectedUser} 
           onClose={handleCloseUserModal}
+          onUserUpdate={handleUserUpdate}
         />
       )}
     </div>

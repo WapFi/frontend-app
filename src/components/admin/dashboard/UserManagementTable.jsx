@@ -1,12 +1,12 @@
 import UserAvatar from "../../common/UserAvatar";
-
 import { useState, useEffect } from "react";
 import { getUsers } from "../../../api/adminApi";
 
-function UserManagementTable({ onUserClick }) {
+function UserManagementTable({ onUserClick, onUserUpdate, searchTerm = '', selectedDate = '' }) {
 	const [users, setUsers] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [perPage, setPerPage] = useState(10);
 	const [pagination, setPagination] = useState({
 		currentPage: 1,
 		totalPages: 1,
@@ -15,12 +15,18 @@ function UserManagementTable({ onUserClick }) {
 
 	useEffect(() => {
 		fetchUsers();
-	}, []);
+	}, [perPage, searchTerm, selectedDate]);
 
-	const fetchUsers = async (page = 1, search = '') => {
+	const fetchUsers = async (page = 1, search = '', startDate = '', endDate = '') => {
 		try {
 			setLoading(true);
-			const response = await getUsers({ page, limit: 10, search });
+			const response = await getUsers({ 
+				page, 
+				limit: perPage, 
+				search: search || searchTerm,
+				start_date: startDate || selectedDate,
+				// end_date: endDate || selectedDate
+			});
 			
 			if (response.status && response.data) {
 				const { users: userData, total_users, total_pages, current_page } = response.data;
@@ -35,7 +41,10 @@ function UserManagementTable({ onUserClick }) {
 					outstandingLoan: `₦ ${user.outstanding_loan?.toLocaleString() || '0'}`,
 					amountRepaid: `₦ ${user.amount_repaid?.toLocaleString() || '0'}`,
 					lastLoanDate: user.loan_due_date ? new Date(user.loan_due_date).toLocaleDateString() : 'No loans',
-					avatar: user.avatar || null
+					avatar: user.avatar || null,
+                    bvnVerified: user.bvn_verified,
+                    phoneVerified: user.phone_verified,
+                    ninVerified: user.nin_verified
 				}));
 				
 				setUsers(transformedUsers);
@@ -51,6 +60,15 @@ function UserManagementTable({ onUserClick }) {
 		} finally {
 			setLoading(false);
 		}
+	};
+
+	const handlePageChange = (page) => {
+		fetchUsers(page, searchTerm, selectedDate, selectedDate);
+	};
+
+	const handlePerPageChange = (newPerPage) => {
+		setPerPage(newPerPage);
+		setPagination(prev => ({ ...prev, currentPage: 1 }));
 	};
 	if (loading) {
 		return (
@@ -81,7 +99,7 @@ function UserManagementTable({ onUserClick }) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200">
         <thead className="">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -111,7 +129,7 @@ function UserManagementTable({ onUserClick }) {
                   <UserAvatar user={user} />
                   <div className="ml-3">
                     <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                    <div className="text-sm text-gray-500">{user.email}</div>
+                    <div className="text-sm text-gray-500">{user.phone}</div>
                   </div>
                 </div>
               </td>
@@ -132,6 +150,51 @@ function UserManagementTable({ onUserClick }) {
           ))}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      <div className="mt-6 flex items-center justify-between p-4">
+        <div className="flex items-center space-x-4">
+          <span className="text-sm text-gray-700">
+            Showing {((pagination.currentPage - 1) * perPage) + 1} to {Math.min(pagination.currentPage * perPage, pagination.totalUsers)} of {pagination.totalUsers} results
+          </span>
+          
+          <div className="flex items-center space-x-2">
+            <label className="text-sm text-gray-700">Per page:</label>
+            <select
+              value={perPage}
+              onChange={(e) => handlePerPageChange(parseInt(e.target.value))}
+              className="px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => handlePageChange(pagination.currentPage - 1)}
+            disabled={pagination.currentPage <= 1}
+            className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Previous
+          </button>
+          
+          <span className="px-3 py-1 text-sm text-gray-700">
+            Page {pagination.currentPage} of {pagination.totalPages}
+          </span>
+          
+          <button
+            onClick={() => handlePageChange(pagination.currentPage + 1)}
+            disabled={pagination.currentPage >= pagination.totalPages}
+            className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
