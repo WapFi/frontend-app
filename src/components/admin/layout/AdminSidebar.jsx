@@ -11,6 +11,7 @@ const navigation = [
     { name: "BVN Verification", href: "/admin/bvn-verification", icon: "bvn" },
     { name: "NIN Verification", href: "/admin/nin-verification", icon: "nin" },
     { name: "Analytics", href: "/admin/analytics", icon: "analytics" },
+    { name: "Admin Management", href: "/admin/admin-management", icon: "admin" },
 ];
 
 function AdminSidebar({ isOpen, onClose }) {
@@ -20,10 +21,10 @@ function AdminSidebar({ isOpen, onClose }) {
     const handleLogout = async () => {
         setIsLoggingOut(true);
         try {
-        // Add logout API call here
-        navigate("/sign-in");
+            localStorage.removeItem("auth_token");
+            navigate("/sign-in");
         } catch (error) {
-        console.error("Logout failed:", error);
+            console.error("Logout failed:", error);
         }
         setIsLoggingOut(false);
     };
@@ -35,8 +36,8 @@ function AdminSidebar({ isOpen, onClose }) {
         case "dashboard":
             return (
                 <svg className="ml-3" xmlns="http://www.w3.org/2000/svg" width="19" height="22" viewBox="0 0 19 22" fill="none">
-                <path d="M3.26631 20.5628C2.01469 20.5628 1 19.5215 1 18.2359V8.88379C1 8.17723 1.31344 7.50786 1.85 7.06692L8.08369 1.94779C8.48197 1.61798 8.98288 1.4375 9.5 1.4375C10.0171 1.4375 10.518 1.61798 10.9163 1.94779L17.1489 7.06692C17.6866 7.50786 18 8.17723 18 8.88379V18.2359C18 19.5215 16.9853 20.5628 15.7337 20.5628H3.26631Z" stroke="#A0B0AB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M6.84381 20.563V14.7192C6.84381 14.1557 7.06769 13.6152 7.46621 13.2166C7.86472 12.8181 8.40523 12.5942 8.96881 12.5942H10.0313C10.5949 12.5942 11.1354 12.8181 11.5339 13.2166C11.9324 13.6152 12.1563 14.1557 12.1563 14.7192V20.563" stroke="#A0B0AB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3.26631 20.5628C2.01469 20.5628 1 19.5215 1 18.2359V8.88379C1 8.17723 1.31344 7.50786 1.85 7.06692L8.08369 1.94779C8.48197 1.61798 8.98288 1.4375 9.5 1.4375C10.0171 1.4375 10.518 1.61798 10.9163 1.94779L17.1489 7.06692C17.6866 7.50786 18 8.17723 18 8.88379V18.2359C18 19.5215 16.9853 20.5628 15.7337 20.5628H3.26631Z" stroke="#A0B0AB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M6.84381 20.563V14.7192C6.84381 14.1557 7.06769 13.6152 7.46621 13.2166C7.86472 12.8181 8.40523 12.5942 8.96881 12.5942H10.0313C10.5949 12.5942 11.1354 12.8181 11.5339 13.2166C11.9324 13.6152 12.1563 14.1557 12.1563 14.7192V20.563" stroke="#A0B0AB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
             );
         case "user":
@@ -85,6 +86,14 @@ function AdminSidebar({ isOpen, onClose }) {
                 <path d="M1.11765 11C0.821229 11 0.536951 11.1159 0.327351 11.3222C0.117752 11.5285 0 11.8083 0 12.1V20.9C0 21.1917 0.117752 21.4715 0.327351 21.6778C0.536951 21.8841 0.821229 22 1.11765 22C1.41407 22 1.69834 21.8841 1.90794 21.6778C2.11754 21.4715 2.23529 21.1917 2.23529 20.9V12.1C2.23529 11.8083 2.11754 11.5285 1.90794 11.3222C1.69834 11.1159 1.41407 11 1.11765 11ZM6.70588 0C6.40946 0 6.12519 0.115892 5.91559 0.322183C5.70599 0.528472 5.58824 0.808262 5.58824 1.1V20.9C5.58824 21.1917 5.70599 21.4715 5.91559 21.6778C6.12519 21.8841 6.40946 22 6.70588 22C7.0023 22 7.28658 21.8841 7.49618 21.6778C7.70578 21.4715 7.82353 21.1917 7.82353 20.9V1.1C7.82353 0.808262 7.70578 0.528472 7.49618 0.322183C7.28658 0.115892 7.0023 0 6.70588 0ZM17.8824 15.4C17.5859 15.4 17.3017 15.5159 17.0921 15.7222C16.8825 15.9285 16.7647 16.2083 16.7647 16.5V20.9C16.7647 21.1917 16.8825 21.4715 17.0921 21.6778C17.3017 21.8841 17.5859 22 17.8824 22C18.1788 22 18.4631 21.8841 18.6726 21.6778C18.8822 21.4715 19 21.1917 19 20.9V16.5C19 16.2083 18.8822 15.9285 18.6726 15.7222C18.4631 15.5159 18.1788 15.4 17.8824 15.4ZM12.2941 6.6C11.9977 6.6 11.7134 6.71589 11.5038 6.92218C11.2942 7.12847 11.1765 7.40826 11.1765 7.7V20.9C11.1765 21.1917 11.2942 21.4715 11.5038 21.6778C11.7134 21.8841 11.9977 22 12.2941 22C12.5905 22 12.8748 21.8841 13.0844 21.6778C13.294 21.4715 13.4118 21.1917 13.4118 20.9V7.7C13.4118 7.40826 13.294 7.12847 13.0844 6.92218C12.8748 6.71589 12.5905 6.6 12.2941 6.6Z" fill="#A0B0AB"/>
               </svg>
             );
+        case "admin":
+            return (
+                <svg className="ml-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 1C6.685 1 4 3.685 4 7C4 10.315 6.685 13 10 13C13.315 13 16 10.315 16 7C16 3.685 13.315 1 10 1ZM10 11C7.791 11 6 9.209 6 7C6 4.791 7.791 3 10 3C12.209 3 14 4.791 14 7C14 9.209 12.209 11 10 11Z" fill="#A0B0AB"/>
+                <path d="M10 14C5.589 14 2 17.589 2 22H4C4 18.691 6.691 16 10 16C13.309 16 16 18.691 16 22H18C18 17.589 14.411 14 10 14Z" fill="#A0B0AB"/>
+                <path d="M15 6L17 8L20 5" stroke="#A0B0AB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            );
         default:
             return (
             <svg className={iconClass} fill="currentColor" viewBox="0 0 20 20">
@@ -119,7 +128,7 @@ function AdminSidebar({ isOpen, onClose }) {
                     }
                 >
                     <IconComponent type={item.icon} />
-                    <span className="ml-3">{item.name}</span>
+                    <span className="ml-3 text-sm">{item.name}</span>
                 </NavLink>
                 ))}
             </nav>
@@ -130,7 +139,7 @@ function AdminSidebar({ isOpen, onClose }) {
                 onClick={handleLogout}
                 disabled={isLoggingOut}
                 style={{color: "#B88E00"}}
-                className="group flex items-center w-full px-2 py-2 text-sm font-medium rounded-md hover:bg-red-50 transition-colors disabled:opacity-50"
+                className="group flex items-center w-full px-2 py-2 text-sm font-medium rounded-md hover:bg-red-50 transition-colors disabled:opacity-50 cursor-pointer"
                 >
                 <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd"/>
@@ -185,7 +194,7 @@ function AdminSidebar({ isOpen, onClose }) {
                 <button
                 onClick={handleLogout}
                 disabled={isLoggingOut}
-                className="group flex items-center w-full px-2 py-2 text-sm font-medium text-red-600 rounded-md hover:bg-red-50 transition-colors disabled:opacity-50"
+                className="group flex items-center w-full px-2 py-2 text-sm font-medium text-red-600 rounded-md hover:bg-red-50 transition-colors disabled:opacity-50 cursor-pointer"
                 >
                 <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd"/>

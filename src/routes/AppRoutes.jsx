@@ -16,6 +16,7 @@ import DashboardWrapper from "../components/dashboard/DashboardWrapper";
 import AdminLayout from "../components/admin/layout/AdminLayout";
 import AdminDashboard from "../components/admin/dashboard/AdminDashboard";
 import UserManagement from "../components/admin/user-management/UserManagement";
+import AdminManagement from "../components/admin/admin-management/AdminManagement";
 import BVNVerification from "../components/admin/kyc/BVNVerification";
 import NINVerification from "../components/admin/kyc/NINVerification";
 import LoanApplications from "../components/admin/loans/LoanApplications";
@@ -235,6 +236,10 @@ const router = createBrowserRouter([
       {
         path: "user-management",
         element: <UserManagement />,
+      },
+      {
+        path: "admin-management",
+        element: <AdminManagement />,
       },
       {
         path: "bvn-verification",

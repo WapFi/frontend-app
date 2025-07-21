@@ -107,4 +107,23 @@ export const processIdentityVerification = async (userId, action, identityType, 
   } catch (error) {
     throw error;
   }
+};
+
+// Admin Management
+export const getAdmins = async (params = {}) => {
+  try {
+    const response = await axios.get('/admins/admins', { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 }; 
+
+export const addAdmin = async (adminData) => {
+  try {
+    const response = await axios.post('/admins/create', adminData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
