@@ -278,7 +278,6 @@ function SignIn() {
       // navigate to dashboard
       const userRole = response.data?.role || null;
       if (userRole === "WAPFI_SUPER_ADMIN" || userRole === "WAPFI_ADMIN") {
-        console.log("Admin user detected");
         navigate("/admin/dashboard");
       } else {
         console.log("User detected");

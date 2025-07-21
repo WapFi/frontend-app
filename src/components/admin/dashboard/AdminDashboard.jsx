@@ -7,7 +7,7 @@ import UserDetailsModal from "../modals/UserDetailsModal";
 function AdminDashboard() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUserModal, setShowUserModal] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleUserClick = (user) => {
