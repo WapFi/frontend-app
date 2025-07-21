@@ -57,7 +57,7 @@ function LoanApplications() {
 					loanTerm: `${app.loan_term_months || 0} Months`,
 					reason: app.loan_purpose || 'Not specified',
 					date: app.application_date ? new Date(app.application_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown',
-					action: app.status === 'PENDING' ? 'PENDING' : app.status === 'APPROVED' ? 'APPROVED' : 'DECLINED',
+					action: app.status === 'PENDING' ? 'PENDING' : app.status === 'APPROVED' ? 'APPROVED' : 'REJECTED',
 					status: app.status,
 					avatar: app.user?.avatar || null,
 					tier: app.user?.credit_score?.tier || 'N/A',
@@ -103,7 +103,7 @@ function LoanApplications() {
 	const handleApprove = async (loanId) => {
 		try {
 			const response = await updateLoanApplicationStatus(loanId, 'APPROVED');
-			if (response.status && response.data) {
+			if (response.status) {
 				toast.success('Loan application approved successfully');
 				fetchLoanApplications();
 			} else {
@@ -119,7 +119,7 @@ function LoanApplications() {
 		try {
 			let response = await updateLoanApplicationStatus(loanId, 'REJECTED');
 			console.log("response: ", response);
-			if (response.status && response.data) {
+			if (response.status) {
 				toast.success('Loan application declined successfully');
 				fetchLoanApplications();
 			} else {
@@ -176,6 +176,14 @@ function LoanApplications() {
 				>
 					Decline
 				</button>
+			);
+		} else if (loan.status === 'REJECTED') {
+			return (
+				<span
+					className="text-red-600 hover:text-red-900 text-sm cursor-pointer"
+				>
+					Rejected
+				</span>
 			);
 		}
 	};
@@ -286,7 +294,7 @@ function LoanApplications() {
 
 				<tbody className="bg-white divide-y divide-gray-200">
 					{loanApplications.map((loan) => (
-						<tr key={loan.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => handleLoanClick(loan)}>
+						<tr key={loan.id} className="hover:bg-gray-50 cursor-pointer">
 						<td className="px-6 py-4 whitespace-nowrap">
 
 							<div className="flex items-center">

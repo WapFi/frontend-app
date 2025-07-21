@@ -34,7 +34,7 @@ function AdminSidebar({ isOpen, onClose }) {
         switch (type) {
         case "dashboard":
             return (
-                <svg className="ml-3" xmlns="http://www.w3.org/2000/svg" width="19" height="22" viewBox="0 0 19 22" fill="none">
+                <svg style={{borderColor: "#A0B0AB"}} className="ml-3" xmlns="http://www.w3.org/2000/svg" width="19" height="22" viewBox="0 0 19 22" fill="none">
                 <path d="M3.26631 20.5627C2.01469 20.5627 1 19.5214 1 18.2358V8.88367C1 8.17711 1.31344 7.50773 1.85 7.0668L8.08369 1.94767C8.48197 1.61785 8.98288 1.43738 9.5 1.43738C10.0171 1.43738 10.518 1.61785 10.9163 1.94767L17.1489 7.0668C17.6866 7.50773 18 8.17711 18 8.88367V18.2358C18 19.5214 16.9853 20.5627 15.7337 20.5627H3.26631Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M6.84381 20.5626V14.7189C6.84381 14.1553 7.06769 13.6148 7.46621 13.2163C7.86472 12.8178 8.40523 12.5939 8.96881 12.5939H10.0313C10.5949 12.5939 11.1354 12.8178 11.5339 13.2163C11.9324 13.6148 12.1563 14.1553 12.1563 14.7189V20.5626" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
