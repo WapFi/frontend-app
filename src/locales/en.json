@@ -116,7 +116,8 @@
     "creditScore": "Credit Score",
     "settings": "Settings",
     "logout": "Log Out",
-    "logoutError": "Logout failed. Please try again."
+    "logoutError": "Logout failed. Please try again.",
+    "logoutSuccess": "Logout successful!"
   },
   "mobile_menu": {
     "dashboard": "Dashboard",

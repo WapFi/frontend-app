@@ -115,7 +115,9 @@
     "repayments": "Biyan Bashi",
     "creditScore": "Matsayin Ƙima",
     "settings": "Saituna",
-    "logout": "Fita"
+    "logout": "Fita",
+    "logoutError": "Fita bai yi nasara ba. Don Allah a sake gwadawa.",
+    "logoutSuccess": "An yi nasarar fita!"
   },
   "mobile_menu": {
     "dashboard": "Allon Kulawa",
