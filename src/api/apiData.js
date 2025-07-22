@@ -242,6 +242,6 @@ export const getBorrowingLimit = async () => {
 
 // log user out
 export const logOut = async () => {
-  const response = await axios.post("/auth/sign_ou");
+  const response = await axios.post("/auth/sign_out");
   return response;
 };
