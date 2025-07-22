@@ -1,103 +1,33 @@
+import { useEffect, useState } from "react";
 import UserAvatar from "../../common/UserAvatar";
-
-const users = [
-  {
-    id: 1,
-    name: "Aisha Bello",
-    email: "aisha@example.com",
-    phone: "+234 812 345 6789",
-    totalLoanTaken: "₦ 50,000",
-    outstandingLoan: "₦ 30,000",
-    amountRepaid: "₦ 20,000",
-    lastLoanDate: "July 15, 2025",
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 2,
-    name: "John Bello",
-    email: "john@example.com", 
-    phone: "+234 812 345 6789",
-    totalLoanTaken: "₦ 100",
-    outstandingLoan: "₦ 100",
-    amountRepaid: "₦ 0",
-    lastLoanDate: "July 15, 2025",
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 3,
-    name: "Amina Bello",
-    email: "amina@example.com",
-    phone: "+234 812 345 6789", 
-    totalLoanTaken: "₦ 50,000",
-    outstandingLoan: "₦ 100",
-    amountRepaid: "₦ 0",
-    lastLoanDate: "July 15, 2025",
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 4,
-    name: "Kemi Adeniran",
-    email: "kemi@example.com",
-    phone: "+234 812 345 6789",
-    totalLoanTaken: "₦ 75,000", 
-    outstandingLoan: "₦ 25,000",
-    amountRepaid: "₦ 50,000",
-    lastLoanDate: "July 12, 2025",
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 5,
-    name: "Ibrahim Musa",
-    email: "ibrahim@example.com",
-    phone: "+234 812 345 6789",
-    totalLoanTaken: "₦ 120,000",
-    outstandingLoan: "₦ 40,000", 
-    amountRepaid: "₦ 80,000",
-    lastLoanDate: "July 10, 2025",
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 6,
-    name: "Fatima Yusuf",
-    email: "fatima@example.com",
-    phone: "+234 812 345 6789",
-    totalLoanTaken: "₦ 30,000",
-    outstandingLoan: "₦ 10,000",
-    amountRepaid: "₦ 20,000", 
-    lastLoanDate: "July 08, 2025",
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 7,
-    name: "Ahmed Hassan",
-    email: "ahmed@example.com",
-    phone: "+234 812 345 6789",
-    totalLoanTaken: "₦ 90,000",
-    outstandingLoan: "₦ 90,000",
-    amountRepaid: "₦ 0", 
-    lastLoanDate: "July 16, 2025",
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 8,
-    name: "Blessing Okoro",
-    email: "blessing@example.com",
-    phone: "+234 812 345 6789",
-    totalLoanTaken: "₦ 60,000",
-    outstandingLoan: "₦ 15,000",
-    amountRepaid: "₦ 45,000", 
-    lastLoanDate: "July 05, 2025",
-    avatar: "/api/placeholder/32/32"
-  }
-];
+import { getUsers } from "../../../api/adminApi";
 
 function UserManagementTable({ onUserClick, searchTerm = "" }) {
-  // Filter users based on search term
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.phone.includes(searchTerm)
-  );
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const params = {};
+        if (searchTerm) params.search = searchTerm;
+        const res = await getUsers(params);
+        // If paginated, res.data.users; else res.data
+        setUsers(res.data?.users || res.data || []);
+      } catch (err) {
+        setError("Failed to fetch users");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, [searchTerm]);
+
+  if (loading) return <div className="p-6 text-center">Loading users...</div>;
+  if (error) return <div className="p-6 text-center text-red-500">{error}</div>;
 
   return (
     <div className="overflow-x-auto">
@@ -128,79 +58,55 @@ function UserManagementTable({ onUserClick, searchTerm = "" }) {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {filteredUsers.map((user) => (
-            <tr key={user.id} className="hover:bg-gray-50">
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="flex items-center">
-                  <UserAvatar user={user} />
-                  <div className="ml-3">
-                    <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                    <div className="text-sm text-gray-500">{user.email}</div>
-                  </div>
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {user.totalLoanTaken}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {user.outstandingLoan}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {user.amountRepaid}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {user.lastLoanDate}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <button
-                  onClick={() => onUserClick(user)}
-                  className="text-yellow-600 hover:text-yellow-900"
-                >
-                  View
-                </button>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <button className="text-red-600 hover:text-red-900">
-                  Delete
-                </button>
+          {users.length === 0 ? (
+            <tr>
+              <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
+                No users found.
               </td>
             </tr>
-          ))}
+          ) : (
+            users.map((user) => (
+              <tr key={user.id || user._id} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <UserAvatar user={user} />
+                    <div className="ml-3">
+                      <div className="text-sm font-medium text-gray-900">{user.name || user.full_name}</div>
+                      <div className="text-sm text-gray-500">{user.email}</div>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {user.totalLoanTaken || user.total_loan_taken || "0"}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {user.outstandingLoan || user.outstanding_loan || "0"}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {user.amountRepaid || user.amount_repaid || "0"}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {user.lastLoanDate || user.last_loan_date || "0"}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button
+                    onClick={() => onUserClick(user)}
+                    className="text-yellow-600 hover:text-yellow-900"
+                  >
+                    View
+                  </button>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button className="text-red-600 hover:text-red-900">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
-      
-      {/* Pagination */}
-      <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-        <div className="flex-1 flex justify-between sm:hidden">
-          <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-            Previous
-          </button>
-          <button className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-            Next
-          </button>
-        </div>
-        <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm text-gray-700">
-              Showing <span className="font-medium">1</span> to <span className="font-medium">8</span> of{' '}
-              <span className="font-medium">{filteredUsers.length}</span> results
-            </p>
-          </div>
-          <div>
-            <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-              <button className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                Previous
-              </button>
-              <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                1
-              </button>
-              <button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                Next
-              </button>
-            </nav>
-          </div>
-        </div>
-      </div>
+      {/* Pagination placeholder (implement if backend supports) */}
     </div>
   );
 }

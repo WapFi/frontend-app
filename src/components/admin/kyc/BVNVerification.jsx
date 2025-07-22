@@ -1,84 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserDetailsModal from "../modals/UserDetailsModal";
 import UserAvatar from "../../common/UserAvatar";
-
-const bvnData = [
-  {
-    id: 1,
-    name: "Aisha Bello",
-    email: "aisha@example.com", 
-    phone: "+2348123456789",
-    bvn: "***********23",
-    status: "verified",
-    date: "July 15, 2025",
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 2,
-    name: "Aisha Bello",
-    email: "aisha@example.com",
-    phone: "+2348123456789", 
-    bvn: "***********23",
-    status: "unverified",
-    date: "July 15, 2025",
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 3,
-    name: "Aisha Bello",
-    email: "aisha@example.com",
-    phone: "+2348123456789",
-    bvn: "***********23",
-    status: "unverified", 
-    date: "July 15, 2025",
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 4,
-    name: "Aisha Bello",
-    email: "aisha@example.com",
-    phone: "+2348123456789",
-    bvn: "***********23",
-    status: "unverified",
-    date: "July 15, 2025",
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 5,
-    name: "Aisha Bello", 
-    email: "aisha@example.com",
-    phone: "+2348123456789",
-    bvn: "***********23",
-    status: "unverified",
-    date: "July 15, 2025",
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 6,
-    name: "Aisha Bello",
-    email: "aisha@example.com",
-    phone: "+2348123456789",
-    bvn: "***********23",
-    status: "unverified",
-    date: "July 15, 2025", 
-    avatar: "/api/placeholder/32/32"
-  },
-  {
-    id: 7,
-    name: "Aisha Bello",
-    email: "aisha@example.com",
-    phone: "+2348123456789",
-    bvn: "***********23",
-    status: "unverified",
-    date: "July 15, 2025",
-    avatar: "/api/placeholder/32/32"
-  }
-];
+import { getVerifications, processIdentityVerification } from "../../../api/adminApi";
 
 function BVNVerification() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [showUserModal, setShowUserModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [bvnData, setBvnData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [actionLoading, setActionLoading] = useState(null); // userId for which action is loading
+
+    useEffect(() => {
+        const fetchBVNs = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const params = { type: "bvn" };
+                if (searchTerm) params.search = searchTerm;
+                const res = await getVerifications(params);
+                setBvnData(res.data.verifications || []);
+            } catch (err) {
+                setError("Failed to fetch BVN verifications");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchBVNs();
+    }, [searchTerm]);
 
     const handleUserClick = (user) => {
         setSelectedUser(user);
@@ -90,33 +40,49 @@ function BVNVerification() {
         setSelectedUser(null);
     };
 
-    const handleVerify = (userId) => {
-        // Add verify logic here
-        console.log("Verify user:", userId);
+    const handleVerify = async (userId) => {
+        setActionLoading(userId);
+        try {
+            await processIdentityVerification(userId, "VERIFY", "BVN");
+            setBvnData((prev) => prev.map(u => u._id === userId ? { ...u, status: "verified" } : u));
+        } catch (err) {
+            alert("Failed to verify user");
+        } finally {
+            setActionLoading(null);
+        }
     };
 
-    const handleReject = (userId) => {
-        // Add reject logic here
-        console.log("Reject user:", userId);
+    const handleReject = async (userId) => {
+        setActionLoading(userId);
+        try {
+            await processIdentityVerification(userId, "REJECT", "BVN");
+            setBvnData((prev) => prev.map(u => u._id === userId ? { ...u, status: "rejected" } : u));
+        } catch (err) {
+            alert("Failed to reject user");
+        } finally {
+            setActionLoading(null);
+        }
     };
 
     const filteredData = bvnData.filter(user =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.phone.includes(searchTerm)
+        (user.name || user.full_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.phone || "").includes(searchTerm)
     );
+
+    if (loading) return <div className="p-6 text-center">Loading BVN verifications...</div>;
+    if (error) return <div className="p-6 text-center text-red-500">{error}</div>;
 
     return (
         <div className="space-y-6">
         {/* Page header */}
         <div>
             <h1 className="text-2xl font-bold text-gray-900">BVN Verification</h1>
-            <p className="text-sm text-gray-600">Coming soon</p>
         </div>
 
         {/* Search bar */}
         <div className="bg-white rounded-lg shadow">
-            {/* <div className="px-6 py-4 border-b border-gray-200">
+            <div className="px-6 py-4 border-b border-gray-200">
                 <div className="relative max-w-md">
                     <input
                         type="text"
@@ -129,10 +95,10 @@ function BVNVerification() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </div>
-            </div> */}
+            </div>
 
             {/* Table */}
-            {/* <div className="overflow-x-auto">
+            <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                 <tr>
@@ -160,13 +126,20 @@ function BVNVerification() {
                 </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                {filteredData.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-50">
+                {filteredData.length === 0 ? (
+                    <tr>
+                        <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
+                            No BVN verifications found.
+                        </td>
+                    </tr>
+                ) : (
+                filteredData.map((user) => (
+                    <tr key={user._id || user.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                             <UserAvatar user={user} />
                             <div className="ml-3">
-                                <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                                <div className="text-sm font-medium text-gray-900">{user.name || user.full_name}</div>
                                 <div className="text-sm text-gray-500">{user.email}</div>
                             </div>
                         </div>
@@ -175,27 +148,30 @@ function BVNVerification() {
                         {user.phone}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {user.bvn}
+                        {user.bvn || user.identity_value}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                         user.status === 'verified' 
                             ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
+                            : user.status === 'rejected'
+                            ? 'bg-red-100 text-red-800'
+                            : 'bg-yellow-100 text-yellow-800'
                         }`}>
-                        {user.status === 'verified' ? 'Verified' : 'Unverified'}
+                        {user.status === 'verified' ? 'Verified' : user.status === 'rejected' ? 'Rejected' : 'Unverified'}
                         </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.date}
+                        {user.date || user.createdAt?.slice(0, 10)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         {user.status === 'unverified' ? (
                         <button
-                            onClick={() => handleVerify(user.id)}
+                            onClick={() => handleVerify(user._id)}
                             className="text-yellow-600 hover:text-yellow-900"
+                            disabled={actionLoading === user._id}
                         >
-                            Verify
+                            {actionLoading === user._id ? 'Verifying...' : 'Verify'}
                         </button>
                         ) : (
                         <button
@@ -208,46 +184,19 @@ function BVNVerification() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <button
-                        onClick={() => handleReject(user.id)}
+                        onClick={() => handleReject(user._id)}
                         className="text-red-600 hover:text-red-900"
+                        disabled={actionLoading === user._id}
                         >
-                        Reject
+                        {actionLoading === user._id ? 'Rejecting...' : 'Reject'}
                         </button>
                     </td>
                     </tr>
-                ))}
+                )))
+                }
                 </tbody>
             </table>
-            </div> */}
-
-            {/* Pagination */}
-            {/* <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-            <div className="flex-1 flex justify-between sm:hidden">
-                <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                Previous
-                </button>
-                <button className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                Next
-                </button>
             </div>
-            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                <div>
-                <p className="text-sm text-gray-700">
-                    Per page <span className="font-medium">5</span>
-                </p>
-                </div>
-                <div>
-                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                    <button className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                    Previous
-                    </button>
-                    <button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                    Next
-                    </button>
-                </nav>
-                </div>
-            </div>
-            </div> */}
         </div>
 
         {/* User Details Modal */}
