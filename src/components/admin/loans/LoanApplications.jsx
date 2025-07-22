@@ -144,38 +144,38 @@ function LoanApplications() {
 
 	const getStatusColor = (status) => {
 		switch (status) {
-			case 'approved':
-				return 'bg-green-100 text-green-800';
-			case 'declined':
+		case 'approved':
+			return 'bg-green-100 text-green-800';
+		case 'declined':
 			case 'rejected':
-				return 'bg-red-100 text-red-800';
-			case 'pending':
-				return 'bg-yellow-100 text-yellow-800';
-			default:
-				return 'bg-gray-100 text-gray-800';
+			return 'bg-red-100 text-red-800';
+		case 'pending':
+			return 'bg-yellow-100 text-yellow-800';
+		default:
+			return 'bg-gray-100 text-gray-800';
 		}
 	};
 
 	const getActionButton = (loan) => {
 		if (loan.status === 'PENDING') {
-			return (
-				<div className="flex space-x-2">
-					<button
-						onClick={() => handleApprove(loan.id)}
+		return (
+			<div className="flex space-x-2">
+			<button
+				onClick={() => handleApprove(loan.id)}
 						className="text-green-600 hover:text-green-900 text-sm cursor-pointer"
-					>
-						Accept
-					</button>
+			>
+				Accept
+			</button>
 				</div>
 			);
 		} else if (loan.status === 'APPROVED' || loan.status === 'DISBURSED') {
 			return (
-				<button
-					onClick={() => handleDecline(loan.id)}
+			<button
+				onClick={() => handleDecline(loan.id)}
 					className="text-red-600 hover:text-red-900 text-sm cursor-pointer"
-				>
-					Decline
-				</button>
+			>
+				Decline
+			</button>
 			);
 		} else if (loan.status === 'REJECTED') {
 			return (
@@ -204,7 +204,7 @@ function LoanApplications() {
 				</div>
 			</div>
 		);
-	}
+		}
 
 	if (error) {
 		return (
@@ -214,12 +214,12 @@ function LoanApplications() {
 				</div>
 				<div className="text-center py-8">
 					<p className="text-red-600">{error}</p>
-					<button 
+		<button
 						onClick={() => fetchLoanApplications()} 
 						className="mt-2 text-blue-600 hover:text-blue-800"
-					>
+		>
 						Retry
-					</button>
+		</button>
 				</div>
 			</div>
 		);
@@ -239,27 +239,27 @@ function LoanApplications() {
 
 					{/* Date */}
 					<div className="w-1/4">
-						<input
-							type="date"
+					<input
+						type="date"
 							value={startDate}
 							onChange={(e) => setStartDate(e.target.value)}
 							className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
-						/>
-					</div>
+					/>
+				</div>
 
 					{/* Search Input */}
 					<div className="w-3/5">
 						<div className="relative">
-							<input
-								type="text"
+					<input
+					type="text"
 								placeholder="Search by name or email..."
-								value={searchTerm}
-								onChange={(e) => setSearchTerm(e.target.value)}
+					value={searchTerm}
+					onChange={(e) => setSearchTerm(e.target.value)}
 								className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
-							/>
-							<svg className="w-4 h-4 absolute left-2.5 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-							</svg>
+					/>
+					<svg className="w-4 h-4 absolute left-2.5 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+					</svg>
 						</div>
 					</div>
 
@@ -270,60 +270,60 @@ function LoanApplications() {
 			<div className="overflow-x-auto">
 			<table className="min-w-full divide-y divide-gray-200">
 				<thead className="">
-					<tr>
-						<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-						Name
-						</th>
-						<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-						Amount
-						</th>
-						<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-						Loan Term
-						</th>
-						<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-						Reason
-						</th>
-						<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-						Date
-						</th>
-						<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-						Action
-						</th>
-					</tr>
+				<tr>
+					<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+					Name
+					</th>
+					<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+					Amount
+					</th>
+					<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+					Loan Term
+					</th>
+					<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+					Reason
+					</th>
+					<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+					Date
+					</th>
+					<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+					Action
+					</th>
+				</tr>
 				</thead>
 
 				<tbody className="bg-white divide-y divide-gray-200">
 					{loanApplications.map((loan) => (
 						<tr key={loan.id} className="hover:bg-gray-50 cursor-pointer">
-						<td className="px-6 py-4 whitespace-nowrap">
+					<td className="px-6 py-4 whitespace-nowrap">
 
-							<div className="flex items-center">
+						<div className="flex items-center">
 								<UserAvatar user={loan} />
-								<div className="ml-3">
-									<div className="text-sm font-medium text-gray-900">{loan.name}</div>
+						<div className="ml-3">
+							<div className="text-sm font-medium text-gray-900">{loan.name}</div>
 									<div className="text-sm text-gray-500"> Tier {loan.tier}</div>
-								</div>
-							</div>
-						</td>
+						</div>
+						</div>
+					</td>
 						
-						<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-							{loan.amount}
-						</td>
-						<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-							{loan.loanTerm}
-						</td>
-						<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-							{loan.reason}
-						</td>
-						<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-							{loan.date}
-						</td>
-						<td className="px-6 py-4 whitespace-nowrap">
-							{getActionButton(loan)}
-						</td>
+					<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+						{loan.amount}
+					</td>
+					<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+						{loan.loanTerm}
+					</td>
+					<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+						{loan.reason}
+					</td>
+					<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+						{loan.date}
+					</td>
+					<td className="px-6 py-4 whitespace-nowrap">
+						{getActionButton(loan)}
+					</td>
 					
-						</tr>
-					))}
+					</tr>
+				))}
 				</tbody>
 			</table>
 			</div>
@@ -331,26 +331,26 @@ function LoanApplications() {
 			{/* Pagination */}
 			<div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
 				{/* Mobile pagination */}
-				<div className="flex-1 flex justify-between sm:hidden">
-					<button className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-						Previous
-					</button>
-					<button className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-						Next
-					</button>
-				</div>
+			<div className="flex-1 flex justify-between sm:hidden">
+				<button className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+				Previous
+				</button>
+				<button className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+				Next
+				</button>
+			</div>
 				
 				{/* Desktop pagination */}
 				<div className="hidden sm:flex sm:items-center sm:justify-between w-full">
 					{/* Previous button - left */}
-					<div>
+				<div>
 						<button 
 							className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
 							disabled={pagination.currentPage === 1}
 							onClick={() => handlePageChange(pagination.currentPage - 1)}
 						>
-							Previous
-						</button>
+					Previous
+					</button>
 					</div>
 					
 					{/* Per page dropdown - center */}
@@ -375,10 +375,10 @@ function LoanApplications() {
 							disabled={pagination.currentPage === pagination.totalPages}
 							onClick={() => handlePageChange(pagination.currentPage + 1)}
 						>
-							Next
-						</button>
-					</div>
+					Next
+					</button>
 				</div>
+			</div>
 			</div>
 		</div>
 

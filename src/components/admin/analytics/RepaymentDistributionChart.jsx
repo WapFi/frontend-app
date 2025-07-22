@@ -1,28 +1,16 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
 
-const data = [
-  { month: 'Jan', cash: 20, plastic: 35, recyclables: 25 },
-  { month: 'Feb', cash: 25, plastic: 40, recyclables: 30 },
-  { month: 'Mar', cash: 18, plastic: 32, recyclables: 28 },
-  { month: 'Apr', cash: 30, plastic: 45, recyclables: 35 },
-  { month: 'May', cash: 22, plastic: 38, recyclables: 32 },
-  { month: 'Jun', cash: 35, plastic: 50, recyclables: 40 },
-  { month: 'Jul', cash: 28, plastic: 42, recyclables: 38 },
-  { month: 'Aug', cash: 40, plastic: 55, recyclables: 45 },
-  { month: 'Sep', cash: 32, plastic: 48, recyclables: 42 },
-  { month: 'Oct', cash: 45, plastic: 60, recyclables: 50 },
-  { month: 'Nov', cash: 38, plastic: 52, recyclables: 48 },
-  { month: 'Dec', cash: 50, plastic: 65, recyclables: 55 },
-];
-
-function RepaymentDistributionChart() {
+function RepaymentDistributionChart({ data }) {
+  if (!data || data.length === 0) {
+    return <div className="h-80 flex items-center justify-center text-gray-500">No data available</div>;
+  }
   return (
     <div className="h-80">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis 
-            dataKey="month" 
+            dataKey="month"
             axisLine={false}
             tickLine={false}
             fontSize={12}
