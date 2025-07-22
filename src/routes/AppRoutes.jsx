@@ -49,6 +49,12 @@ import SettingsWrapper from "../components/settings/SettingsWrapper";
 // settings
 import IdentityVerification from "../components/settings/IdentityVerification";
 import { UserContextProvider } from "../context/UserContext";
+import SettingsChangePassword from "../components/settings/SettingsChangePassword";
+import SettingsForgotPassword from "../components/settings/SettingsForgotPassword";
+import SettingsVerifyEmailPhone from "../components/settings/SettingsVerifyEmailPhone";
+import PasswordResetForm from "../components/settings/PasswordResetForm";
+import Notifications from "../components/settings/Notifications";
+import Support from "../components/settings/Support";
 
 const router = createBrowserRouter([
   // Public routes
@@ -121,6 +127,8 @@ const router = createBrowserRouter([
             <RepaymentsHistoryWrapper />
           </RepaymentsProvider>
         ),
+
+
       },
 
       // Loan flow
@@ -198,6 +206,30 @@ const router = createBrowserRouter([
                 <IdentityVerification />,
               </UserContextProvider>
             ),
+          },
+          {
+            path: "change-password",
+            element: <SettingsChangePassword />,
+          },
+          {
+            path: "forgot-password",
+            element: <SettingsForgotPassword />,
+          },
+          {
+            path: "verify-phone-email",
+            element: <SettingsVerifyEmailPhone />,
+          },
+          {
+            path: "reset-password",
+            element: <PasswordResetForm />,
+          },
+          {
+            path: "notifications",
+            element: <Notifications />,
+          },
+          {
+            path: "support",
+            element: <Support />,
           },
           // {
           //   path: "bank-account-confirmation",

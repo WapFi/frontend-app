@@ -40,8 +40,8 @@ function SplashScreen() {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setFadeOut(true); // trigger fade out
-      setTimeout(() => navigate("/select-language"), 1000); // allow fade animation to complete
+      setFadeOut(true); 
+      setTimeout(() => navigate("/select-language"), 1000); 
     }, 4000);
 
     return () => clearTimeout(timeout);

@@ -234,7 +234,6 @@ function SignIn() {
   const [showFormError, setShowFormError] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  
 
   const {
     register,
@@ -288,6 +287,9 @@ function SignIn() {
       setShowFormError(true);
     } finally {
       setLoading(false);
+      // clear states
+      setShowFormError(false);
+      setShowSuccessMessage(false);
     }
   };
 

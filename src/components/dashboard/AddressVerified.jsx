@@ -6,7 +6,7 @@ function AddressVerified() {
   return (
     <div className="flex flex-col py-4 px-[18px] gap-2 md:gap-4 justify-center items-start self-strech rounded-xl bg-[#fafafa]">
       <p className="font-medium text-[#222]">
-        T{t("creditScore.tier3Message")}
+        {t("creditScore.tier2BMessage")}
       </p>
       <div className="flex justify-between self-stretch items-center">
         <p className="text-[14px] text-[#888] md:text-[18px]">

@@ -1,10 +1,11 @@
 import calendarIcon from "../../assets/calendar icon.svg";
 import NairaIcon from "../../assets/naira icon.svg";
-import AccessBankLogo from "../../assets/access bank logo.svg";
+import defaultBankLogo from "../../assets/default bank logo.png";
 import DateDisplay from "./DateDisplay";
 import RepaymentProgressBar from "./RepaymentProgressBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import banks from "../../data/banks.json";
 
 function LoanDetails({ loanDetails }) {
   const navigate = useNavigate();
@@ -17,6 +18,16 @@ function LoanDetails({ loanDetails }) {
     // navigate to repayments history page and pass the loanID
     navigate(`/repayments/repayment-history/${loanID}`);
   };
+
+  // Find the bank object based on the bank name from loanDetails
+  const bankInfo = banks.find(
+    (bank) =>
+      bank.name.toLowerCase() ===
+      loanDetails.data.bank_account.bank_name.toLowerCase()
+  );
+
+  // Get the logo URL, or a default if not found
+  const bankLogoUrl = bankInfo ? bankInfo.logo : defaultBankLogo;
 
   return (
     <div className="w-full lg:flex lg:flex-col lg:gap-14 lg:w-[50%]">
@@ -54,11 +65,25 @@ function LoanDetails({ loanDetails }) {
               {loanDetails.data.repayment_method}
             </p>
           </div>
-          <div className="flex flex-col gap-[5px]">
+          <div className="flex flex-col">
             <p className="text-[12px] md:text-[16px] text-[rgba(34,34,34,0.50)]">
               {t("loanDetails.disbursedTo")}
             </p>
-            <img src={AccessBankLogo} alt="bank logo" />
+
+            <div className="w-25 h-10 flex items-center justify-center overflow-hidden">
+              {/* Container for consistent sizing */}
+              <img
+                src={bankLogoUrl}
+                alt={`${loanDetails.data.bank_account.bank_name} logo`}
+                className="w-full object-contain" // Ensures image fits within container without distortion
+              />
+            </div>
+
+            {/* <img
+              src={bankLogoUrl}
+              alt={`${loanDetails.data.bank_account.bank_name} logo`}
+              className="max-w-full max-h-full object-contain"
+            /> */}
             <p className="text-[12px] md:text-[14px] text-[#222] font-medium uppercase">
               {loanDetails.data.disbursement_account}
             </p>

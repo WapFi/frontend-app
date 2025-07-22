@@ -12,7 +12,7 @@ import PageLoader from "../PageLoader";
 import { useTranslation } from "react-i18next";
 
 export default function CashRepaymentsTable() {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
   const { loanID } = useParams();
   const { repaymentsData } = useRepayments();
@@ -106,7 +106,9 @@ export default function CashRepaymentsTable() {
               className="flex items-center gap-2 rounded-[8px] border border-[#e5e5e5] px-3 py-1 cursor-pointer"
               onClick={() => setShowMonthPicker(!showMonthPicker)}
             >
-              <p className="text-[#222] text-sm py-0.5">{t("cashRepaymentsTable.thisMonth")}</p>
+              <p className="text-[#222] text-sm py-0.5">
+                {t("cashRepaymentsTable.thisMonth")}
+              </p>
               <img
                 src={chevronDown}
                 alt="dropdown icon"
@@ -141,34 +143,47 @@ export default function CashRepaymentsTable() {
             key={index}
             className="grid grid-cols-3 py-4 px-4 items-center border-y border-y-[rgba(0,0,0,0.04)]"
           >
-            <p className="text-[#666] text-[14px]">
-              {new Date(repayment.repayment_date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+            <p className="text-[#484747]">
+              {`${new Date(repayment.repayment_date).getDate()} ${new Date(
+                repayment.repayment_date
+              ).toLocaleString("en-GB", { month: "short" })}, ${new Date(
+                repayment.repayment_date
+              ).getFullYear()}`}
             </p>
 
             <div className="flex items-center gap-1">
               <img src={NairaIcon} alt="naira icon" />
-              <span>{repayment.amount_paid}</span>
+              <span>
+                {new Intl.NumberFormat("en-NG", {
+                  style: "decimal",
+                  
+                  maximumFractionDigits: 2,
+                }).format(repayment.amount_paid)}
+              </span>
             </div>
+
             {repayment.status === "COMPLETED" && (
               <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[#D3F3DF] bg-[#F2FDF5] w-fit">
                 <img src={VerifiedIcon} alt="verified icon" />
-                <p className="text-[14px] text-[#16A34A]">{t("cashRepaymentsTable.completed")}</p>
+                <p className="text-[14px] text-[#16A34A]">
+                  {t("cashRepaymentsTable.completed")}
+                </p>
               </div>
             )}
             {repayment.status === "PENDING" && (
               <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[rgba(217,145,0,0.60)] bg-[rgba(217,145,0,0.14)] w-fit">
                 <img src={PendingIcon} alt="pending icon" />
-                <p className="text-[14px] text-[#D99100]">{t("cashRepaymentsTable.pending")}</p>
+                <p className="text-[14px] text-[#D99100]">
+                  {t("cashRepaymentsTable.pending")}
+                </p>
               </div>
             )}
             {repayment.status === "FAILED" && (
               <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[rgba(239,68,68,0.15)] bg-[rgba(239,68,68,0.08)] w-fit">
                 <img src={FailedIcon} alt="failed icon" />
-                <p className="text-[14px] text-[#EF4444]">{t("cashRepaymentsTable.failed")}</p>
+                <p className="text-[14px] text-[#EF4444]">
+                  {t("cashRepaymentsTable.failed")}
+                </p>
               </div>
             )}
           </div>
@@ -176,7 +191,7 @@ export default function CashRepaymentsTable() {
 
         <div className="flex items-center justify-between mt-4 px-4">
           <button
-            className="text-sm border px-3 py-1 rounded-[8px] border-[rgba(0,0,0,0.16)] text-[#333] font-semibold"
+            className="text-sm border px-3 py-1 rounded-[8px] bg-white border-[rgba(0,0,0,0.16)] text-[#333] font-semibold"
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((p) => p - 1)}
           >
@@ -185,10 +200,12 @@ export default function CashRepaymentsTable() {
 
           <div className="relative">
             <div
-              className="flex items-center gap-2 rounded-[8px] border border-[#e5e5e5] px-3 cursor-pointer"
+              className="flex items-center gap-2 rounded-[8px] bg-white border border-[#e5e5e5] px-3 cursor-pointer"
               onClick={() => setPerPageOpen(!perPageOpen)}
             >
-              <p className="text-[#999] text-sm py-0.5">{t("cashRepaymentsTable.perPage")}</p>
+              <p className="text-[#999] text-sm py-0.5">
+                {t("cashRepaymentsTable.perPage")}
+              </p>
               <span className="text-[#333] block border-l border-l-[#e5e5e5] pl-2.5 py-0.5">
                 {perPage}
               </span>
@@ -217,7 +234,7 @@ export default function CashRepaymentsTable() {
           </div>
 
           <button
-            className="text-sm border px-3 py-1 rounded-[8px] border-[rgba(0,0,0,0.16)] text-[#333] font-semibold"
+            className="text-sm border px-3 py-1 rounded-[8px] bg-white border-[rgba(0,0,0,0.16)] text-[#333] font-semibold"
             disabled={currentPage === totalPages || totalPages === 0}
             onClick={() => setCurrentPage((p) => p + 1)}
           >
@@ -227,75 +244,79 @@ export default function CashRepaymentsTable() {
       </div>
 
       {/* MOBILE */}
-      <div className="block lg:hidden space-y-4 bg-white rounded-2xl py-6 px-4">
-        {/* <div className="flex justify-end mb-4">
-          <div className="relative">
-            <img
-              src={chevronDown} // You can replace this with your actual calendar icon if it's different
-              alt="calendar icon"
-              className="w-5 h-5 cursor-pointer"
-              onClick={() => setShowMonthPicker(!showMonthPicker)}
-            />
-            {showMonthPicker && (
-              <input
-                type="month"
-                value={selectedMonth}
-                onChange={handleMonthChange}
-                className="mt-2 border rounded px-2 py-1 text-sm w-full"
-              />
-            )}
-          </div>
-        </div> */}
 
+      <div className="block lg:hidden space-y-4 rounded-2xl py-6">
         {paginatedRepayments.length === 0 && (
           <div className="text-center text-[#666] py-6">
-           {t("cashRepaymentsTable.noRepayments")}
+            {t("cashRepaymentsTable.noRepayments")}
           </div>
         )}
 
         {paginatedRepayments.map((repayment, index) => (
           <div
             key={index}
-            className="flex justify-between items-center pt-4 pb-4 border-b border-b-[rgba(0,0,0,0.04)]"
+            className="flex flex-col rounded-[12px] gap-3 p-4 bg-white border-[rgba(0,0,0,0.04)] md:text-[16px]"
           >
-            <div>
-              <p className="text-[#222] font-medium">
-                {repayment.repayment_method}
+            <div className="flex justify-between font-medium">
+              <p className="text-[#222]">
+                {/* {repayment.repayment_method} */}
+                Date:
               </p>
-              <p className="text-[#666] text-[14px]">
-                {new Date(repayment.repayment_date).toLocaleDateString(
-                  "en-US",
-                  {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  }
-                )}
+
+              <p className="text-[#484747]">
+                {`${new Date(repayment.repayment_date).getDate()}, ${new Date(
+                  repayment.repayment_date
+                ).toLocaleString("en-GB", { month: "short" })} ${new Date(
+                  repayment.repayment_date
+                ).getFullYear()}`}
               </p>
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1 mt-1">
+            <div className="flex justify-between font-medium">
+              <p className="text-[#222]">Amount:</p>
+
+              <div className="flex items-center gap-1">
                 <img src={NairaIcon} alt="naira icon" />
-                <span>{repayment.amount_paid}</span>
+                <span>
+                  {new Intl.NumberFormat("en-NG", {
+                    style: "decimal",
+                    
+                    maximumFractionDigits: 2,
+                  }).format(repayment.amount_paid)}
+                </span>
               </div>
             </div>
 
             {repayment.status === "COMPLETED" && (
-              <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[#D3F3DF] bg-[#F2FDF5] w-fit">
-                <img src={VerifiedIcon} alt="verified icon" />
-                <p className="text-[14px] text-[#16A34A]">{t("cashRepaymentsTable.completed")}</p>
+              <div className="flex justify-between font-medium">
+                <p className="text-[#222]">Status:</p>
+                <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[#D3F3DF] bg-[#F2FDF5] w-fit">
+                  <img src={VerifiedIcon} alt="verified icon" />
+                  <p className="text-[14px] md:text-[14px] text-[#16A34A] font-normal">
+                    {t("cashRepaymentsTable.completed")}
+                  </p>
+                </div>
               </div>
             )}
             {repayment.status === "PENDING" && (
-              <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[#FEE4C7] bg-[#FFFAF2] w-fit">
-                <img src={PendingIcon} alt="pending icon" />
-                <p className="text-[14px] text-[#DC6803]">{t("cashRepaymentsTable.pending")}</p>
+              <div className="flex justify-between font-medium">
+                <p className="text-[#222]">Status:</p>
+                <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[#FEE4C7] bg-[#FFFAF2] w-fit">
+                  <img src={PendingIcon} alt="pending icon" />
+                  <p className="text-[14px] md:text-[14px] text-[#DC6803] font-normal">
+                    {t("cashRepaymentsTable.pending")}
+                  </p>
+                </div>
               </div>
             )}
             {repayment.status === "FAILED" && (
-              <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[#FEE4E2] bg-[#FFFAF2] w-fit">
-                <img src={FailedIcon} alt="failed icon" />
-                <p className="text-[14px] text-[#D92D20]">{t("cashRepaymentsTable.failed")}</p>
+              <div className="flex justify-between font-medium">
+                <p className="text-[#222]">Status:</p>
+                <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[#FEE4E2] bg-[#FFFAF2] w-fit">
+                  <img src={FailedIcon} alt="failed icon" />
+                  <p className="text-[14px] md:text-[14px] text-[#D92D20] font-normal">
+                    {t("cashRepaymentsTable.failed")}
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -304,7 +325,7 @@ export default function CashRepaymentsTable() {
         {/* Pagination + Per page controls */}
         <div className="flex items-center justify-between mt-4">
           <button
-            className="text-sm border px-3 py-1.5 rounded-[8px] border-[rgba(0,0,0,0.16)] text-[#333] font-semibold"
+            className="text-sm border px-3 py-1.5 rounded-[8px] bg-white border-[rgba(0,0,0,0.16)] text-[#333] font-semibold"
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((p) => p - 1)}
           >
@@ -313,10 +334,12 @@ export default function CashRepaymentsTable() {
 
           <div className="relative">
             <div
-              className="flex items-center gap-2 rounded-[8px] border border-[#e5e5e5] px-3 cursor-pointer"
+              className="flex items-center gap-2 rounded-[8px] bg-white border border-[#e5e5e5] px-3 cursor-pointer"
               onClick={() => setPerPageOpen(!perPageOpen)}
             >
-              <p className="text-[#999] text-sm py-1">{t("cashRepaymentsTable.perPage")}</p>
+              <p className="text-[#999] text-sm py-1">
+                {t("cashRepaymentsTable.perPage")}
+              </p>
               <span className="text-[#333] block border-l border-l-[#e5e5e5] pl-2.5 py-1">
                 {perPage}
               </span>
@@ -345,11 +368,11 @@ export default function CashRepaymentsTable() {
           </div>
 
           <button
-            className="text-sm border px-3 py-1.5 rounded-[8px] border-[rgba(0,0,0,0.16)] text-[#333] font-semibold"
+            className="text-sm border px-3 py-1.5 rounded-[8px] bg-white border-[rgba(0,0,0,0.16)] text-[#333] font-semibold"
             disabled={currentPage === totalPages || totalPages === 0}
             onClick={() => setCurrentPage((p) => p + 1)}
           >
-             {t("cashRepaymentsTable.next")}
+            {t("cashRepaymentsTable.next")}
           </button>
         </div>
       </div>

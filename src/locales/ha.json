@@ -154,20 +154,20 @@
     "statusPending": "Ana jira"
   },
   "creditScore": {
-    "title": "Ƙididdigar Bashi",
-    "totalCredit": "Jimillar Ƙididdiga",
+    "title": "Matsayin Bashi",
+    "totalCredit": "Jimillar Bashi",
     "nextLevelSuffix": "don zuwa mataki na gaba",
-    "loading": "Ana loda ƙididdigar bashi...",
-    "tier0Message": "Tier 0 – Tabbatar da BVN ɗinka don Buɗe Samun Lamuni",
+    "loading": "Ana loda matsayin bashi...",
+    "tier0Message": "Mataki na 0 – Tabbatar da BVN ɗinka don buɗe damar karɓar rance",
     "bvnVerification": "Tabbatar da BVN",
     "unverified": "Ba a tabbatar ba",
-    "tier1Message": "Tier 1 – Kammala Tabbatar da NIN don Buɗe Tier 2",
+    "tier1Message": "Mataki na 1 – Kammala Tabbatar da NIN don buɗe Mataki na 2",
     "ninVerification": "Tabbatar da NIN",
     "completed": "An kammala",
-    "tier2Message": "Tier 2 Bai Cikakku ba – Tabbatar da NIN, BVN da Adireshi don samun aron ₦50,000",
+    "tier2AMessage": "Mataki na 2 Bai Cika Ba – Tabbatar da NIN, BVN da Adireshi don samun damar rance ₦50,000",
+    "tier2BMessage": "Mataki na 2 Ya Cika – Za ka iya karɓar rance ₦50,000",
     "addressVerification": "Tabbatar da Adireshi",
-    "pending": "Ana jira",
-    "tier3Message": "Tier 1 – Kammala Tabbatar da BVN don Buɗe Tier 2"
+    "pending": "Ana jiran"
   },
   "countdown": {
     "title": "Ragowar lokaci kafin biyan kuɗi na gaba:",
@@ -446,5 +446,145 @@
     "previous": "Na baya",
     "next": "Na gaba",
     "perPage": "A shafi"
+  },
+  "settings": {
+    "title": "Saituna",
+    "identity": "Shaida da Tabbatarwa",
+    "changePassword": "Canja Kalmar Sirri",
+    "notifications": "Sanarwa",
+    "support": "Taimako"
+  },
+  "identityVerification": {
+    "title": "Gane Shaida & Tabbatarwa",
+    "bvn": "BVN",
+    "phoneNumber": "Lambar Waya",
+    "ninVerified": "NIN An Tabbatar",
+    "residentialAddress": "Adireshin Gida",
+    "completed": "An Kammala",
+    "unverified": "Ba a Tabbatar ba",
+    "form": {
+      "nin": "NIN",
+      "enterNin": "Shigar da NIN ɗinka",
+      "country": "Ƙasa",
+      "state": "Jihar",
+      "selectState": "Zaɓi Jihar",
+      "street": "Titi",
+      "enterStreet": "Shigar da Sunan Titi",
+      "houseNumber": "Lambar Gida (ba dole ba)",
+      "enterHouseNumber": "Shigar da Lambar Gida (ba dole ba)",
+      "save": "Ajiye"
+    },
+    "errors": {
+      "ninRequired": "Don Allah shigar da NIN ɗinka",
+      "ninLength": "NIN dole ya kasance lambobi 11 kacal",
+      "countryRequired": "Ƙasa wajibi ne",
+      "stateRequired": "Jihar wajibi ce",
+      "streetRequired": "Titin wajibi ne",
+      "streetFormat": "Titi zai iya ƙunsar haruffa, lambobi, sarari da .,'- kawai",
+      "houseFormat": "Lambar gida na iya ƙunsar haruffa, lambobi, sarari da .,'- kawai",
+      "ninFailed": "Tabbatar da NIN ya kasa. Da fatan duba NIN ɗinka kuma gwada sake.",
+      "addressFailed": "Tabbatar da adireshi ya kasa. Da fatan duba adireshin kuma gwada sake.",
+      "ninGenericError": "An samu matsala wajen tabbatar da NIN. Da fatan gwada sake.",
+      "addressGenericError": "An samu matsala wajen tabbatar da adireshi. Da fatan gwada sake."
+    }
+  },
+  "settingsChangePassword": {
+    "title": "Sauya Kalmar sirri",
+    "current": "Kalmar Sirri ta yanzu",
+    "new": "Sabo Kalmar Sirri",
+    "confirm": "Tabbatar da Sabo Kalmar Sirri",
+    "placeholders": {
+      "current": "Shigar da Kalmar Sirri ta yanzu",
+      "password": "Shigar da Kalmar Sirri"
+    },
+    "forgot": "Ka manta kalmar sirri?",
+    "save": "Ajiye",
+    "success": "An sauya kalmar sirrinka cikin nasara.",
+    "errors": {
+      "password_required": "Kalmar sirri na da mahimmanci",
+      "password_min": "Kalmar sirri dole ta zama aƙalla haruffa 8",
+      "passwords_do_not_match": "Kalmar sirri ba su dace ba"
+    }
+  },
+
+  "settingsForgotPassword": {
+    "title": "Manta Kalmar Sirri?",
+    "subtext": "Shigar da adireshin imel ko lambar wayar da aka hada da asusunka. Za mu aiko maka da lamba don sauya kalmar sirri.",
+    "email_or_phone": "Imel ko Lambar Waya",
+    "placeholders": {
+      "email_phone": "Shigar da imel ko lambar waya"
+    },
+    "continue": "Ci gaba",
+    "error": "Ba mu samu asusun da wannan bayanin ba. Da fatan za a sake gwadawa.",
+    "success": "An aiko da lambar sauya kalmar sirri zuwa imel ko wayarka.",
+    "errors": {
+      "email_or_phone_required": "Dole ne a shigar da imel ko lambar waya.",
+      "invalid_email_or_phone": "Da fatan za a shigar da imel mai inganci ko lambar waya guda 11."
+    }
+  },
+
+  "settingsVerify": {
+    "title": "Tabbatar da Imel ko Lambar Wayarka",
+    "subtext": "Mun aiko lambar lambobi 4 zuwa imel ko wayarka. Da fatan za a shigar da ita don tabbatar da asusunka.",
+    "continue": "Ci gaba",
+    "resend": "Aiko lamba karo na biyu",
+    "resend_in": "Aiko lamba a cikin",
+    "resend_success": "An aiko sabuwar lamba.",
+    "error": "Lambar da ka shigar ba daidai ba ce. Da fatan a sake gwadawa.",
+    "success": "An tabbatar da lambarka! Ana canjawa...",
+    "errors": {
+      "digit_required": "Wannan filin dole ne.",
+      "invalid_digit": "Da fatan za a shigar da lamba mai inganci."
+    }
+  },
+
+  "passwordResetForm": {
+    "title": "Sauya Kalmar sirri",
+    "new": "Sabon Kalmar Sirri",
+    "confirm": "Tabbatar da Sabon Kalmar Sirri",
+    "placeholders": {
+      "password": "Shigar da Kalmar Sirri"
+    },
+    "save": "Ajiye",
+    "success": "An sauya kalmar sirrinka cikin nasara.",
+    "errors": {
+      "password_required": "Dole ne a shigar da kalmar sirri.",
+      "password_min": "Kalmar sirri dole ta zama aƙalla haruffa 8.",
+      "passwords_do_not_match": "Kalmar sirri ba su dace ba."
+    }
+  },
+
+  "notificationsSettings": {
+    "title": "Sanarwa",
+    "success": "An sabunta zaɓin da nasara!",
+    "error": "Akwai matsala wajen sabunta zaɓin. Da fatan a sake gwadawa.",
+    "sms": {
+      "label": "Sanarwar SMS",
+      "desc": "Samu bayanai kan rance da biyan bashin ta SMS"
+    },
+    "email": {
+      "label": "Sanarwar Imel",
+      "desc": "Samu bayanai kan rance da biyan bashin ta Imel"
+    }
+  },
+
+  "supportSection": {
+    "title": "Tallafi",
+    "email": {
+      "label": "Imel",
+      "desc": "Za ku samu amsa daga gare mu cikin yini ɗaya na aiki."
+    },
+    "instagram": {
+      "label": "Instagram",
+      "desc": "Ku bi mu a Instagram don samun sabbin labarai da abubuwan cikin gida."
+    },
+    "facebook": {
+      "label": "Facebook",
+      "desc": "Ku so shafinmu na Facebook don shiga cikin al'umma da samun sabbin bayanai."
+    },
+    "linkedin": {
+      "label": "LinkedIn",
+      "desc": "Ku haɗu da mu a LinkedIn don ƙarin bayani game da ƙungiyarmu, ayyuka, da cigaba."
+    }
   }
 }
