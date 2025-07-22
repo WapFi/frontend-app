@@ -4,23 +4,11 @@ import DateDisplay from "../DateDisplay";
 import calendarIcon from "../../../assets/calendar icon.svg";
 import bellIcon from "../../../assets/bell icon.svg";
 import { useLanguage } from "../../../context/LanguageContext";
-// import { useEffect, useState } from "react";
-// import { fetchUserMe } from "../../../api/mockApi";
 import { useTranslation } from "react-i18next";
 
 function HeaderBar({ userName }) {
   const { t } = useTranslation();
   const { language, setLanguage } = useLanguage();
-
-  // const [user, setUser] = useState(null);
-
-  // useEffect(() => {
-  //   fetchUserMe().then((res) => {
-  //     if (res.status) {
-  //       setUser(res.data);
-  //     }
-  //   });
-  // }, []);
 
   const nameParts = userName.full_name?.split(" ");
   const initials = nameParts

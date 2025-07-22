@@ -2,12 +2,13 @@ import { Outlet, useNavigate } from "react-router-dom";
 import HeaderBar from "./HeaderBar";
 import Sidebar from "./Sidebar";
 import MobileMenu from "./MobileMenu";
-import { fetchUserMe } from "../../../api/apiData";
+import { fetchUserMe, logOut } from "../../../api/apiData";
 import { useState, useEffect } from "react";
 import PageLoader from "../../PageLoader";
 import { useTranslation } from "react-i18next";
 import { useDashboard } from "../../../context/DashboardContext";
 import { use_UserData } from "../../../context/UserContext";
+import Toast from "./Toast";
 // import RepaymentsSection from "../RepaymentsSection";
 // import Repayments from "../../repayments/Repayments";
 
@@ -20,8 +21,8 @@ function Layout() {
   const { userData, setUserData } = use_UserData();
   // const [newUserRepayments, setNewUserRepayments] = false;
   const [error, setError] = useState(null);
-  const [signOut, setSignOut] = useState(null);
-  const [logoutError, setLogoutError] = useState(null);
+  const [toastMessage, setToastMessage] = useState(null);
+  const [toastType, setToastType] = useState(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -42,13 +43,13 @@ function Layout() {
     loadData();
   }, []);
 
-  // --- NEW: Dashboard Context for Active Loan Check ---
+  // Dashboard Context for Active Loan Check ---
   const { dashboardData } = useDashboard();
   const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
 
   // --- NEW: Take a Loan Click Handler ---
   const handleTakeLoanClick = () => {
-    console.log("user data: ", userData);
+    // console.log("user data: ", userData);
     if (dashboardData?.active_loan) {
       // User has an existing active loan
       setShowActiveLoanModal(true);
@@ -67,25 +68,61 @@ function Layout() {
     }
   };
 
+  // useEffect to clear toast message after a few seconds
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => {
+        setToastMessage(null);
+        setToastType(null);
+      }, 3000);
+      return () => clearTimeout(timer); // Cleanup on unmount or message change
+    }
+  }, [toastMessage]);
+
+  // handleLogOut
+  const handleLogOut = async () => {
+    setToastMessage(null);
+    setToastType(null);
+    try {
+      const response = await logOut();
+      if (response) {
+        setToastMessage(t("sidebar.logoutSuccess"));
+        setToastType("success");
+
+        // clear data
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("dashboardData");
+        localStorage.removeItem("loanConfirmationData");
+        localStorage.removeItem("repaymentsData");
+        localStorage.removeItem("userData");
+
+        setTimeout(() => {
+          navigate("/sign-in");
+        }, 3000);
+      } else {
+        setToastMessage(t("sidebar.logoutError"));
+        setToastType("error");
+      }
+    } catch (err) {
+      console.error("Logout error:", err);
+      setToastMessage(t("sidebar.logoutError"));
+      setToastType("error");
+    }
+  };
+
   // --- Loading/Error States for User Data ---
   if (error) return <div className="p-4 text-red-600">{t("layout.error")}</div>;
   if (!userData) return <PageLoader />;
 
-  {
-    logoutError && (
-      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 text-center">
-        {logoutError}
-      </div>
-    );
-  }
-
   return (
     <div className="flex gap-3.5 min-h-screen relative">
+      <Toast message={toastMessage} type={toastType} />
+
       {/* Sidebar for desktop */}
       <aside className="md:w-[30%] hidden lg:block lg:w-[23%]">
         <Sidebar
           onTakeLoanClick={handleTakeLoanClick}
-          setLogoutError={setLogoutError}
+          onLogOut={handleLogOut}
         />
       </aside>
 
@@ -100,7 +137,7 @@ function Layout() {
             <MobileMenu
               userName={userData}
               onTakeLoanClick={handleTakeLoanClick}
-              setLogoutError={setLogoutError}
+              onLogOut={handleLogOut}
             />
           </div>
         </header>

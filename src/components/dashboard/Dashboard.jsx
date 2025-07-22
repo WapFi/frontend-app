@@ -23,7 +23,7 @@ function Dashboard({ dashboardData }) {
   console.log("dashboard data: ", dashboardData);
 
   const dueDate = new Date(dashboardData.active_loan.due_date);
-  const targetTime = dueDate.getTime(); // milliseconds
+  const targetTime = dueDate.getTime(); 
 
   return (
     <div className="text-[18px] text-[#222] flex flex-col items-end md:items-start md:shrink-0 gap-8 py-4 px-2.5 lg:px-[23px]">
@@ -40,11 +40,21 @@ function Dashboard({ dashboardData }) {
           <CountdownTimer targetTime={targetTime} />
           <div className="flex flex-col flex-start gap-2">
             <p>{t("dashboard.outstandingLoanBalance")}</p>
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <img src={NairaIcon} alt="Naira Icon" />
               <p className="md:text-[24px] font-semibold">
                 {dashboardData.active_loan.outstanding_balance}
               </p>
+            </div> */}
+            <div className="flex items-center gap-1">
+              <img src={NairaIcon} alt="naira icon" />
+              <span>
+                {new Intl.NumberFormat("en-NG", {
+                  style: "decimal",
+
+                  maximumFractionDigits: 2,
+                }).format(dashboardData.active_loan.outstanding_balance)}
+              </span>
             </div>
           </div>
           {/* <div className="relative">

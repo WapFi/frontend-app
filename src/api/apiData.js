@@ -133,7 +133,7 @@ export const applyForLoan = async (loanFormData) => {
 export const updatePendingLoanDetails = async (loanFormData, loanID) => {
   const response = await axios.patch(`/loans/${loanID}/update`, loanFormData);
   return response.data;
-}
+};
 
 // confirm loan application
 export const confirmLoanApplication = async (loan_id, password) => {
@@ -142,6 +142,67 @@ export const confirmLoanApplication = async (loan_id, password) => {
     password: password,
   });
   return response;
+};
+
+// update preferences
+// export const updatePreferences = async (type, state) => {
+//   if (type === "sms") {
+//     const response = await axios.patch("/users/update-preferences", {
+//       preferences: {
+//         notification: {
+//           sms: state,
+//         },
+//       },
+//     });
+//     return response;
+//   } else if (type === "email") {
+//     const response = await axios.patch("/users/update-preferences", {
+//       preferences: {
+//         notification: {
+//           email: state,
+//         },
+//       },
+//     });
+//     return response;
+//   }
+// };
+
+export const updatePreferences = async (
+  type, // 'sms' or 'email' (can be null if only language is updated)
+  state, // true/false (can be null if only language is updated)
+  currentEmailState, // Current state of email preference
+  currentSmsState, // Current state of SMS preference
+  newLanguageCode // The new language code (e.g., 'ENG', 'HAU')
+) => {
+  const preferencesPayload = {
+    notification: {
+      email: currentEmailState, // Always send current email state
+      sms: currentSmsState, // Always send current SMS state
+    },
+  };
+
+  // If a specific notification type is being updated, override its value
+  if (type === "sms" && state !== null) {
+    // Check state !== null in case 'false' is passed explicitly
+    preferencesPayload.notification.sms = state;
+  } else if (type === "email" && state !== null) {
+    preferencesPayload.notification.email = state;
+  }
+
+  // Add language to the payload if it's provided
+  if (newLanguageCode) {
+    preferencesPayload.language = newLanguageCode;
+  }
+
+  try {
+    const response = await axios.patch("/users/update-preferences", {
+      preferences: preferencesPayload,
+    });
+
+    return response;
+  } catch (error) {
+    return response;
+  }
 };
 
 // record a payment

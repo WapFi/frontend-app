@@ -5,7 +5,7 @@
     "email_or_phone": "Email or Phone Number",
     "password": "Password",
     "remember_me": "Remember Me",
-    "forgot_password": "Forgot Password",
+    "forgot_password": "Forgot Password?",
     "sign_in": "Sign In",
     "invalid_credentials": "Incorrect email or phone number. Please try again.",
     "success": "Login successful!",
@@ -116,7 +116,8 @@
     "creditScore": "Credit Score",
     "settings": "Settings",
     "logout": "Log Out",
-    "logoutError": "Logout failed. Please try again."
+    "logoutError": "Logout failed. Please try again.",
+    "logoutSuccess": "Logout successful!"
   },
   "mobile_menu": {
     "dashboard": "Dashboard",
@@ -168,10 +169,10 @@
     "tier1Message": "Tier 1 – Complete NIN Verification to Unlock Tier 2",
     "ninVerification": "NIN Verification",
     "completed": "Completed",
-    "tier2Message": "Tier 2 Incomplete – Verify NIN, BVN and Address to Access ₦50,000 Loans",
+    "tier2AMessage": "Tier 2 Incomplete – Verify NIN, BVN and Address to Access ₦50,000 Loans",
+    "tier2BMessage": "Tier 2 Complete - You can access ₦50,000 Loans",
     "addressVerification": "Address Verification",
-    "pending": "Pending",
-    "tier3Message": "Tier 1 – Complete BVN Verification to Unlock Tier 2"
+    "pending": "Pending"
   },
   "countdown": {
     "title": "Time left to next payment:",
@@ -450,5 +451,145 @@
     "previous": "Previous",
     "next": "Next",
     "perPage": "Per page"
+  },
+  "settings": {
+    "title": "Settings",
+    "identity": "Identity & Verification",
+    "changePassword": "Change Password",
+    "notifications": "Notifications",
+    "support": "Support"
+  },
+  "identityVerification": {
+    "title": "Identity & Verification",
+    "bvn": "BVN",
+    "phoneNumber": "Phone Number",
+    "ninVerified": "NIN Verified",
+    "residentialAddress": "Residential Address",
+    "completed": "Completed",
+    "unverified": "Unverified",
+    "form": {
+      "nin": "NIN",
+      "enterNin": "Enter your NIN",
+      "country": "Country",
+      "state": "State",
+      "selectState": "Select State",
+      "street": "Street",
+      "enterStreet": "Enter your Street",
+      "houseNumber": "House Number (optional)",
+      "enterHouseNumber": "Enter your House No (optional)",
+      "save": "Save"
+    },
+    "errors": {
+      "ninRequired": "Please enter your NIN",
+      "ninLength": "NIN must be exactly 11 digits",
+      "countryRequired": "Country is required",
+      "stateRequired": "State is required",
+      "streetRequired": "Street is required",
+      "streetFormat": "Street can only contain letters, numbers, spaces and .,'-",
+      "houseFormat": "House number can only contain letters, numbers, spaces and .,'-",
+      "ninFailed": "NIN verification failed. Please check your NIN and try again.",
+      "addressFailed": "Address verification failed. Please check your address and try again.",
+      "ninGenericError": "Something went wrong verifying NIN. Please try again.",
+      "addressGenericError": "Something went wrong verifying address. Please try again."
+    }
+  },
+  "settingsChangePassword": {
+    "title": "Change Password",
+    "current": "Current Password",
+    "new": "New Password",
+    "confirm": "Confirm New Password",
+    "placeholders": {
+      "current": "Enter current password",
+      "password": "Enter password"
+    },
+    "forgot": "Forgot password?",
+    "save": "Save",
+    "success": "Your password was changed successfully.",
+    "errors": {
+      "password_required": "Password is required",
+      "password_min": "Password must be at least 8 characters",
+      "passwords_do_not_match": "Passwords do not match"
+    }
+  },
+
+  "settingsForgotPassword": {
+    "title": "Forgot Password?",
+    "subtext": "Enter the email or phone number linked to your account. We'll send you a code to reset your password.",
+    "email_or_phone": "Email or Phone Number",
+    "placeholders": {
+      "email_phone": "Enter email or phone number"
+    },
+    "continue": "Continue",
+    "error": "We couldn't find an account with that information. Please try again.",
+    "success": "A reset code has been sent to your email or phone.",
+    "errors": {
+      "email_or_phone_required": "Email or phone number is required.",
+      "invalid_email_or_phone": "Please enter a valid email or 11-digit phone number."
+    }
+  },
+
+  "settingsVerify": {
+    "title": "Verify Your Email Address or Phone Number",
+    "subtext": "We’ve sent a 4-digit code to your email or phone. Please enter it below to verify your account.",
+    "continue": "Continue",
+    "resend": "Resend code",
+    "resend_in": "Resend code in",
+    "resend_success": "A new code has been sent.",
+    "error": "The code you entered is incorrect. Please try again.",
+    "success": "Your code has been verified! Redirecting...",
+    "errors": {
+      "digit_required": "This field is required.",
+      "invalid_digit": "Please enter a valid digit."
+    }
+  },
+
+  "passwordResetForm": {
+    "title": "Change Password",
+    "new": "New Password",
+    "confirm": "Confirm New Password",
+    "placeholders": {
+      "password": "Enter password"
+    },
+    "save": "Save",
+    "success": "Your password was changed successfully.",
+    "errors": {
+      "password_required": "Password is required.",
+      "password_min": "Password must be at least 8 characters.",
+      "passwords_do_not_match": "Passwords do not match."
+    }
+  },
+
+  "notificationsSettings": {
+    "title": "Notifications",
+    "success": "Preference successfully updated!",
+    "error": "Error updating preference. Please try again.",
+    "sms": {
+      "label": "SMS Alerts",
+      "desc": "Get loan and repayment updates via SMS"
+    },
+    "email": {
+      "label": "Email Alerts",
+      "desc": "Get loan and repayment updates via Email"
+    }
+  },
+
+  "supportSection": {
+    "title": "Support",
+    "email": {
+      "label": "Email",
+      "desc": "You can expect a response from us within one business day."
+    },
+    "instagram": {
+      "label": "Instagram",
+      "desc": "Follow us on Instagram to stay updated with our latest posts and behind-the-scenes moments."
+    },
+    "facebook": {
+      "label": "Facebook",
+      "desc": "Like our Facebook page to join our community and never miss an important update."
+    },
+    "linkedin": {
+      "label": "LinkedIn",
+      "desc": "Connect with us on LinkedIn to learn more about our team, projects, and professional updates."
+    }
   }
 }

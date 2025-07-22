@@ -2,32 +2,31 @@ import React, { useRef, useEffect, useState } from "react";
 import NairaIcon from "../../assets/naira icon.svg"; // adjust path if needed
 // import { fetchDashboardData } from "../../api/mockApi";
 
-export default function RepaymentProgressBar({loanAmount, amountRepaid}) {
+export default function RepaymentProgressBar({ loanAmount, amountRepaid }) {
   // const [dashboardData, setDashboardData] = useState(null);
   const containerRef = useRef(null); // ✅ moved to top
   const [barWidth, setBarWidth] = useState(0); // ✅ moved to top
 
   useEffect(() => {
-  // if (!dashboardData) return;
+    // if (!dashboardData) return;
 
-  const updateWidth = () => {
-    if (containerRef.current) {
-      setBarWidth(containerRef.current.offsetWidth);
-    }
-  };
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setBarWidth(containerRef.current.offsetWidth);
+      }
+    };
 
-  // Use requestAnimationFrame for better layout sync
-  const raf = requestAnimationFrame(updateWidth);
+    // Use requestAnimationFrame for better layout sync
+    const raf = requestAnimationFrame(updateWidth);
 
-  // Also handle window resizing
-  window.addEventListener("resize", updateWidth);
+    // Also handle window resizing
+    window.addEventListener("resize", updateWidth);
 
-  return () => {
-    cancelAnimationFrame(raf);
-    window.removeEventListener("resize", updateWidth);
-  };
-}, [loanAmount]); // ✅ Runs only when data is available
-
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", updateWidth);
+    };
+  }, [loanAmount]); // ✅ Runs only when data is available
 
   // if (!dashboardData) return <p>Loading dashboard...</p>;
 
@@ -108,7 +107,13 @@ export default function RepaymentProgressBar({loanAmount, amountRepaid}) {
           }}
         >
           <img src={NairaIcon} alt="naira icon" className="w-3 h-3" />
-          <span>{loanAmount.toLocaleString()}</span>
+          <span>
+            {new Intl.NumberFormat("en-NG", {
+              style: "decimal",
+
+              maximumFractionDigits: 2,
+            }).format(loanAmount)}
+          </span>
         </p>
 
         {/* Progress Bar Background */}

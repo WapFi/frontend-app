@@ -9,9 +9,8 @@ import { useLanguage } from "../../../context/LanguageContext";
 import UKFlag from "../../../assets/UK Flag.svg";
 import NigerianFlag from "../../../assets/Nigerian Flag.svg";
 import logoutIcon from "../../../assets/logout icon.svg";
-// import { logOut } from "../../../api/apiData";
 
-function MobileMenu({ userName, onTakeLoanClick, setLogoutError }) {
+function MobileMenu({ userName, onTakeLoanClick, onLogOut }) {
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -38,23 +37,10 @@ function MobileMenu({ userName, onTakeLoanClick, setLogoutError }) {
     navigate("/credit-score");
   };
 
-    const handleSettingsClick = () => {
+  const handleSettingsClick = () => {
     setMenuOpen(false);
     navigate("/settings");
   };
-
-  // const handleLogOut = async () => {
-  //   try {
-  //     const response = await logOut();
-  //     if (response) {
-  //       // localStorage.removeItem("dashboardData");
-  //       // localStorage.removeItem("repaymentsData");
-  //       navigate("/sign-in");
-  //     }
-  //   } catch (error) {
-  //     setLogoutError(t("mobile_menu.logoutError"));
-  //   }
-  // };
 
   return (
     <div className={`${menuOpen ? "bg-white h-screen" : "bg-[#f1f1f1]"}`}>
@@ -303,9 +289,7 @@ function MobileMenu({ userName, onTakeLoanClick, setLogoutError }) {
             role="button"
             tabIndex={0}
             className="text-[#2D6157] flex items-center gap-3 self-stretch h-[40px] px-[16px] mt-20 cursor-pointer"
-            onClick={() => {
-              // handleLogOut();
-            }}
+            onClick={onLogOut}
           >
             <img src={logoutIcon} alt="log out icon" />
             <p>{t("mobile_menu.logout")}</p>

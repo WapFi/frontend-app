@@ -177,10 +177,30 @@ function New_User_Dashboard({ dashboardData }) {
   const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
 
   // --- NEW: Take a Loan Click Handler ---
-  const handleTakeLoanClick = () => {
+  // const handleTakeLoanClick = () => {
+  //   if (dashboardData?.active_loan) {
+  //     // User has an existing active loan
+  //     setShowActiveLoanModal(true);
+  //   } else if (dashboardData.credit_score.current_score === 0) {
+  //     navigate("/take-a-loan/enter-bvn");
+  //   } else if (userData.phone_verified === false) {
+  //     navigate("/take-a-loan/verify-phone");
+  //   } else {
+  //     // User is eligible
+  //     navigate("/take-a-loan/form/loan-amount-purpose");
+  //   }
+  // };
+
+    const handleTakeLoanClick = () => {
+    // console.log("user data: ", userData);
     if (dashboardData?.active_loan) {
       // User has an existing active loan
       setShowActiveLoanModal(true);
+    } else if (
+      dashboardData?.pending_loan?.status === "PENDING" &&
+      userData.phone_verified === true
+    ) {
+      navigate("/take-a-loan/loan-repayment-overview");
     } else if (dashboardData.credit_score.current_score === 0) {
       navigate("/take-a-loan/enter-bvn");
     } else if (userData.phone_verified === false) {

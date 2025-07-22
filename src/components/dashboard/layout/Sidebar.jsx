@@ -2,12 +2,11 @@ import WapfiLogo from "../../WapfiLogo";
 import logoutIcon from "../../../assets/logout icon.svg";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-// import { logOut } from "../../../api/apiData";
 // import { useRepayments } from "../../../context/RepaymentsContext";
 import { useNavigate } from "react-router-dom";
 // import { useState } from "react";
 
-function Sidebar({ onTakeLoanClick, setLogoutError }) {
+function Sidebar({ onTakeLoanClick, onLogOut }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
@@ -28,19 +27,6 @@ function Sidebar({ onTakeLoanClick, setLogoutError }) {
   const handleSettingsClick = () => {
     navigate("/settings");
   };
-
-  // const handleLogOut = async () => {
-  //   try {
-  //     const response = await logOut();
-  //     if (response) {
-  //       // localStorage.removeItem("dashboardData");
-  //       // localStorage.removeItem("repaymentsData");
-  //       navigate("/sign-in");
-  //     }
-  //   } catch (error) {
-  //     setLogoutError(t("sidebar.logoutError"));
-  //   }
-  // };
 
   return (
     <div className="h-full text-[#A0B0AB] text-[16px] px-6 pt-5 bg-white grow rounded-tl-none rounded-bl-none rounded-tr-[20px] rounded-br-[20px] border-r border-[#00000014]">
@@ -256,9 +242,7 @@ function Sidebar({ onTakeLoanClick, setLogoutError }) {
           role="button"
           tabIndex={0}
           className="2xl:w-[95%] text-[#2D6157] flex items-center gap-3 self-stretch h-[40px] py-[8px] px-[16px] mt-38 cursor-pointer"
-          onClick={() => {
-            // handleLogOut();
-          }}
+          onClick={onLogOut}
         >
           <img src={logoutIcon} alt="log out icon" />
           <p>{t("sidebar.logout")}</p>
