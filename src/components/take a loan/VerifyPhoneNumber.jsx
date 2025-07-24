@@ -286,9 +286,10 @@ export default function VerifyPhoneNumber() {
       }),
   });
 
-  const [showFormError, setShowFormError] = useState(false);
-  const [showVerificationSuccess, setShowVerificationSuccess] = useState(false);
-  const [showResendSuccess, setShowResendSuccess] = useState(false);
+  const [showFormError, setShowFormError] = useState("");
+  const [showVerificationSuccess, setShowVerificationSuccess] = useState("");
+  const [showResendSuccess, setShowResendSuccess] = useState("");
+  const [showResendFailure, setShowResendFailure] = useState("");
   const [resending, setResending] = useState(false);
 
   const [secondsLeft, setSecondsLeft] = useState(60);
@@ -322,10 +323,8 @@ export default function VerifyPhoneNumber() {
       const response = await verifyIdentity("phone", code);
 
       if (response.status) {
-        // Simulate verification and move to next screen
-        setShowFormError(false);
-        setLoading(false);
-        setShowVerificationSuccess(true);
+        setShowVerificationSuccess(response.data?.message);
+        console.log(response.data?.message);
 
         // refresh user data to make sure we get the latest data
         const updatedUserData = await refreshUserData();
@@ -336,14 +335,18 @@ export default function VerifyPhoneNumber() {
           } else if (updatedUserData?.pending_loan.status === "PENDING") {
             navigate("/take-a-loan/loan-repayment-overview");
           }
-        }, 1000);
+        }, 3000);
+      } else {
+        setShowFormError(response.data?.message);
       }
     } catch (error) {
-      console.log("Error verifying phone number");
-      setShowFormError(true);
-      setLoading(false);
+      setShowFormError(error.response?.data?.message);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        setShowFormError("");
+        setShowVerificationSuccess("");
+      }, 2500);
     }
   };
 
@@ -396,17 +399,17 @@ export default function VerifyPhoneNumber() {
 
           {showFormError && (
             <p className="text-[#EF4444] text-center mb-3">
-              {t("verifyPhone.error")}
+              {showFormError || t("verifyPhone.error")}
             </p>
           )}
 
           {showVerificationSuccess && (
-            <p className="text-green-500 mb-3">{t("verifyPhone.success")}</p>
+            <p className="text-green-500 mb-3">{showVerificationSuccess || t("verifyPhone.success")}</p>
           )}
 
           {showResendSuccess && (
             <p className="text-green-500 mb-3">
-              {t("verifyPhone.resend_success")}
+              {showResendSuccess || t("verifyPhone.resend_success")}
             </p>
           )}
 

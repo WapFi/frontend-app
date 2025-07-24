@@ -246,6 +246,11 @@ function SignUpAccountVerification() {
   const [fadeIn, setFadeIn] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [showFormError, setShowFormError] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   useEffect(() => {
     setFadeIn(true);
   }, []);
@@ -296,14 +301,10 @@ function SignUpAccountVerification() {
       ),
   });
 
-  const [showFormError, setShowFormError] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const {
     register,
     handleSubmit,
+    reset,
     // setValue,
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
@@ -340,18 +341,30 @@ function SignUpAccountVerification() {
         // confirmedPassword: signUpData.confirmedPassword,
       });
 
-      console.log("Sign up success:", response.data);
-      setShowFormError(false);
-      setShowSuccessMessage(true);
+      if (response.status === 200) {
+        console.log("Sign up success:", response.data);
 
-      setTimeout(() => {
-        navigate("/sign-in");
-      }, 2000);
+        setShowSuccessMessage(response.data?.message);
+
+        // reset form
+        reset();
+
+        setTimeout(() => {
+          navigate("/sign-in");
+        }, 3500);
+      } else {
+        setShowFormError(response.data?.message);
+      }
     } catch (error) {
       console.error("Sign up error:", error);
-      setShowFormError(true);
+      setShowFormError(error.response?.data?.message);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        // reset success and error states
+        setShowFormError("");
+        setShowSuccessMessage("");
+      }, 3000);
     }
   };
 
@@ -378,11 +391,15 @@ function SignUpAccountVerification() {
             </div>
 
             {showFormError && (
-              <p className="text-red-500 mb-3">{t("sign_up.error")}</p>
+              <p className="text-red-500 mb-3">
+                {showFormError || t("sign_up.error")}
+              </p>
             )}
 
             {showSuccessMessage && (
-              <p className="text-green-500 mb-3">{t("sign_up.success")}</p>
+              <p className="text-green-500 mb-3">
+                {showSuccessMessage || "sign_up.success"}
+              </p>
             )}
 
             <label className="text-[#222] gap-2">
@@ -511,7 +528,9 @@ function SignUpAccountVerification() {
                   type="button"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  aria-label={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
                 >
                   {showConfirmPassword ? (
                     <svg

@@ -231,14 +231,15 @@ function SignIn() {
       .min(8, t("sign_in.errors.password_min")),
   });
 
-  const [showFormError, setShowFormError] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showFormError, setShowFormError] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
@@ -269,27 +270,63 @@ function SignIn() {
         // { withCredentials: true }
       );
 
-      localStorage.setItem("auth_token", response.data.token);
-      // console.log("Token saved:", response.data.token);
-      setShowFormError(false);
-      setShowSuccessMessage(true);
+      if (response.status === 200) {
+        localStorage.setItem("auth_token", response.data.token);
+        // console.log("Token saved:", response.data.token);
+        // setShowFormError("");
+        setShowSuccessMessage(response.data?.message);
+        reset();
+        console.log(response.data?.message)
 
-      // navigate to dashboard
-      const userRole = response.data?.role || null;
-      if (userRole === "WAPFI_SUPER_ADMIN" || userRole === "WAPFI_ADMIN") {
-        navigate("/admin/dashboard");
-      } else {
-        console.log("User detected");
-        navigate("/dashboard");
+        // navigate to dashboard
+        const userRole = response.data?.role || null;
+        if (userRole === "WAPFI_SUPER_ADMIN" || userRole === "WAPFI_ADMIN") {
+          setTimeout(() => {
+            // reset state and navigate
+            setShowSuccessMessage("");
+            navigate("/admin/dashboard");
+          }, 3000);
+        } else {
+          console.log("User detected");
+          setTimeout(() => {
+            // reset state and navigate
+            setShowSuccessMessage("");
+            navigate("/dashboard");
+          }, 3000);
+        }
       }
+
+      // localStorage.setItem("auth_token", response.data.token);
+      // // console.log("Token saved:", response.data.token);
+      // setShowFormError(false);
+      // setShowSuccessMessage(true);
+
+      // // navigate to dashboard
+      // const userRole = response.data?.role || null;
+      // if (userRole === "WAPFI_SUPER_ADMIN" || userRole === "WAPFI_ADMIN") {
+      //   setTimeout(() => {
+      //     // reset state and navigate
+      //     setShowSuccessMessage(false);
+      //     navigate("/admin/dashboard");
+      //   }, 3000);
+      // } else {
+      //   console.log("User detected");
+      //   setTimeout(() => {
+      //     // reset state and navigate
+      //     setShowSuccessMessage(false);
+      //     navigate("/dashboard");
+      //   }, 3000);
+      // }
     } catch (error) {
       console.error("Login error:", error);
-      setShowFormError(true);
+      setShowFormError(error.response?.data?.message);
+      console.log(error.response?.data?.message);
+      setTimeout(() => {
+        // reset state
+        setShowFormError("");
+      }, 3000);
     } finally {
       setLoading(false);
-      // clear states
-      setShowFormError(false);
-      setShowSuccessMessage(false);
     }
   };
 
@@ -319,12 +356,12 @@ function SignIn() {
 
             {showFormError && (
               <p className="text-red-500 mb-3">
-                {t("sign_in.invalid_credentials")}
+                {showFormError || t("sign_in.invalid_credentials")}
               </p>
             )}
 
             {showSuccessMessage && (
-              <p className="text-green-500 mb-3">{t("sign_in.success")}</p>
+              <p className="text-green-500 mb-3">{showSuccessMessage || t("sign_in.success")}</p>
             )}
 
             <label className="text-[#222] gap-2">

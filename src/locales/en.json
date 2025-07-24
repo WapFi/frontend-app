@@ -337,8 +337,9 @@
     "repaymentScheduleLabel": "Select your preferred repayment schedule",
     "repaymentScheduleOptions": {
       "Weekly": "Weekly",
-      "Biweekly": "Biweekly",
-      "Monthly": "Monthly"
+      "Bi-Weekly": "Bi-Weekly",
+      "Monthly": "Monthly",
+      "Bi-Monthly": "Bi-Monthly"
     },
     "errors": {
       "repaymentMethodRequired": "Please select your repayment method.",
@@ -382,6 +383,7 @@
     "disbursementTo": "Disbursement To",
     "confirmationNotice": "By entering your password, you confirm acceptance of the loan terms and authorize disbursement to the selected bank account.",
     "formError": "Password may be incorrect. Please try again.",
+     "formSuccess": "Loan confirmed and disbursed successfully.",
     "passwordLabel": "Password",
     "passwordPlaceholder": "Enter your password",
     "passwordRequired": "Please enter your password",
@@ -390,7 +392,8 @@
   },
   "loanApprovalModal": {
     "title": "Loan Approved & Sent!",
-    "message": "Your loan of ₦{{loan_amount}} has been successfully disbursed to your bank account. You'll repay with {{total_plastic_to_repay_kg}} kg of recyclable plastics based on your selected repayment plan."
+    "message": "Your loan of ₦{{loan_amount}} has been successfully disbursed to your bank account. You'll repay with <0>{{total_plastic_to_repay_kg}} kg of recyclable plastics</0> based on your selected repayment plan.",
+    "goToDashboard": "Go to Dashboard"
   },
   "cancelApplicationModal": {
     "error": "Something went wrong. Please try again.",

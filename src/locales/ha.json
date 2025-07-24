@@ -335,8 +335,9 @@
     "repaymentScheduleLabel": "Zaɓi tsarin biyan kuɗin da kake so",
     "repaymentScheduleOptions": {
       "Weekly": "A kowane mako",
-      "Biweekly": "Kowane mako biyu",
-      "Monthly": "Kowane wata"
+      "Bi-Weekly": "Kowane mako biyu",
+      "Monthly": "Kowane wata",
+      "Bi-Monthly": "Kowane wata biyu"
     },
     "errors": {
       "repaymentMethodRequired": "Da fatan zaɓi hanyar biyan kuɗi.",
@@ -380,6 +381,7 @@
     "disbursementTo": "An Tura Zuwa",
     "confirmationNotice": "Ta hanyar shigar da kalmar sirri, kana tabbatar da amincewa da sharuɗɗan lamuni kuma kana ba da izinin a tura kuɗin zuwa asusun bankin da aka zaɓa.",
     "formError": "Kalmar sirri ba daidai ba ce. Don Allah a sake gwadawa.",
+    "formSuccess": "An tabbatar da rancen kuma an tura shi cikin nasara.",
     "passwordLabel": "Kalmar sirri",
     "passwordPlaceholder": "Shigar da kalmar sirri",
     "passwordRequired": "Don Allah a shigar da kalmar sirri.",
@@ -388,7 +390,8 @@
   },
   "loanApprovalModal": {
     "title": "An Amince da Lamuni Kuma An Tura Shi!",
-    "message": "An riga an tura maka lamuni na ₦{{loan_amount}} cikin asusun bankinka. Za ka biya da {{total_plastic_to_repay_kg}} kg na robobin da za a iya sake amfani da su bisa ga tsarin biyan da ka zaɓa."
+    "message": "An riga an tura maka lamuni na ₦{{loan_amount}} cikin asusun bankinka. Za ka biya da <0>{{total_plastic_to_repay_kg}} kg na robobin da za a iya sake amfani da su</0> bisa ga tsarin biyan da ka zaɓa.",
+    "goToDashboard": "Komawa Dashboard"
   },
   "cancelApplicationModal": {
     "error": "Wani abu ya faru. Don Allah a sake gwadawa.",

@@ -1,5 +1,3 @@
-
-
 import arrowTimer from "../../assets/arrow-timer.svg";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -63,9 +61,10 @@ function VerifyPhoneEmail() {
       }),
   });
 
-  const [showFormError, setShowFormError] = useState(false);
-  const [showVerificationSuccess, setShowVerificationSuccess] = useState(false);
-  const [showResendSuccess, setShowResendSuccess] = useState(false);
+  const [showFormError, setShowFormError] = useState("");
+  const [showVerificationSuccess, setShowVerificationSuccess] = useState("");
+  const [showResendSuccess, setShowResendSuccess] = useState("");
+  const [showResendFailure, setShowResendFailure] = useState("");
   const [resending, setResending] = useState(false);
 
   const [secondsLeft, setSecondsLeft] = useState(60);
@@ -99,22 +98,30 @@ function VerifyPhoneEmail() {
 
     try {
       const response = await axios.get(`/auth/verify/${code}`);
-      localStorage.setItem("otpCode", code);
 
-      setShowFormError(false);
-      setShowVerificationSuccess(true);
+      if (response.status === 200) {
+        localStorage.setItem("otpCode", code);
 
-       // this is needed just incase the user wants to ask for code resend
-      localStorage.removeItem("userIdentifier");
+        setShowVerificationSuccess(response.data?.message);
 
-      setTimeout(() => {
-        setLoading(false);
-        navigate("/change-password");
-      }, 2000);
+        localStorage.removeItem("userIdentifier");
+
+        setTimeout(() => {
+          navigate("/change-password");
+        }, 4000);
+      } else {
+        setShowFormError(response.data?.message);
+      }
     } catch (error) {
       console.error("Code verification error:", error);
-      setShowFormError(true);
+      setShowFormError(error.response?.data?.message);
+      // setLoading(false);
+    } finally {
       setLoading(false);
+      setTimeout(() => {
+        setShowFormError("");
+        setShowVerificationSuccess("");
+      }, 3500);
     }
   };
 
@@ -122,15 +129,24 @@ function VerifyPhoneEmail() {
     setResending(true);
     try {
       const identifier = localStorage.getItem("userIdentifier");
-      await axios.post("/auth/request_reset", {
+      const response = await axios.post("/auth/request_reset", {
         identifier,
       });
-      setShowResendSuccess(true);
-      setSecondsLeft(60);
+      if (response.status === 200) {
+        setShowResendSuccess(response.data?.message);
+        setSecondsLeft(60);
+      } else {
+        setShowResendFailure(response.data?.message);
+      }
     } catch (error) {
       console.error("Failed to resend code:", error);
+      setShowResendFailure(error.response?.data?.message);
     } finally {
       setResending(false);
+      setTimeout(() => {
+        setShowResendFailure("");
+        setShowResendSuccess("");
+      }, 4000);
     }
   };
 
@@ -173,16 +189,24 @@ function VerifyPhoneEmail() {
               </p>
 
               {showFormError && (
-                <p className="text-red-500 mb-3">{t("verify.error")}</p>
+                <p className="text-red-500 mb-3">
+                  {showFormError || t("verify.error")}
+                </p>
               )}
 
               {showVerificationSuccess && (
-                <p className="text-green-500 mb-3">{t("verify.success")}</p>
+                <p className="text-green-500 mb-3">
+                  {showVerificationSuccess || t("verify.success")}
+                </p>
+              )}
+
+              {showResendFailure && (
+                <p className="text-red-500 mb-3">{showResendFailure}</p>
               )}
 
               {showResendSuccess && (
                 <p className="text-green-500 mb-3">
-                  {t("verify.resend_success")}
+                  {showResendSuccess || t("verify.resend_success")}
                 </p>
               )}
 
