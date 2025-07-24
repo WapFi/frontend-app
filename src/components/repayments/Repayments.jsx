@@ -319,7 +319,7 @@ export default function Repayments() {
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState("");
-  const { dashboardData } = useDashboard();
+  const { dashboardData, refreshDashboardData} = useDashboard();
   const [loading, setLoading] = useState(true);
   const { repaymentsData, setRepaymentsData } = useRepayments();
   const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
@@ -359,20 +359,37 @@ export default function Repayments() {
     !dashboardData.active_loan ||
     dashboardData.pending_loan?.status === "PENDING";
 
+  // useEffect(() => {
+  //   const loadRepayments = async () => {
+  //     try {
+  //       const res = await fetchRepayments();
+  //       console.log("list: ", res.data.repayments);
+  //       setRepaymentsData(res.status ? res.data.repayments : []);
+  //     } catch (error) {
+  //       setRepaymentsData([]);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   loadRepayments();
+  // }, [setRepaymentsData]);
+
   useEffect(() => {
-    const loadRepayments = async () => {
-      try {
-        const res = await fetchRepayments();
-        console.log("list: ", res.data.repayments);
-        setRepaymentsData(res.status ? res.data.repayments : []);
-      } catch (error) {
-        setRepaymentsData([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadRepayments();
-  }, [setRepaymentsData]);
+  const loadAllData = async () => {
+    setLoading(true);                
+    await refreshDashboardData();     // refresh dashboard data
+    const res = await fetchRepayments();  // then fetch repayments
+    if (res.status) {
+      setRepaymentsData(res.data.repayments);
+    } else {
+      setRepaymentsData([]);
+    }
+    setLoading(false);               
+  };
+
+  loadAllData();
+}, []);
+
 
   useEffect(() => {
     const handleResize = () => {

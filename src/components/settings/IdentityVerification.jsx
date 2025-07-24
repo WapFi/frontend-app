@@ -1,4 +1,3 @@
-
 import UnverifiedIcon from "../../assets/unverified icon.svg";
 import VerifiedIcon from "../../assets/verified icon.svg";
 import { useTranslation } from "react-i18next";
@@ -22,6 +21,7 @@ export default function IdentityVerification() {
 
   const [displayStateDropdown, setDisplayStateDropdown] = useState(false);
   const [showFormError, setShowFormError] = useState(false);
+  const [showFormSuccess, setShowFormSuccess] = useState(false);
 
   const [showNINError, setShowNINError] = useState("");
   const [showAddressError, setShowAddressError] = useState("");
@@ -31,8 +31,7 @@ export default function IdentityVerification() {
   const nin_verified = userData.nin_verified;
   const phone_verified = userData.phone_verified;
   const address_verified = userData.address_verified;
-  const allVerified =
-    bvn_verified && nin_verified && phone_verified && address_verified;
+  const ninAddressVerified = nin_verified && address_verified;
 
   // Conditional Yup schema (with translations!)
   const schema = yup.object().shape({
@@ -79,27 +78,45 @@ export default function IdentityVerification() {
   const onSubmit = async (data) => {
     setLoading(true);
     setShowFormError(false);
+    setShowFormSuccess(false);
     setShowNINError("");
     setShowAddressError("");
 
     let ninOk = nin_verified;
     let addrOk = address_verified;
 
+    let ninMessage = "";
+    let addressMessage = "";
+
     // verify NIN (if not already verified)
     if (!nin_verified && data.nin) {
       try {
         const nin_response = await verifyIdentity("nin", data.nin);
-        if (!nin_response.status) {
+        if (nin_response.status !== 200) {
+          //   setShowNINError(t("identityVerification.errors.ninFailed"));
+          // Show error message from backend or fallback translation
           setShowNINError(
-            t("identityVerification.errors.ninFailed")
+            nin_response.message
+              ? "NIN: " + nin_response.message
+              : t("identityVerification.errors.ninFailed")
           );
         } else {
+        //   console.log("success nin: ", nin_response);
+        //   console.log("nin msg: ", nin_response?.data?.message);
           ninOk = true;
+          ninMessage = nin_response?.data?.message || "";
+          //   setShowFormSuccess(nin_response?.data?.message);
         }
       } catch (error) {
-        setShowFormError(
-          t("identityVerification.errors.ninGenericError")
-        );
+        // setShowFormError(t("identityVerification.errors.ninGenericError"));
+        // setLoading(false);
+        // return;
+        // console.log("nin error: ", error);
+        // console.log("nin msg: ", error?.response?.data.message);
+        const errMsg =
+          error?.response?.data?.message ||
+          t("identityVerification.errors.ninGenericError");
+        setShowFormError(errMsg);
         setLoading(false);
         return;
       }
@@ -116,34 +133,62 @@ export default function IdentityVerification() {
           data.street +
           (data.house_number ? " " + data.house_number : "");
         const address_response = await verifyIdentity("address", address);
-        if (!address_response.status) {
+        if (address_response.status !== 200) {
+          //   setShowAddressError(t("identityVerification.errors.addressFailed"));
           setShowAddressError(
-            t("identityVerification.errors.addressFailed")
+            address_response.message
+              ? "Address: " + address_response.message
+              : t("identityVerification.errors.addressFailed")
           );
         } else {
+        //   console.log("success: ", address_response);
+        //   console.log("address msg: ", address_response?.data?.message);
+
           addrOk = true;
+          addressMessage = address_response?.data?.message || "";
+          //   setShowFormSuccess(address_response?.data?.message);
         }
       } catch (error) {
-        setShowFormError(
-          t("identityVerification.errors.addressGenericError")
-        );
+        // setShowFormError(t("identityVerification.errors.addressGenericError"));
+        // setLoading(false);
+        // return;
+        // console.log("address error: ", error);
+        // console.log("nin msg: ", error?.response?.data.message);
+
+        const errMsg =
+          error?.response?.data?.message ||
+          t("identityVerification.errors.addressGenericError");
+        setShowFormError(errMsg);
         setLoading(false);
         return;
       }
     }
 
+    // if both nin and address successfully verify, only then show success message
+    // show the success message of either, this is from backend response
+    if (ninOk && addrOk) {
+      setShowFormSuccess(ninMessage);
+    } else if (ninOk && !addrOk) {
+      // show success message
+      setShowFormSuccess("NIN: ", ninMessage);
+    } else if (addrOk && !ninOk) {
+      setShowFormSuccess("Address: ", addressMessage);
+    }
+
     // If either newly verified (or already verified), refresh user data
     if (ninOk !== nin_verified || addrOk !== address_verified) {
-      try {
-        const freshUserData = await refreshUserData();
-        if (freshUserData) {
-          reset();
-          await refreshDashboardData();
+      setTimeout(async () => {
+        try {
+          const freshUserData = await refreshUserData();
+          if (freshUserData) {
+            reset();
+            await refreshDashboardData();
+          }
+        } catch (err) {
+          // not critical for user - just log
+          console.warn("Could not refresh user after verification", err);
         }
-      } catch (err) {
-        // not critical for user - just log
-        console.warn("Could not refresh user after verification", err);
-      }
+      }, 3000);
     }
 
     setLoading(false);
@@ -281,13 +326,17 @@ export default function IdentityVerification() {
       </div>
 
       {/* Conditional form rendering if all not verified */}
-      {!allVerified && (
+      {!ninAddressVerified && (
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="mt-7 w-full flex flex-col gap-1.5 self-stretch md:text-[18px]"
         >
           {showFormError && (
             <p className="text-red-500 mb-3">{showFormError}</p>
+          )}
+
+          {showFormSuccess && (
+            <p className="text-green-500 mb-3">{showFormSuccess}</p>
           )}
 
           {/* NIN */}

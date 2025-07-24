@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -11,6 +10,8 @@ export default function PasswordResetForm() {
   const [loading, setLoading] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showFormError, setShowFormError] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState("");
 
   const { t } = useTranslation();
   const schema = yup.object({
@@ -28,9 +29,6 @@ export default function PasswordResetForm() {
       ),
   });
 
-  const [showFormError, setShowFormError] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -42,31 +40,35 @@ export default function PasswordResetForm() {
     setLoading(true);
 
     if (passwordData.newPassword !== passwordData.confirmedPassword) {
-      setShowFormError(true);
+      setShowFormError(t("passwordResetForm.errors.passwords_do_not_match"));
       setLoading(false);
       return;
     }
     try {
       // get otp code
       const otp = localStorage.getItem("otpCode");
-      await axios.patch("/auth/reset_password", {
+      const response = await axios.patch("/auth/reset_password", {
         code: otp,
         new_password: passwordData.newPassword,
       });
 
-      setShowFormError(false);
-      setShowSuccessMessage(true);
+      if (response.status === 200) {
+        setShowSuccessMessage(response.data?.message);
 
-      // now remove otp code
-      localStorage.removeItem("otpCode");
-      reset();
+        // now remove otp code
+        localStorage.removeItem("otpCode");
+        reset();
+      } else {
+        setShowFormError(response.data?.message);
+      }
     } catch (error) {
-      setShowFormError(true);
+      console.log(error);
+      setShowFormError(error.response?.data?.message);
     } finally {
       setTimeout(() => {
         setLoading(false);
-        setShowSuccessMessage(false);
-        setShowFormError(false);
+        setShowSuccessMessage("");
+        setShowFormError("");
       }, 3000);
     }
   };
@@ -82,11 +84,14 @@ export default function PasswordResetForm() {
       >
         {showFormError && (
           <p className="text-red-500 mb-3">
-            {t("passwordResetForm.errors.passwords_do_not_match")}
+            {showFormError ||
+              t("passwordResetForm.errors.passwords_do_not_match")}
           </p>
         )}
         {showSuccessMessage && (
-          <p className="text-green-500 mb-3">{t("passwordResetForm.success")}</p>
+          <p className="text-green-500 mb-3">
+            {showSuccessMessage || t("passwordResetForm.success")}
+          </p>
         )}
 
         <label className="text-[#222] gap-2">
@@ -228,4 +233,3 @@ export default function PasswordResetForm() {
     </div>
   );
 }
-

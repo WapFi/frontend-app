@@ -1,5 +1,3 @@
-
-
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -36,35 +34,46 @@ export default function ForgotPassword() {
       ),
   });
 
-  const [showFormError, setShowFormError] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showFormError, setShowFormError] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState("");
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
   const onSubmit = async (phoneEmailData) => {
     setLoading(true);
     try {
-      await axios.post("/auth/request_reset", {
+      const response = await axios.post("/auth/request_reset", {
         identifier: phoneEmailData.emailPhone,
       });
 
-      setShowFormError(false);
-      setShowSuccessMessage(true);
+      if (response.status === 200) {
+        setShowSuccessMessage(response.data?.message);
+      } else {
+        setShowFormError(response.data?.message);
+        // console.log("err in else: ", response);
+      }
 
       // For resending code
       localStorage.setItem("userIdentifier", phoneEmailData.emailPhone);
 
       setTimeout(() => {
+        reset();
         navigate("/settings/verify-phone-email");
       }, 2000);
     } catch (error) {
-      setShowFormError(true);
+      setShowFormError(error.response?.data?.message);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        // reset success and error message states
+        setShowFormError("");
+        setShowSuccessMessage("");
+      }, 3000);
     }
   };
 
@@ -84,11 +93,15 @@ export default function ForgotPassword() {
         </div>
 
         {showFormError && (
-          <p className="text-red-500 mb-3">{t("settingsForgotPassword.error")}</p>
+          <p className="text-red-500 mb-3">
+            {showFormError || t("settingsForgotPassword.error")}
+          </p>
         )}
 
         {showSuccessMessage && (
-          <p className="text-green-500 mb-3">{t("settingsForgotPassword.success")}</p>
+          <p className="text-green-500 mb-3">
+            {showSuccessMessage || t("settingsForgotPassword.success")}
+          </p>
         )}
 
         <label className="text-[#222] gap-2">

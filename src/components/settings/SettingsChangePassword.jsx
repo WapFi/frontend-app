@@ -36,8 +36,8 @@ export default function SettingsChangePassword() {
       ),
   });
 
-  const [showFormError, setShowFormError] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showFormError, setShowFormError] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState("");
 
   const {
     register,
@@ -55,20 +55,27 @@ export default function SettingsChangePassword() {
     setShowFormError(false);
 
     try {
-      await axios.patch("/users/change-password", {
+      const response = await axios.patch("/users/change-password", {
         old_password: passwordData.currentPassword,
         new_password: passwordData.newPassword,
       });
-      setShowSuccessMessage(true);
-      setShowFormError(false);
-      reset();
+      if (response.status === 200) {
+        console.log("success msg: ", response);
+        setShowSuccessMessage(response.data?.message);
+
+        // reset form after success
+        reset();
+      } else {
+        setShowFormError(response.data?.message);
+      }
     } catch (error) {
-      setShowFormError(true);
+      console.log("err msg: ", error.response?.data?.message);
+      setShowFormError(error.response?.data?.message);
     } finally {
       setLoading(false);
       setTimeout(async () => {
-        setShowSuccessMessage(false);
-        setShowFormError(false);
+        setShowSuccessMessage("");
+        setShowFormError("");
       }, 3000);
     }
   };
@@ -85,12 +92,13 @@ export default function SettingsChangePassword() {
         {showFormError && (
           <p className="text-red-500 mb-3">
             {/* General error message, optional: customize if you want */}
-            {t("settingsChangePassword.errors.passwords_do_not_match")}
+            {showFormError ||
+              t("settingsChangePassword.errors.passwords_do_not_match")}
           </p>
         )}
         {showSuccessMessage && (
           <p className="text-green-500 mb-3">
-            {t("settingsChangePassword.success")}
+            {showSuccessMessage || t("settingsChangePassword.success")}
           </p>
         )}
 

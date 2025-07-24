@@ -20,7 +20,7 @@ export default function LoanRepaymentOverview() {
   const { dashboardData, refreshDashboardData } = useDashboard();
   const { userData } = use_UserData();
 
-  // Local state to track if fresh dashboard data is ready 
+  // Local state to track if fresh dashboard data is ready
   const [isDataReady, setIsDataReady] = useState(false);
 
   useEffect(() => {
@@ -42,7 +42,8 @@ export default function LoanRepaymentOverview() {
 
   // Local UI states
   const [loading, setLoading] = useState(false);
-  const [formError, setFormError] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -60,25 +61,55 @@ export default function LoanRepaymentOverview() {
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
-  // Reconstruct loanFormData from active loan and userData if empty
+  // // Reconstruct loanFormData from pending loan and userData if empty
+  // useEffect(() => {
+  //   // Check a key which determines if loanFormData is empty or invalid
+  //   if (!loanFormData.loan_amount || loanFormData.loan_amount === "") {
+  //     if (loanDetails) {
+  //       updateLoanFormData({
+  //         loan_amount: loanDetails.loan_amount ?? "",
+  //         loan_purpose: loanDetails.loan_purpose ?? "",
+  //         wapan_member: loanDetails.wapan_member ?? false,
+  //         account_name: loanDetails.bank_account.account_name ?? "",
+  //         account_number: loanDetails.disbursement_account ?? "",
+  //         bank_name: loanDetails.bank_account.bank_name ?? "",
+  //         repayment_method: loanDetails.repayment_method ?? "",
+  //         recyclable_drop_off_known:
+  //           loanDetails.recyclable_drop_off_known ?? false,
+  //         recyclable_drop_off_location: loanDetails.recyclable_drop_off_location ?? "",
+  //         repayment_schedule: loanDetails.repayment_schedule ?? "",
+  //       });
+  //     }
+  //   }
+  // }, [loanDetails, loanFormData.loan_amount, updateLoanFormData, userData]);
+
+  // Reconstruct loanFormData from pending loan and userData if empty
   useEffect(() => {
     // Check a key which determines if loanFormData is empty or invalid
     if (!loanFormData.loan_amount || loanFormData.loan_amount === "") {
       if (loanDetails) {
-        updateLoanFormData({
+        const updatedFields = {
           loan_amount: loanDetails.loan_amount ?? "",
           loan_purpose: loanDetails.loan_purpose ?? "",
           wapan_member: loanDetails.wapan_member ?? false,
-          account_name: loanDetails.bank_account.account_name ?? "",
+          account_name: loanDetails.bank_account?.account_name ?? "",
           account_number: loanDetails.disbursement_account ?? "",
-          bank_name: loanDetails.bank_account.bank_name ?? "",
+          bank_name: loanDetails.bank_account?.bank_name ?? "",
           repayment_method: loanDetails.repayment_method ?? "",
           recyclable_drop_off_known:
             loanDetails.recyclable_drop_off_known ?? false,
-          recyclable_drop_off_location: loanDetails.recyclable_drop_off_location ?? "",
           repayment_schedule: loanDetails.repayment_schedule ?? "",
-          // repayment_drop_off_location: loanDetails.repayment_location ?? "N/A",
-        });
+        };
+
+        // Only add recyclable_drop_off_location if recyclable_drop_off_known is false
+        if (loanDetails.recyclable_drop_off_known === false) {
+          updatedFields.recyclable_drop_off_location =
+            loanDetails.recyclable_drop_off_location ?? "";
+        } else {
+          updatedFields.recyclable_drop_off_location = null;
+        }
+
+        updateLoanFormData(updatedFields);
       }
     }
   }, [loanDetails, loanFormData.loan_amount, updateLoanFormData, userData]);
@@ -94,7 +125,6 @@ export default function LoanRepaymentOverview() {
 
   const onSubmit = async (passwordData) => {
     setLoading(true);
-    setFormError(false);
 
     try {
       // Refresh dashboard data to ensure correct loan id
@@ -110,38 +140,32 @@ export default function LoanRepaymentOverview() {
       //   return;
       // }
 
-      await confirmLoanApplication(loanIdToConfirm, passwordData.password);
+      const response = await confirmLoanApplication(
+        loanIdToConfirm,
+        passwordData.password
+      );
 
-      clearLoanFormData();
-      localStorage.removeItem("pendingLoanID");
-      setShowApprovalModal(true);
+      if (response.status === 200) {
+        clearLoanFormData();
+        localStorage.removeItem("pendingLoanID");
+        setFormSuccess(response.data?.message);
+        console.log("my loan: ", response);
+        setTimeout(() => {
+          setShowApprovalModal(true);
+        }, 3500);
+      } else {
+        setFormError(response.data?.message);
+      }
     } catch (error) {
-      setFormError(true);
+      setFormError(error.response?.data?.message);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        setFormError("");
+        setFormSuccess("");
+      }, 2500);
     }
   };
-
-  const handleModalClose = () => {
-    setShowApprovalModal(false);
-    navigate("/dashboard");
-    refreshDashboardData();
-  };
-
-  // If no active loan after loading, show this fallback
-  // if (!loanDetails) {
-  //   return (
-  //     <div className="text-center py-20">
-  //       <p className="text-xl font-semibold">{t("loanRepaymentOverview.noLoanFound")}</p>
-  //       <button
-  //         onClick={() => navigate("/take-a-loan/form/loan-amount-purpose")}
-  //         className="mt-5 text-center rounded-[50px] text-[#FFF] font-medium bg-[#439182] py-3 px-6 cursor-pointer hover:opacity-80 transition-opacity duration-300"
-  //       >
-  //         {t("loanRepaymentOverview.startNewLoan")}
-  //       </button>
-  //     </div>
-  //   );
-  // }
 
   return (
     <>
@@ -161,8 +185,14 @@ export default function LoanRepaymentOverview() {
           </div>
 
           {formError && (
-            <p className="text-red-500 mb-3">
-              {t("loanRepaymentOverview.formError")}
+            <p className="text-red-500 mb-3 text-center">
+              {formError || t("loanRepaymentOverview.formError")}
+            </p>
+          )}
+
+          {formSuccess && (
+            <p className="text-green-500 mb-3 text-center">
+              {formSuccess || t("loanRepaymentOverview.formSuccess")}
             </p>
           )}
 
@@ -315,7 +345,6 @@ export default function LoanRepaymentOverview() {
       {showApprovalModal && (
         <LoanApprovalModal
           data={loanDetails} // Pass loanDetails to the modal
-          onClose={handleModalClose}
         />
       )}
     </>

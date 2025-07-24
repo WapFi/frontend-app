@@ -100,7 +100,7 @@ export const fetchUserMe = async () => {
   return response.data;
 };
 
-// fetch dashboard info
+// fetch dashboard data
 export const fetchDashboardData = async () => {
   const response = await axios.get("/users/dashboard");
   // console.log(response);
@@ -126,13 +126,13 @@ export const verifyIdentity = async (identity, value) => {
 // apply for a loan
 export const applyForLoan = async (loanFormData) => {
   const response = await axios.post("/loans/apply", loanFormData);
-  return response.data;
+  return response;
 };
 
 // update loan details pending confirmation
 export const updatePendingLoanDetails = async (loanFormData, loanID) => {
   const response = await axios.patch(`/loans/${loanID}/update`, loanFormData);
-  return response.data;
+  return response;
 };
 
 // confirm loan application
@@ -167,29 +167,56 @@ export const confirmLoanApplication = async (loan_id, password) => {
 //   }
 // };
 
+// export const updatePreferences = async (
+//   type, // 'sms' or 'email' (can be null if only language is updated)
+//   state, // true/false (can be null if only language is updated)
+//   currentEmailState, // Current state of email preference
+//   currentSmsState, // Current state of SMS preference
+//   newLanguageCode // The new language code (e.g., 'ENG', 'HAU')
+// ) => {
+//   const preferencesPayload = {
+//     notification: {
+//       email: currentEmailState, // Always send current email state
+//       sms: currentSmsState, // Always send current SMS state
+//     },
+//   };
+
+//   // If a specific notification type is being updated, override its value
+//   if (type === "sms" && state !== null) {
+//     // Check state !== null in case 'false' is passed explicitly
+//     preferencesPayload.notification.sms = state;
+//   } else if (type === "email" && state !== null) {
+//     preferencesPayload.notification.email = state;
+//   }
+
+//   // Add language to the payload if it's provided
+//   if (newLanguageCode) {
+//     preferencesPayload.language = newLanguageCode;
+//   }
+
+//   try {
+//     const response = await axios.patch("/users/update-preferences", {
+//       preferences: preferencesPayload,
+//     });
+
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
 export const updatePreferences = async (
-  type, // 'sms' or 'email' (can be null if only language is updated)
-  state, // true/false (can be null if only language is updated)
-  currentEmailState, // Current state of email preference
-  currentSmsState, // Current state of SMS preference
-  newLanguageCode // The new language code (e.g., 'ENG', 'HAU')
+  emailState,
+  smsState,
+  newLanguageCode
 ) => {
   const preferencesPayload = {
     notification: {
-      email: currentEmailState, // Always send current email state
-      sms: currentSmsState, // Always send current SMS state
+      email: emailState,
+      sms: smsState,
     },
   };
 
-  // If a specific notification type is being updated, override its value
-  if (type === "sms" && state !== null) {
-    // Check state !== null in case 'false' is passed explicitly
-    preferencesPayload.notification.sms = state;
-  } else if (type === "email" && state !== null) {
-    preferencesPayload.notification.email = state;
-  }
-
-  // Add language to the payload if it's provided
   if (newLanguageCode) {
     preferencesPayload.language = newLanguageCode;
   }
@@ -198,10 +225,9 @@ export const updatePreferences = async (
     const response = await axios.patch("/users/update-preferences", {
       preferences: preferencesPayload,
     });
-
     return response;
   } catch (error) {
-    return response;
+    throw error;
   }
 };
 

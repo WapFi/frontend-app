@@ -34,18 +34,6 @@ const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
   const { userData, refreshUserData } = use_UserData();
-  // const storedLang = localStorage.getItem("language");
-
-  // Initialize state: prefer storedLang, then user data, then default to 'en'
-  // const [language, setLanguageState] = useState(
-  //   storedLang ||
-  //     (userData?.preferences?.language === "ENG"
-  //       ? "en"
-  //       : userData?.preferences?.language === "HAU"
-  //       ? "ha"
-  //       : "en") ||
-  //     "en"
-  // );
 
   const [language, setLanguageState] = useState(() => {
     // 1. Try to get language from backend user data (most authoritative)
@@ -88,21 +76,23 @@ export function LanguageProvider({ children }) {
 
   // Function to update language preference on the backend
   const updateLanguagePreferenceBackend = async (newLang) => {
-    if (!userData) {
-      // Ensure user data is available
-      return;
-    }
+
+    // fetch fresh userData
+    const freshUser = await refreshUserData();
 
     // Map internal 'en'/'ha' to backend 'ENG'/'HAU'
     const backendLangCode = newLang === "en" ? "ENG" : "HAU";
+
+    const emailPref = freshUser?.preferences?.notification?.email;
+    const smsPref = freshUser?.preferences?.notification?.sms;
     // console.log(backendLangCode);
 
     try {
+      console.log("email: ", userData.preferences?.notification?.email);
+      console.log("sms: ", userData.preferences?.notification?.sms);
       const response = await updatePreferences(
-        null, // No specific type for notifications here
-        null, // No specific state for notifications here
-        userData.preferences?.notification?.email, // Current email preference
-        userData.preferences?.notification?.sms, // Current SMS preference
+        emailPref, // Current email preference
+        smsPref, // Current SMS preference
         backendLangCode // The new language preference
       );
 

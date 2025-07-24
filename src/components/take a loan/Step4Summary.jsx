@@ -14,7 +14,8 @@ export default function Step4Summary() {
   // const { refreshDashboardData } = useDashboard();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [formError, setFormError] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
   const { dashboardData, refreshDashboardData } = useDashboard();
 
   // useEffect to ensure loanFormData is synced from backend on mount
@@ -56,13 +57,7 @@ export default function Step4Summary() {
     };
 
     fetchAndSyncLoanData();
-    // Keep these dependencies. React needs to know if these change to potentially re-run.
-    // The `initialLoanDataSynced` dependency will stop the loop.
-  }, [
-    dashboardData.pending_loan,
-    refreshDashboardData,
-    updateLoanFormData,
-  ]);
+  }, [dashboardData.pending_loan, refreshDashboardData, updateLoanFormData]);
 
   // // useEffect to ensure loanFormData is synced from backend on mount
   // useEffect(() => {
@@ -101,6 +96,8 @@ export default function Step4Summary() {
   // }, [refreshDashboardData, updateLoanFormData]);
 
   console.log("loan form data: ", loanFormData);
+
+  // logging for test only
   console.log(
     "loan application data: ",
     localStorage.getItem("latestLoanApplicationData")
@@ -110,7 +107,7 @@ export default function Step4Summary() {
 
   const onSubmit = async () => {
     setLoading(true);
-    setFormError(false);
+    // setFormError(false);
 
     const payload = {
       loan_amount: loanFormData.loan_amount,
@@ -120,13 +117,21 @@ export default function Step4Summary() {
       account_number: loanFormData.account_number,
       bank_name: loanFormData.bank_name,
       recyclable_drop_off_known: loanFormData.recyclable_drop_off_known,
-      recyclable_drop_off_location: loanFormData.recyclable_drop_off_location,
+      // recyclable_drop_off_location: loanFormData.recyclable_drop_off_location,
       repayment_method: loanFormData.repayment_method,
       repayment_schedule: loanFormData.repayment_schedule,
     };
 
+    // include the location choice only if user does not know the location
+    if (loanFormData.recyclable_drop_off_known === false) {
+      payload.recyclable_drop_off_location =
+        loanFormData.recyclable_drop_off_location;
+    }
+
+    console.log("payload: ", payload);
+
     if (dashboardData.pending_loan) {
-      console.log("Updating loan");
+      console.log("i am Updating loan");
       try {
         // update loan details
         // pendingLoanID = localStorage.getItem("pendingLoanID");
@@ -135,36 +140,65 @@ export default function Step4Summary() {
           // pendingLoanID
           dashboardData.pending_loan._id
         );
+        console.log("updated: ", updatedLoanDetails);
 
-        // save updatedLoanDetails and navigate to overview page
-        localStorage.setItem(
-          "latestLoanApplicationData",
-          JSON.stringify(updatedLoanDetails.data)
-        );
-
-        navigate("/take-a-loan/loan-repayment-overview");
+        if (updatedLoanDetails.status === 200) {
+          setFormSuccess(updatedLoanDetails.data?.message);
+          // save updatedLoanDetails and navigate to overview page
+          localStorage.setItem(
+            "latestLoanApplicationData",
+            JSON.stringify(updatedLoanDetails.data?.data)
+          );
+          console.log(
+            "my loan is here: ",
+            localStorage.getItem("latestLoanApplicationData")
+          );
+          setTimeout(() => {
+            navigate("/take-a-loan/loan-repayment-overview");
+          }, 3500);
+        } else {
+          setFormError(updatedLoanDetails.data?.message);
+        }
       } catch (error) {
-        console.log("Something went wrong: ", error);
-        setFormError(true);
+        // console.log("Something went wrong: ", error);
+
+        setFormError(error.response?.data?.message);
       } finally {
         setLoading(false);
+        setTimeout(() => {
+          setFormError("");
+          setFormSuccess("");
+        }, 3000);
       }
     } else {
+      // console.log("payload: ", payload);
       try {
         const response = await applyForLoan(payload);
-
-        // console.log("api data: ", response.data);
-        console.log(payload);
-        localStorage.setItem(
-          "latestLoanApplicationData",
-          JSON.stringify(response.data)
-        );
-        navigate("/take-a-loan/loan-repayment-overview");
+        if (response.status === 201) {
+          console.log("applying");
+          setFormSuccess(response.data?.message);
+          // console.log("api data: ", response.data);
+          localStorage.setItem(
+            "latestLoanApplicationData",
+            JSON.stringify(response.data?.data)
+          );
+          setTimeout(() => {
+            navigate("/take-a-loan/loan-repayment-overview");
+          }, 3500);
+        } else {
+          console.log("in else block");
+          setFormError(response.data?.message);
+        }
       } catch (error) {
-        console.log("Something went wrong: ", error);
-        setFormError(true);
+        console.log("error: ", error);
+        // console.log("Something went wrong: ", error);
+        setFormError(error.response?.data?.message);
       } finally {
         setLoading(false);
+        setTimeout(() => {
+          setFormError("");
+          setFormSuccess("");
+        }, 3000);
       }
     }
   };
@@ -172,7 +206,13 @@ export default function Step4Summary() {
   return (
     <div className="w-[95%] mx-auto md:w-[75%] flex flex-col gap-3">
       {formError && (
-        <p className="text-red-500 mb-3">{t("loanStep4.errorForm")}</p>
+        <p className="text-red-500 mb-3 text-center">
+          {formError || t("loanStep4.errorForm")}
+        </p>
+      )}
+
+      {formSuccess && (
+        <p className="text-green-500 mb-3 text-center">{formSuccess || ""}</p>
       )}
       <div className="flex flex-col gap-1.5">
         <div className="flex justify-between text-[#222]">

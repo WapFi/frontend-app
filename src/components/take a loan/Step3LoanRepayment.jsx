@@ -615,7 +615,7 @@ export default function Step3RepaymentUnderstanding() {
           </div>
           {displayScheduleForm && (
             <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
-              {["Weekly", "Biweekly", "Monthly"].map((option) => (
+              {["Weekly", "Bi-Weekly", "Monthly", "Bi-Monthly"].map((option) => (
                 <button
                   key={option}
                   type="button"
