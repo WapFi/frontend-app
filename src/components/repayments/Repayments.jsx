@@ -310,6 +310,7 @@ import { useNavigate } from "react-router-dom";
 import plusIcon from "../../assets/plus icon.svg";
 import PageLoader from "../PageLoader";
 import { use_UserData } from "../../context/UserContext";
+import { Link } from "react-router-dom";
 
 export default function Repayments() {
   const navigate = useNavigate();
@@ -319,7 +320,7 @@ export default function Repayments() {
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState("");
-  const { dashboardData, refreshDashboardData} = useDashboard();
+  const { dashboardData, refreshDashboardData } = useDashboard();
   const [loading, setLoading] = useState(true);
   const { repaymentsData, setRepaymentsData } = useRepayments();
   const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
@@ -375,21 +376,20 @@ export default function Repayments() {
   // }, [setRepaymentsData]);
 
   useEffect(() => {
-  const loadAllData = async () => {
-    setLoading(true);                
-    await refreshDashboardData();     // refresh dashboard data
-    const res = await fetchRepayments();  // then fetch repayments
-    if (res.status) {
-      setRepaymentsData(res.data.repayments);
-    } else {
-      setRepaymentsData([]);
-    }
-    setLoading(false);               
-  };
+    const loadAllData = async () => {
+      setLoading(true);
+      await refreshDashboardData(); // refresh dashboard data
+      const res = await fetchRepayments(); // then fetch repayments
+      if (res.status) {
+        setRepaymentsData(res.data.repayments);
+      } else {
+        setRepaymentsData([]);
+      }
+      setLoading(false);
+    };
 
-  loadAllData();
-}, []);
-
+    loadAllData();
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -428,10 +428,10 @@ export default function Repayments() {
       <div className="rounded-xl flex flex-col self-stretch justify-center items-start gap-6 lg:bg-[#fff] p-6 lg:mb-14">
         {/* -- Desktop Header -- */}
         <div className="hidden lg:flex justify-between items-start self-stretch w-full">
-          <div className="flex justify-between items-center md:w-[65%] relative">
-            <p className="font-raleway font-semibold md:text-[24px]">
+          <div className="flex justify-between items-center md:w-[25%] relative">
+            {/* <p className="font-raleway font-semibold md:text-[24px]">
               {t("repaymentsSection.title")}
-            </p>
+            </p> */}
             <div className="ml-3.5 relative">
               <div className="hidden lg:flex lg:items-center gap-2.5 pl-3 shrink-0 rounded-[30px] border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)]">
                 <p className="text-[16px] text-[rgba(34,34,34,0.80)] font-medium">
@@ -470,7 +470,7 @@ export default function Repayments() {
           </div>
 
           <div className="md:w-[90%] flex justify-end items-center gap-4">
-            <div className="flex items-center justify-between gap-2.5 pl-3 shrink-0 rounded-[30px] w-full md:w-[60%] border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)]">
+            <div className="flex items-center justify-between gap-2.5 pl-3 shrink-0 flex-1 rounded-[30px] w-full md:w-[60%] border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)]">
               <input
                 type="search"
                 placeholder={t("repaymentsSection.searchPlaceholder")}
@@ -480,6 +480,12 @@ export default function Repayments() {
                 <img src={searchIcon} alt="search icon" />
               </button>
             </div>
+            <Link
+              className="text-right text-[18px] text-[#439182] my-4 font-semibold"
+              to="/repayments/loans/history"
+            >
+              Loan History
+            </Link>
           </div>
         </div>
 
@@ -532,6 +538,12 @@ export default function Repayments() {
               <img src={searchIcon} alt="search icon" />
             </button>
           </div>
+          <Link
+            className="text-right md:text-[16px] text-[#439182] my-4 font-semibold"
+            to="/repayments/loans/history"
+          >
+            Loan History
+          </Link>
         </div>
 
         {/* -- Body -- */}

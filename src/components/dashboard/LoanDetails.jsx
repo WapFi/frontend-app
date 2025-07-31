@@ -92,10 +92,14 @@ function LoanDetails({ loanDetails }) {
             <p className="text-[12px] md:text-[16px] text-[rgba(34,34,34,0.50)]">
               {t("loanDetails.amount")}
             </p>
-            <div className="flex gap-2">
-              <img src={NairaIcon} alt="naira icon" />{" "}
-              <span className="block md:text-[22px] text-[#222] font-medium">
-                {loanDetails.data.loan_amount}
+            <div className="flex items-center gap-1 font-medium">
+              <img src={NairaIcon} alt="naira icon" />
+              <span>
+                {new Intl.NumberFormat("en-NG", {
+                  style: "decimal",
+
+                  maximumFractionDigits: 2,
+                }).format(loanDetails.data.loan_amount)}
               </span>
             </div>
           </div>

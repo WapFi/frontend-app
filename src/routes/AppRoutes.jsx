@@ -34,7 +34,7 @@ import Step2BankAccount from "../components/take a loan/Step2BankAccount";
 import Step3LoanRepayment from "../components/take a loan/Step3LoanRepayment";
 import Step4Summary from "../components/take a loan/Step4Summary";
 import LoanRepaymentOverview from "../components/take a loan/LoanRepaymentOverview";
-// import LoanApprovalModal from "../components/take a loan/LoanApprovalModal";
+import LoanHistory from "../components/repayments/LoanHistory";
 
 // repayments
 import { RepaymentsProvider } from "../context/RepaymentsContext";
@@ -55,6 +55,10 @@ import SettingsVerifyEmailPhone from "../components/settings/SettingsVerifyEmail
 import PasswordResetForm from "../components/settings/PasswordResetForm";
 import Notifications from "../components/settings/Notifications";
 import Support from "../components/settings/Support";
+
+// profile
+import ProfileNotifications from "../components/profile/ProfileNotifications";
+import { NotificationProvider } from "../context/NotificationContext";
 
 const router = createBrowserRouter([
   // Public routes
@@ -92,7 +96,9 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <PrivateRoute>
-        <Layout />
+        <NotificationProvider>
+          <Layout />
+        </NotificationProvider>
       </PrivateRoute>
     ),
     children: [
@@ -127,8 +133,10 @@ const router = createBrowserRouter([
             <RepaymentsHistoryWrapper />
           </RepaymentsProvider>
         ),
-
-
+      },
+      {
+        path: "/repayments/loans/history",
+        element: <LoanHistory />,
       },
 
       // Loan flow
@@ -190,6 +198,11 @@ const router = createBrowserRouter([
         path: "/credit-score",
         element: <CreditScore />,
       },
+
+      // {
+      //   path: "/notif",
+      //   element: <ProfileNotifications />,
+      // },
 
       // {
       //   path: "take-a-loan/loan-approval-modal",

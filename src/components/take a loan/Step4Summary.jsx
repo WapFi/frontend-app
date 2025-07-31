@@ -30,6 +30,7 @@ export default function Step4Summary() {
             updateLoanFormData({
               loan_amount: freshDashboardRes.pending_loan.loan_amount ?? "",
               loan_purpose: freshDashboardRes.pending_loan.loan_purpose ?? "",
+              other_purpose: freshDashboardRes.pending_loan.loan_purpose_other ?? "",
               wapan_member:
                 freshDashboardRes.pending_loan.wapan_member ?? false,
               account_name:
@@ -126,6 +127,11 @@ export default function Step4Summary() {
     if (loanFormData.recyclable_drop_off_known === false) {
       payload.recyclable_drop_off_location =
         loanFormData.recyclable_drop_off_location;
+    }
+
+    // include in payload only if user chooses 'Other' for loan purpose
+    if (loanFormData.loan_purpose === "OTHER") {
+      payload.loan_purpose_other = loanFormData.other_purpose;
     }
 
     console.log("payload: ", payload);
@@ -254,6 +260,17 @@ export default function Step4Summary() {
             {loanFormData.loan_purpose || "N/A"}
           </span>
         </p>
+        {loanFormData.loan_purpose === "OTHER" && (
+          <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
+            <span className="text-[rgba(34,34,34,0.50)]">
+              {t("loanStep4.otherPurposeLabel")}
+            </span>
+            <span className="font-medium">
+              {loanFormData.other_purpose || "N/A"}
+            </span>
+          </p>
+        )}
+
         <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
           <span className="text-[rgba(34,34,34,0.50)]">
             {t("loanStep4.wapanMemberLabel")}
