@@ -6,11 +6,18 @@ import bellIcon from "../../../assets/bell icon.svg";
 import { useLanguage } from "../../../context/LanguageContext";
 import { useTranslation } from "react-i18next";
 
-function HeaderBar({ userName }) {
+function HeaderBar({
+  userData,
+  onOpenUserProfile,
+  onOpenUserNotifications,
+  unreadNotificationCount,
+  loadingUnreadCount,
+  errorUnreadCount,
+}) {
   const { t } = useTranslation();
   const { language, setLanguage } = useLanguage();
 
-  const nameParts = userName.full_name?.split(" ");
+  const nameParts = userData.full_name?.split(" ");
   const initials = nameParts
     ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
     : "";
@@ -57,15 +64,28 @@ function HeaderBar({ userName }) {
           </span>
         </div>
 
-        <div className="rounded-full py-2 px-[8px] bg-[#fff] text-white text-center font-medium relative">
+        <button
+          className="rounded-full py-2 px-[8px] bg-[#fff] text-white text-center font-medium relative cursor-pointer"
+          onClick={onOpenUserNotifications}
+        >
           <img src={bellIcon} alt="notification bell" />
-          <span className="border-[rgba(229,62,62,0.30)] bg-[rgba(229,62,62,0.08)] absolute -top-1 -right-[3px] text-[#E53E3E] text-[12px] w-5 h-5 p-[1px] gap-[10px] flex items-center justify-center rounded-[6px] font-semibold">
-            4
+          {!loadingUnreadCount && !errorUnreadCount &&(
+            <span className="border-[rgba(229,62,62,0.30)] bg-[rgba(229,62,62,0.08)] absolute -top-1 -right-[3px] text-[#E53E3E] text-[12px] w-5 h-5 p-[1px] gap-[10px] flex items-center justify-center rounded-[6px] font-semibold">
+              {unreadNotificationCount}
+            </span>
+          )}
+           {/* {errorUnreadCount && (
+          <span className="fixed top-1/2 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-400 bg-red-200 rounded-full transform translate-x-1/2 -translate-y-1/2">
+             {errorUnreadCount}
           </span>
-        </div>
-        <div className="rounded-full py-1 px-[7px] bg-[#171717] text-white text-center font-medium">
+        )} */}
+        </button>
+        <button
+          className="rounded-full py-1 px-[7px] bg-[#171717] text-white text-center font-medium cursor-pointer"
+          onClick={onOpenUserProfile}
+        >
           <p>{initials}</p>
-        </div>
+        </button>
       </div>
     </div>
   );

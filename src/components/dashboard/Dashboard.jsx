@@ -23,7 +23,9 @@ function Dashboard({ dashboardData }) {
   console.log("dashboard data: ", dashboardData);
 
   const dueDate = new Date(dashboardData.active_loan.due_date);
-  const targetTime = dueDate.getTime(); 
+  const targetTime = dueDate.getTime();
+
+  const initialTimeLeft = dashboardData.active_loan.time_left;
 
   return (
     <div className="text-[18px] text-[#222] flex flex-col items-end md:items-start md:shrink-0 gap-8 py-4 px-2.5 lg:px-[23px]">
@@ -37,7 +39,13 @@ function Dashboard({ dashboardData }) {
           <p>Time left to next repayment:</p>
           <p>Days</p>
         </div> */}
-          <CountdownTimer targetTime={targetTime} />
+          <CountdownTimer
+            targetTime={targetTime}
+            initialDays={initialTimeLeft.days}
+            initialHours={initialTimeLeft.hours}
+            initialMinutes={initialTimeLeft.minutes}
+            initialSeconds={initialTimeLeft.seconds}
+          />
           <div className="flex flex-col flex-start gap-2">
             <p>{t("dashboard.outstandingLoanBalance")}</p>
             {/* <div className="flex items-center gap-2">

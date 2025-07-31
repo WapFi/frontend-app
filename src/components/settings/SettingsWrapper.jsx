@@ -1,5 +1,6 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 
 export default function SettingsWrapper() {
   const { t } = useTranslation();
@@ -37,8 +38,39 @@ export default function SettingsWrapper() {
     isVerifyPhoneEmail ||
     isResetPassword;
 
+  // redirect only on larger screens >= 1024px, else settings menu items should show
+  // const isExactSettingsPath = location.pathname === "/settings";
+  // const isLargeScreen = window.innerWidth >= 1024;
+
+  // useEffect(() => {
+  //   if (isExactSettingsPath && isLargeScreen) {
+  //     navigate("/settings/identity-verification", { replace: true });
+  //   }
+  // }, [location.pathname, navigate]);
+
+  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
+
+  // Monitor screen size changes
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth >= 1024);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Handle conditional redirect
+  useEffect(() => {
+    const isExactSettingsPath = location.pathname === "/settings";
+
+    if (isExactSettingsPath && isLargeScreen) {
+      navigate("/settings/identity-verification", { replace: true });
+    }
+  }, [location.pathname, navigate, isLargeScreen]);
+
   return (
-    <div className="lg:w-[95%] lg:mx-auto">
+    <div className="lg:w-[95%] lg:mx-auto md:px-6">
       <p
         className={`${
           isSettingItem ? "hidden" : "block"

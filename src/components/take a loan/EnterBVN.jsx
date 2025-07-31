@@ -8,6 +8,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import { verifyIdentity } from "../../api/apiData";
 import { use_UserData } from "../../context/UserContext";
+import { useNotifications } from "../../context/NotificationContext";
 
 export default function EnterBVN() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function EnterBVN() {
   const [fadeIn, setFadeIn] = useState(false);
   const [formError, setFormError] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState("");
+  const { refreshNotificationsCount } = useNotifications();
 
   const { refreshUserData } = use_UserData();
 
@@ -49,6 +51,8 @@ export default function EnterBVN() {
         // refresh user data to make sure we get the latest data
         await refreshUserData();
         setShowSuccessMessage(response.data?.message);
+
+        await refreshNotificationsCount();
 
         setTimeout(() => {
           navigate("/take-a-loan/verify-phone");

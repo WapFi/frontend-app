@@ -237,11 +237,14 @@ import LoadingSpinner from "../LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import { verifyIdentity } from "../../api/apiData";
 import { use_UserData } from "../../context/UserContext";
+import { useNotifications } from "../../context/NotificationContext";
 
 export default function VerifyPhoneNumber() {
   const [fadeIn, setFadeIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const { userData, refreshUserData } = use_UserData();
+  const { refreshNotificationsCount } = useNotifications();
+
 
   // Refs for inputs
   const firstRef = useRef(null);
@@ -324,6 +327,8 @@ export default function VerifyPhoneNumber() {
 
       if (response.status) {
         setShowVerificationSuccess(response.data?.message);
+        await refreshNotificationsCount();
+        
         console.log(response.data?.message);
 
         // refresh user data to make sure we get the latest data

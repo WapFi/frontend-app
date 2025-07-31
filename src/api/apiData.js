@@ -108,8 +108,18 @@ export const fetchDashboardData = async () => {
 };
 
 // fetch repayments history
-export const fetchRepayments = async () => {
-  const response = await axios.get("/loans/repayments/history");
+// export const fetchRepayments = async () => {
+//   const response = await axios.get("/loans/repayments/history");
+//   console.log("Repayments: ", response.data);
+//   return response.data;
+// };
+
+export const fetchRepayments = async (page, limit) => {
+  const response = await axios.get(
+    `/loans/repayments/history?page=${page ? page : 1}&limit=${
+      limit ? limit : 10
+    }`
+  );
   console.log("Repayments: ", response.data);
   return response.data;
 };
@@ -142,6 +152,14 @@ export const confirmLoanApplication = async (loan_id, password) => {
     password: password,
   });
   return response;
+};
+
+// fetch loan history
+export const fetchLoans = async (page, limit) => {
+  const response = await axios.get(
+    `/loans/history?page=${page ? page : 1}&limit=${limit ? limit : 10}`
+  );
+  return response.data;
 };
 
 // update preferences
@@ -205,6 +223,7 @@ export const confirmLoanApplication = async (loan_id, password) => {
 //   }
 // };
 
+// update preferences (sms, email, language)
 export const updatePreferences = async (
   emailState,
   smsState,
@@ -229,6 +248,61 @@ export const updatePreferences = async (
   } catch (error) {
     throw error;
   }
+};
+
+// update attachments e.g, profile picture
+export const updateAttachment = async (type, data) => {
+  if (type === "PROFILE_PICTURE") {
+    const response = axios.patch("/users/update-attachment", {
+      attachment: data.fileData,
+      attachment_type: type,
+    });
+    return response;
+  }
+  throw new Error("Unsupported attachment type.");
+};
+
+// delete attachments, e.g, profile picture
+export const deleteAttachment = async (type) => {
+  if (type === "PROFILE_PICTURE") {
+    const response = axios.delete("/users/delete-attachment", {
+      data: {
+        attachment_type: type,
+      },
+    });
+    return response;
+  }
+  throw new Error("Unsupported attachment type.");
+};
+
+// get notifications
+export const getNotifications = async () => {
+  const response = axios.get("/notifications?page=1&limit=10&unread_only=true");
+  return response;
+};
+
+// get unread notifcations count
+export const getUnreadCount = async () => {
+  const response = axios.get("/notifications/unread-count");
+  return response;
+};
+
+// mark single notification as read
+export const markAsRead = async (notification_id) => {
+  const response = axios.patch(`/notifications/${notification_id}/read`);
+  return response;
+};
+
+// mark all notifications as read
+export const markAllAsRead = async () => {
+  const response = axios.patch(`/notifications/mark-all-read`);
+  return response;
+};
+
+// delete a single notification
+export const deleteNotification = async (notification_id) => {
+  const response = axios.delete(`/notifications/${notification_id}`);
+  return response;
 };
 
 // record a payment

@@ -297,7 +297,8 @@
       "loanAmountMin": "Minimum loan amount is ₦1,000",
       "loanAmountMax": "Maximum loan amount is ₦{{limit}}",
       "loanPurposeRequired": "Please select a purpose for the loan.",
-      "membershipRequired": "Please indicate your membership status."
+      "membershipRequired": "Please indicate your membership status.",
+      "otherPurposeRequired": "Please enter a reason for selecting 'Other'."
     }
   },
   "loanStep2": {
@@ -355,6 +356,7 @@
     "howMuchToBorrowLabel": "How much would you like to borrow?",
     "loanPurposeLabel": "What do you need the loan for?",
     "wapanMemberLabel": "Are you a member of WAPAN?",
+    "otherPurposeLabel": "Other (Please specify)",
 
     "bankConfirmationLabel": "Bank Account Confirmation",
     "accountNameLabel": "Bank Account Name",
@@ -383,7 +385,7 @@
     "disbursementTo": "Disbursement To",
     "confirmationNotice": "By entering your password, you confirm acceptance of the loan terms and authorize disbursement to the selected bank account.",
     "formError": "Password may be incorrect. Please try again.",
-     "formSuccess": "Loan confirmed and disbursed successfully.",
+    "formSuccess": "Loan confirmed and disbursed successfully.",
     "passwordLabel": "Password",
     "passwordPlaceholder": "Enter your password",
     "passwordRequired": "Please enter your password",
@@ -467,12 +469,16 @@
     "bvn": "BVN",
     "phoneNumber": "Phone Number",
     "ninVerified": "NIN Verified",
+    "dobVerified": "Date of Birth Verified",
     "residentialAddress": "Residential Address",
     "completed": "Completed",
     "unverified": "Unverified",
     "form": {
       "nin": "NIN",
       "enterNin": "Enter your NIN",
+      "dob": "Date of Birth",
+      "selectDob": "Select your date of birth",
+      "dobWarning": "Please enter a correct date of birth, you won't be able to change it again.",
       "country": "Country",
       "state": "State",
       "selectState": "Select State",
@@ -485,6 +491,9 @@
     "errors": {
       "ninRequired": "Please enter your NIN",
       "ninLength": "NIN must be exactly 11 digits",
+      "dobFormat": "Date of birth must be in YYYY-MM-DD format",
+      "dobFailed": "Date of birth verification failed. Please try again.",
+      "dobGenericError": "Something went wrong while verifying your Date of Birth. Please try again.",
       "countryRequired": "Country is required",
       "stateRequired": "State is required",
       "streetRequired": "Street is required",
@@ -594,5 +603,69 @@
       "label": "LinkedIn",
       "desc": "Connect with us on LinkedIn to learn more about our team, projects, and professional updates."
     }
+  },
+
+  "notifications": {
+    "title": "Notifications",
+    "unreadCount": "{count}",
+    "close": "Close",
+    "markAllAsRead": "Mark all as read",
+    "markingAllAsRead": "Marking all as read...",
+    "clear": "Clear",
+    "clearingAll": "Clearing all...",
+    "noNotifications": "No notifications to display.",
+    "markAsRead": "Mark as read",
+    "loading": "Loading notifications...",
+    "failedToLoad": "Failed to load notifications.",
+    "failedToConnect": "Failed to connect to notification service.",
+    "markAsReadSuccess": "Notification marked as read.",
+    "markAllAsReadSuccess": "All notifications marked as read.",
+    "deleteNotificationSuccess": "Notification deleted successfully.",
+    "failedToMarkAsRead": "Failed to mark as read.",
+    "failedToMarkAllAsRead": "Failed to mark all as read.",
+    "failedToDeleteNotification": "Failed to delete notification.",
+    "failedToClear": "Failed to clear {count} notification(s).",
+    "clearAllSuccess": "All notifications cleared successfully.",
+    "timeAgo": {
+      "year_one": "{{count}} year ago",
+      "year_other": "{{count}} years ago",
+      "month_one": "{{count}} month ago",
+      "month_other": "{{count}} months ago",
+      "day_one": "{{count}} day ago",
+      "day_other": "{{count}} days ago",
+      "hour_one": "{{count}} hour ago",
+      "hour_other": "{{count}} hours ago",
+      "minute_one": "{{count}} minute ago",
+      "minute_other": "{{count}} minutes ago",
+      "second_one": "{{count}} second ago",
+      "second_other": "{{count}} seconds ago",
+      "na": "N/A"
+    }
+  },
+
+  "profile_page": {
+    "title": "Profile Details",
+    "confirm_delete_title": "Confirm Deletion",
+    "confirm_delete_attachment": "Are you sure you want to delete your attachment?",
+    "picture_deleted_success": "Profile picture deleted successfully!",
+    "picture_deleted_error": "Failed to delete profile picture.",
+    "file_type_error": "Please select an image file.",
+    "file_size_error": "File size exceeds 5MB limit.",
+    "file_read_error": "Failed to read file.",
+    "no_file_selected": "Please select a file to upload.",
+    "picture_updated_success": "Profile picture updated successfully!",
+    "picture_update_error": "Failed to update profile picture.",
+    "change_picture": "Change Picture",
+    "delete_picture": "Delete Picture",
+    "save_picture": "Save",
+    "full_name": "Full Name",
+    "contact": "Contact",
+    "date_of_birth": "Date of Birth",
+    "edit_profile": "Edit",
+    "support_message": "Your profile information has already been verified and cannot be changed at this time. If you need to update any details, please contact us at support@wapfi.com."
+  },
+  "common": {
+    "cancel": "Cancel",
+    "delete": "Delete"
   }
 }

@@ -295,7 +295,8 @@
       "loanAmountMin": "Mafi karancin adadin rance shine ₦1,000",
       "loanAmountMax": "Mafi girman adadin rance shine ₦{{limit}}",
       "loanPurposeRequired": "Da fatan za a zaɓi dalilin rance.",
-      "membershipRequired": "Da fatan za a nuna matsayin membobinku."
+      "membershipRequired": "Da fatan za a nuna matsayin membobinku.",
+      "otherPurposeRequired": "Da fatan za a shigar da dalilin da ya sa ka zabi 'Sauran'."
     }
   },
   "loanStep2": {
@@ -353,6 +354,7 @@
     "howMuchToBorrowLabel": "Nawa kake son karɓa a matsayin bashi?",
     "loanPurposeLabel": "Me kake buƙatar bashin domin yi?",
     "wapanMemberLabel": "Kai memba ne na WAPAN?",
+    "otherPurposeLabel": "Sauran (Don Allah a bayyana)",
 
     "bankConfirmationLabel": "Tabbatar da Asusun Banki",
     "accountNameLabel": "Sunan Asusun Banki",
@@ -464,12 +466,16 @@
     "bvn": "BVN",
     "phoneNumber": "Lambar Waya",
     "ninVerified": "NIN An Tabbatar",
+    "dobVerified": "An tabbatar da Ranar Haihuwa",
     "residentialAddress": "Adireshin Gida",
     "completed": "An Kammala",
     "unverified": "Ba a Tabbatar ba",
     "form": {
       "nin": "NIN",
       "enterNin": "Shigar da NIN ɗinka",
+      "dob": "Ranar haihuwa",
+      "selectDob": "Zabi ranar haihuwa",
+      "dobWarning": "Da fatan za a shigar da ranar haihuwa daidai, ba za ka iya canza ta ba daga baya.",
       "country": "Ƙasa",
       "state": "Jihar",
       "selectState": "Zaɓi Jihar",
@@ -482,6 +488,9 @@
     "errors": {
       "ninRequired": "Don Allah shigar da NIN ɗinka",
       "ninLength": "NIN dole ya kasance lambobi 11 kacal",
+      "dobFormat": "Ranar haihuwa dole ne ya zama a tsarin YYYY-MM-DD",
+      "dobFailed": "Tabbatar da ranar haihuwa bai yi nasara ba. Da fatan za a sake gwadawa.",
+      "dobGenericError": "Wani abu ya faru yayin tabbatar da ranar haihuwar ku. Da fatan za a sake gwadawa.",
       "countryRequired": "Ƙasa wajibi ne",
       "stateRequired": "Jihar wajibi ce",
       "streetRequired": "Titin wajibi ne",
@@ -591,5 +600,69 @@
       "label": "LinkedIn",
       "desc": "Ku haɗu da mu a LinkedIn don ƙarin bayani game da ƙungiyarmu, ayyuka, da cigaba."
     }
+  },
+
+  "notifications": {
+    "title": "Sanarwa",
+    "unreadCount": "{count}",
+    "close": "Rufe",
+    "markAllAsRead": "Karanta duka",
+    "markingAllAsRead": "Ana karanta duka...",
+    "clear": "Share",
+    "clearingAll": "Ana sharewa...",
+    "noNotifications": "Babu sanarwa da za a nuna.",
+    "markAsRead": "Karanta",
+    "loading": "Ana ɗora sanarwa...",
+    "failedToLoad": "An kasa ɗora sanarwa.",
+    "failedToConnect": "An kasa haɗawa da sabis ɗin sanarwa.",
+    "markAsReadSuccess": "An karanta sanarwa.",
+    "markAllAsReadSuccess": "An karanta dukkan sanarwa.",
+    "deleteNotificationSuccess": "An share sanarwa da nasara.",
+    "failedToMarkAsRead": "An kasa karanta sanarwa.",
+    "failedToMarkAllAsRead": "An kasa karanta dukkan sanarwa.",
+    "failedToDeleteNotification": "An kasa share sanarwa.",
+    "failedToClear": "An kasa share sanarwa {count}.",
+    "clearAllSuccess": "An share dukkan sanarwa da nasara.",
+    "timeAgo": {
+      "year_one": "shekara {{count}} da suka wuce",
+      "year_other": "shekaru {{count}} da suka wuce",
+      "month_one": "wata {{count}} da ya wuce",
+      "month_other": "watanni {{count}} da suka wuce",
+      "day_one": "rana {{count}} da ta wuce",
+      "day_other": "kwanaki {{count}} da suka wuce",
+      "hour_one": "awa {{count}} da ta wuce",
+      "hour_other": "awanni {{count}} da suka wuce",
+      "minute_one": "minti {{count}} da ya wuce",
+      "minute_other": "mintuna {{count}} da suka wuce",
+      "second_one": "sakan {{count}} da ya wuce",
+      "second_other": "sakanni {{count}} da suka wuce",
+      "na": "Ba a da shi"
+    }
+  },
+
+  "profile_page": {
+    "title": "Bayanin Bayanan martaba",
+    "confirm_delete_title": "Tabbatar da Goge",
+    "confirm_delete_attachment": "Kana da tabbacin kana son goge abin da aka haɗa?",
+    "picture_deleted_success": "An goge hoton bayanan martaba da nasara!",
+    "picture_deleted_error": "Goge hoton bayanan martaba ya gaza.",
+    "file_type_error": "Da fatan za a zaɓi fayil ɗin hoto.",
+    "file_size_error": "Girmar fayil ta wuce iyakar 5MB.",
+    "file_read_error": "Karanta fayil ya gaza.",
+    "no_file_selected": "Da fatan za a zaɓi fayil don ɗorawa.",
+    "picture_updated_success": "An sabunta hoton bayanan martaba da nasara!",
+    "picture_update_error": "Sabunta hoton bayanan martaba ya gaza.",
+    "change_picture": "Canza Hoto",
+    "delete_picture": "Goge Hoto",
+    "save_picture": "Ajiye",
+    "full_name": "Cikakken Suna",
+    "contact": "Lambar waya",
+    "date_of_birth": "Ranar Haihuwa",
+    "edit_profile": "Shirya",
+    "support_message": "An riga an tabbatar da bayanan bayanan martabarka kuma ba za a iya canza su ba a wannan lokacin. Idan kana buƙatar sabunta kowane dalla-dalla, da fatan za a tuntuɓe mu a support@wapfi.com."
+  },
+  "common": {
+    "cancel": "Soke",
+    "delete": "Goge"
   }
 }

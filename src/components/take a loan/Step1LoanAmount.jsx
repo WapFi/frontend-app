@@ -321,7 +321,12 @@ export default function Step1LoanAmount() {
     wapanMembership: yup
       .string()
       .required(t("loanStep1.errors.membershipRequired")),
-    otherPurpose: yup.string(),
+    otherPurpose: yup.string().when("loanPurpose", {
+      is: "OTHER",
+      then: (schema) =>
+        schema.required(t("loanStep1.errors.otherPurposeRequired")),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   });
 
   const {
