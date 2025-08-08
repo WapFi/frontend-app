@@ -1,8 +1,9 @@
 import React from 'react';
 
 const UserAvatar = ({ user, size = "h-15 w-15" }) => {
+  console.log("my user: ", user)
   // Check if user has a photo
-  const hasPhoto = user?.photo || user?.avatar || user?.profile_picture;
+  const hasPhoto = user?.profile_picture;
   
   // Get user initials
   const getInitials = (name) => {
@@ -24,7 +25,7 @@ const UserAvatar = ({ user, size = "h-15 w-15" }) => {
           }}
         />
         {/* Fallback initials (hidden by default) */}
-        <div className={`${size} rounded-full bg-gray-300 flex items-center justify-center hidden`}>
+        <div className={`${size} rounded-full bg-gray-300 items-center justify-center hidden`}>
           <span className="text-xs font-medium text-gray-600">
             {getInitials(user.name)}
           </span>

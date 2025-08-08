@@ -36,9 +36,9 @@
 //       {filteredRepayments.length === 0 ? (
 //         <p className="text-sm text-gray-500">
 //           {selectedMonth
-//             ? t("repaymentsList.noRepayments") 
+//             ? t("repaymentsList.noRepayments")
 //             : t("repaymentsList.noRepayments")}
-        
+
 //         </p>
 //       ) : (
 //         [...filteredRepayments]
@@ -123,8 +123,6 @@
 
 // export default RepaymentsList;
 
-
-
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useRepayments } from "../../context/RepaymentsContext";
@@ -169,7 +167,7 @@ function RepaymentsList({ onSelect, selectedMonth }) {
             const isCompleted = repayment.status !== "PENDING";
             return (
               <button
-                key={repayment._id}
+                key={repayment.loan._id}
                 onClick={() => handleClick(repayment.loan._id)}
                 className={`${
                   isCompleted ? "bg-[#fafafa]" : "bg-[#439182] text-white"
@@ -181,7 +179,7 @@ function RepaymentsList({ onSelect, selectedMonth }) {
                   }`}
                 >
                   <span className="font-medium text-[15px]">
-                    {repayment._id}
+                    {repayment.loan.loan_id}
                   </span>
                   <span className="text-[14px]">
                     {new Date(repayment.repayment_date).toLocaleDateString(
@@ -240,4 +238,3 @@ function RepaymentsList({ onSelect, selectedMonth }) {
 }
 
 export default RepaymentsList;
-

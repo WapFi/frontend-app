@@ -60,7 +60,7 @@ function AddRepayment() {
             }
         } catch (err) {
             console.error("Error adding repayment:", err);
-            setError(err.message || "Failed to add repayment");
+            setError(err.response?.data?.message || "Failed to add repayment");
         } finally {
             setLoading(false);
         }

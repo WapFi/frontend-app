@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { getUnreadCount } from "../api/apiData";
 
-const NotificationContext = createContext(null);
+const NotificationContext = createContext({});
 
 export const NotificationProvider = ({ children }) => {
   const [unreadCount, setUnreadCount] = useState(0);
@@ -23,6 +23,7 @@ export const NotificationProvider = ({ children }) => {
         // console.log(response.data?.message);
         setUnreadCount(0);
       }
+      return response;
     } catch (err) {
       setErrorUnreadCount(err.response?.data?.message);
     //   console.log("err: ", err)
@@ -37,8 +38,8 @@ export const NotificationProvider = ({ children }) => {
     fetchUnreadCount();
   }, []);
 
-  const refreshNotificationsCount = () => {
-    fetchUnreadCount();
+  const refreshNotificationsCount = async () => {
+    return await fetchUnreadCount();
   };
 
   const value = {

@@ -868,6 +868,14 @@ export default function LoanHistory() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
+                      {loan.status === "OVERDUE" && (
+                        <div className="text-[#B91C1C] bg-[rgba(185,28,28,0.14)] border border-[rgba(185,28,28,0.60)] rounded-md text-sm md:text-sm flex gap-0.5 w-fit py-0.5 px-1.5">
+                          <img src={OverdueIcon} alt="overdue loan icon" />
+                          <span className="capitalize">
+                            {loan.status.toLowerCase()}
+                          </span>
+                        </div>
+                      )}
                       {loan.status === "DISBURSED" && (
                         <div className="text-[#16A34A] bg-[#F2FDF5] border border-[#D3F3DF] rounded-md text-sm md:text-sm flex gap-0.5 w-fit py-0.5 px-1.5">
                           <img src={VerifiedIcon} alt="disbursed loan icon" />
@@ -879,14 +887,6 @@ export default function LoanHistory() {
                       {loan.status === "REPAID" && (
                         <div className="text-[#16A34A] bg-[#F2FDF5] border border-[#D3F3DF] rounded-md text-sm md:text-sm flex gap-0.5 w-fit py-0.5 px-1.5">
                           <img src={VerifiedIcon} alt="repaid loan icon" />
-                          <span className="capitalize">
-                            {loan.status.toLowerCase()}
-                          </span>
-                        </div>
-                      )}
-                      {loan.status === "OVERDUE" && (
-                        <div className="text-[#B91C1C] bg-[rgba(185,28,28,0.14)] border border-[rgba(185,28,28,0.60)] rounded-md text-sm md:text-sm flex gap-0.5 w-fit py-0.5 px-1.5">
-                          <img src={OverdueIcon} alt="overdue loan icon" />
                           <span className="capitalize">
                             {loan.status.toLowerCase()}
                           </span>

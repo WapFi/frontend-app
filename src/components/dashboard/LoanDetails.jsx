@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import banks from "../../data/banks.json";
 
 function LoanDetails({ loanDetails }) {
+  console.log("my loan details: ", loanDetails)
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -49,7 +50,7 @@ function LoanDetails({ loanDetails }) {
           </p>
           <div className="flex items-center gap-2.5">
             <span className="text-[14px] font-medium text-[rgba(34,34,34,0.80)] md:text-[16px]">
-              {loanDetails.data._id}
+              {loanDetails.data.loan_id}
             </span>
             <span className="rounded-[16px] bg-white font-medium text-[#7D9776] border border-[#7D9776] text-[12px] px-1.5 py-0.5">
               {loanDetails.data.status}

@@ -68,7 +68,7 @@ function MobileMenu({
                     {unreadNotificationCount}
                   </span>
                 )}
-{/* 
+                {/* 
                 {errorUnreadCount && (
                   <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-400 bg-red-200 rounded-full transform translate-x-1/2 -translate-y-1/2">
                     {errorUnreadCount}
@@ -76,10 +76,20 @@ function MobileMenu({
                 )} */}
               </button>
               <button
-                className="rounded-full py-1 px-[7px] bg-[#171717] text-white text-center font-medium cursor-pointer"
+                className={`rounded-full bg-[#171717] text-white text-center font-medium cursor-pointer w-9 h-9 ${
+                  userData.profile_picture ? "p-0" : "py-1 px-[7px]"
+                }`}
                 onClick={onOpenUserProfile}
               >
-                <p>{initials}</p>
+                {userData.profile_picture ? (
+                  <img
+                    src={userData.profile_picture}
+                    alt={`${userData.full_name}'s avatar`}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <p>{initials}</p>
+                )}
               </button>
             </>
           )}

@@ -69,22 +69,32 @@ function HeaderBar({
           onClick={onOpenUserNotifications}
         >
           <img src={bellIcon} alt="notification bell" />
-          {!loadingUnreadCount && !errorUnreadCount &&(
+          {!loadingUnreadCount && !errorUnreadCount && (
             <span className="border-[rgba(229,62,62,0.30)] bg-[rgba(229,62,62,0.08)] absolute -top-1 -right-[3px] text-[#E53E3E] text-[12px] w-5 h-5 p-[1px] gap-[10px] flex items-center justify-center rounded-[6px] font-semibold">
               {unreadNotificationCount}
             </span>
           )}
-           {/* {errorUnreadCount && (
+          {/* {errorUnreadCount && (
           <span className="fixed top-1/2 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-400 bg-red-200 rounded-full transform translate-x-1/2 -translate-y-1/2">
              {errorUnreadCount}
           </span>
         )} */}
         </button>
         <button
-          className="rounded-full py-1 px-[7px] bg-[#171717] text-white text-center font-medium cursor-pointer"
+          className={`rounded-full bg-[#171717] text-white text-center font-medium cursor-pointer w-9 h-9 ${
+            userData.profile_picture ? "p-0" : "py-1 px-[7px]"
+          }`}
           onClick={onOpenUserProfile}
         >
-          <p>{initials}</p>
+          {userData.profile_picture ? (
+            <img
+              src={userData.profile_picture}
+              alt={`${userData.full_name}'s avatar`}
+              className="w-full h-full rounded-full object-cover"
+            />
+          ) : (
+            <p>{initials}</p>
+          )}
         </button>
       </div>
     </div>

@@ -57,7 +57,7 @@ import Notifications from "../components/settings/Notifications";
 import Support from "../components/settings/Support";
 
 // profile
-import ProfileNotifications from "../components/profile/ProfileNotifications";
+// import ProfileNotifications from "../components/profile/ProfileNotifications";
 import { NotificationProvider } from "../context/NotificationContext";
 
 const router = createBrowserRouter([
@@ -270,7 +270,9 @@ const router = createBrowserRouter([
     path: "/admin",
     element: (
       <AdminRoute>
-        <AdminLayout />
+        <NotificationProvider>
+          <AdminLayout />
+        </NotificationProvider>
       </AdminRoute>
     ),
     children: [

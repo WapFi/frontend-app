@@ -356,6 +356,9 @@ export default function UserProfilePage({ onClose }) {
   const contact = userData?.identifier || "N/A";
   const dob = userData?.date_of_birth || "N/A";
   const profilePictureData = userData?.profile_picture;
+  const creditScore = userData?.credit_score.current_score;
+
+  console.log("user d: ", userData);
 
   const handleShowDeleteConfirm = () => {
     if (!profilePictureData || isPictureUpdating) return;
@@ -471,7 +474,7 @@ export default function UserProfilePage({ onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#f8f8f8] px-4 bg-opacity-50 py-6 overflow-y-auto lg:py-3">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black px-4 bg-opacity-50 py-6 overflow-y-auto lg:py-3">
       {showConfirmModal && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
           <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm mx-4 text-center">
@@ -621,12 +624,18 @@ export default function UserProfilePage({ onClose }) {
               </p>
               <p>{contact}</p>
             </div>
-            {/* <div className="text-[#222]">
+            <div className="text-[#222]">
               <p className="text-[rgba(34,34,34,0.50)]">
                 {t("profile_page.date_of_birth")}
               </p>
               <p>{dob}</p>
-            </div> */}
+            </div>
+            <div className="text-[#222]">
+              <p className="text-[rgba(34,34,34,0.50)]">
+                {t("profile_page.credit_score")}
+              </p>
+              <p>{creditScore}</p>
+            </div>
           </div>
         </div>
         {/* <button

@@ -13,7 +13,7 @@ function BVNVerified() {
           {t("creditScore.bvnVerification")}
         </p>
         <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[#D3F3DF] bg-[#F2FDF5]">
-          <img src={VerifiedIcon} alt="unverified icon" />
+          <img src={VerifiedIcon} alt="verified icon" />
           <p className="text-[14px] text-[#16A34A] bg-[#F2FDF5]">
             {t("creditScore.completed")}
           </p>
@@ -25,7 +25,7 @@ function BVNVerified() {
         </p>
         <div className="flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] border border-[rgba(239,68,68,0.15)] bg-[rgba(239,68,68,0.08)]">
           <img src={UnverifiedIcon} alt="unverified icon" />
-          <p className="text-[14px] text-[#EF4444]">
+          <p className="text-[14px] text-[#EF4444] bg-[rgba(239,68,68,0.15)]">
             {t("creditScore.unverified")}
           </p>
         </div>
