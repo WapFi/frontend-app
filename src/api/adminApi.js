@@ -69,7 +69,6 @@ export const getRepayments = async (params = {}) => {
 
 export const addRepayment = async (repaymentData) => {
   try {
-    console.log("in here")
     const response = await axios.post('/admins/repayments', repaymentData);
     return response.data;
   } catch (error) {

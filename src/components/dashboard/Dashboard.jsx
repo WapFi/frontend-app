@@ -1,129 +1,3 @@
-// import { useNavigate } from "react-router-dom";
-// import NairaIcon from "../../assets/naira icon.svg";
-// import RepaymentsSection from "./RepaymentsSection";
-// import RepaymentProgressBar from "./RepaymentProgressBar";
-// import CountdownTimer from "./CountdownTimer";
-// import CreditScore from "./CreditScore";
-// import Overview from "./Overview";
-// import { useTranslation } from "react-i18next";
-// import { RepaymentsProvider } from "../../context/RepaymentsContext";
-
-// function Dashboard({ dashboardData }) {
-//   const navigate = useNavigate();
-//   const { t } = useTranslation();
-
-//   const handleRepaymentHistoryClick = () => {
-//     // retrieve loan ID and repayments
-//     const loanID = dashboardData.active_loan._id;
-
-//     // navigate to repayments history page and pass the loanID
-//     navigate(`/repayments/repayment-history/${loanID}`);
-//   };
-
-//   console.log("dashboard data: ", dashboardData);
-
-//   const dueDate = new Date(dashboardData.active_loan.due_date);
-//   const targetTime = dueDate.getTime();
-
-//   const initialTimeLeft = dashboardData.active_loan.time_left;
-
-//   return (
-//     <div className="text-[18px] text-[#222] flex flex-col items-end md:items-start md:shrink-0 gap-8 py-4 px-2.5 lg:px-[23px]">
-//       <p className="font-raleway font-semibold text-[24px] md:text-[32px] self-start">
-//         {t("dashboard.title")}
-//       </p>
-
-//       {dashboardData.active_loan.status === "DISBURSED" && (
-//         <div className="rounded-xl flex flex-col self-start justify-center w-full items-start gap-6 border-[#008F4C] border-[1.2px] bg-[#fff] pt-6 pr-[18px] pb-8 pl-[18px]">
-//           {/* <div className="md:flex self-stretch items-center gap-4">
-//           <p>Time left to next repayment:</p>
-//           <p>Days</p>
-//         </div> */}
-//           <CountdownTimer
-//             targetTime={targetTime}
-//             initialDays={initialTimeLeft.days}
-//             initialHours={initialTimeLeft.hours}
-//             initialMinutes={initialTimeLeft.minutes}
-//             initialSeconds={initialTimeLeft.seconds}
-//           />
-//           <div className="flex flex-col flex-start gap-2">
-//             <p>{t("dashboard.outstandingLoanBalance")}</p>
-//             {/* <div className="flex items-center gap-2">
-//               <img src={NairaIcon} alt="Naira Icon" />
-//               <p className="md:text-[24px] font-semibold">
-//                 {dashboardData.active_loan.outstanding_balance}
-//               </p>
-//             </div> */}
-//             <div className="flex items-center gap-1">
-//               <img src={NairaIcon} alt="naira icon" />
-//               <span>
-//                 {new Intl.NumberFormat("en-NG", {
-//                   style: "decimal",
-
-//                   maximumFractionDigits: 2,
-//                 }).format(dashboardData.active_loan.outstanding_balance)}
-//               </span>
-//             </div>
-//           </div>
-//           {/* <div className="relative">
-//           <p className="absolute left-[71%] md:left-[74%] top-[30%] flex gap-1 items-center font-raleway font-medium text-[#444]">
-//             <img src={NairaIcon} alt="naira icon" />
-//             <span>20,000</span>
-//           </p>
-//           <RepaymentProgressBar />
-//         </div> */}
-//           <div className="w-full">
-//             <div className="flex justify-between items-center mb-2">
-//               {/* <p className="flex gap-1 items-center font-raleway font-medium text-[#444]">
-//               <img src={NairaIcon} alt="naira icon" />
-//               <span>20,000</span>
-//             </p> */}
-//             </div>
-//             <RepaymentProgressBar
-//               amountRepaid={dashboardData.active_loan.amount_paid}
-//               loanAmount={dashboardData.active_loan.loan_amount}
-//             />
-//           </div>
-//           {/* <div className="relative">
-//           <p className="absolute left-[71%] md:left-[74%] top-[30%] flex gap-1 items-center font-raleway font-medium text-[#444]">
-//             <img src={NairaIcon} alt="naira icon" />
-//             <span>20,000</span>
-//           </p>
-//           <RepaymentProgressBar />
-//         </div> */}
-
-//           <button
-//             className="text-[14px] flex self-end font-medium text-[#2D6157] cursor-pointer"
-//             role="button"
-//             tabIndex={0}
-//             onClick={() => handleRepaymentHistoryClick()}
-//           >
-//             {t("dashboard.repaymentHistory")}
-//           </button>
-//         </div>
-//       )}
-
-//       {dashboardData.active_loan.status === "DISBURSED" && (
-//         <Overview
-//           totalLoanTaken={dashboardData.total_loans_taken}
-//           amountRepaid={dashboardData.amount_repaid}
-//           activeLoan={dashboardData.active_loan}
-//         />
-//       )}
-
-//       {/* <RepaymentsSection /> */}
-//       <RepaymentsProvider>
-//         <RepaymentsSection />
-//       </RepaymentsProvider>
-
-//       {/* Credit Score Section */}
-
-//       <CreditScore userCreditScore={dashboardData.credit_score} />
-//     </div>
-//   );
-// }
-
-// export default Dashboard;
 
 
 import { useNavigate } from "react-router-dom";
@@ -149,7 +23,7 @@ function Dashboard({ dashboardData }) {
   const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
 
   // REVISED: The condition for a new user
-  const isNewUser = dashboardData.credit_score.current_score === 0;
+  const isNewUser = dashboardData.total_loans_taken === 0;
 
   console.log("dashboard data: ", dashboardData);
 
@@ -173,7 +47,7 @@ function Dashboard({ dashboardData }) {
 
   const handleRepaymentHistoryClick = () => {
     // retrieve loan ID and repayments
-    const loanID = dashboardData.active_loan._id;
+    const loanID = dashboardData.active_loan.loan_id;
 
     // navigate to repayments history page and pass the loanID
     navigate(`/repayments/repayment-history/${loanID}`);
@@ -189,8 +63,8 @@ function Dashboard({ dashboardData }) {
   const renderOverviewSection = () => {
     if (isNewUser) {
       return (
-        <div className="flex items-start gap-6 self-stretch bg-[#fff] p-6 rounded-[12px]">
-          <div className="flex flex-col justify-center items-start gap-2.5 py-[22px] px-6 grow shrink-0 basis-0 rounded-xl shadow-sm ring-1 ring-[#ECECEE]">
+        <div className="flex flex-col md:flex-row items-start gap-6 self-stretch bg-[#fff] p-6 rounded-[12px]">
+          <div className="w-full flex flex-col justify-center items-start gap-2.5 py-[22px] px-6 grow shrink-0 basis-0 rounded-xl shadow-sm ring-1 ring-[#ECECEE]">
             <p className="text-[16px] text-[#888] font-medium">
               {t("newUserDashboard.totalLoanTaken")}
             </p>
@@ -202,7 +76,7 @@ function Dashboard({ dashboardData }) {
               {t("newUserDashboard.lastLoan")}
             </p>
           </div>
-          <div className="flex flex-col justify-center items-start gap-2.5 py-[22px] px-6 grow shrink-0 basis-0 rounded-xl shadow-sm ring-1 ring-[#ECECEE]">
+          <div className="w-full flex flex-col justify-center items-start gap-2.5 py-[22px] px-6 grow shrink-0 basis-0 rounded-xl shadow-sm ring-1 ring-[#ECECEE]">
             <p className="text-[16px] text-[#888] font-medium">
               {t("newUserDashboard.amountRepaid")}
             </p>
@@ -214,7 +88,7 @@ function Dashboard({ dashboardData }) {
               {t("newUserDashboard.repaymentHistory")}
             </p>
           </div>
-          <div className="flex flex-col justify-center items-start gap-2.5 py-[22px] px-6 grow shrink-0 basis-0 rounded-xl shadow-sm ring-1 ring-[#ECECEE]">
+          <div className="w-full flex flex-col justify-center items-start gap-2.5 py-[22px] px-6 grow shrink-0 basis-0 rounded-xl shadow-sm ring-1 ring-[#ECECEE]">
             <p className="text-[16px] text-[#888] font-medium">
               {t("newUserDashboard.activeLoan")}
             </p>
@@ -325,7 +199,7 @@ function Dashboard({ dashboardData }) {
     // Returning user repayments
     return (
       <RepaymentsProvider>
-        <RepaymentsSection />
+        <RepaymentsSection  totalLoansTaken = {dashboardData.total_loans_taken}/>
       </RepaymentsProvider>
     );
   };
@@ -384,7 +258,7 @@ function Dashboard({ dashboardData }) {
           <div className="w-full">
             <RepaymentProgressBar
               amountRepaid={dashboardData.active_loan.amount_paid}
-              loanAmount={dashboardData.active_loan.loan_amount}
+              totalloanAmount={dashboardData.active_loan.total_amount_taken}
             />
           </div>
           <button

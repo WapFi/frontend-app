@@ -15,8 +15,6 @@ export const NotificationProvider = ({ children }) => {
     try {
       const response = await getUnreadCount();
       if (response.status) {
-        // console.log(response.status, response)
-        // console.log("count: ", response.data?.data?.unread_count);
         setUnreadCount(response.data?.data?.unread_count);
       } else {
         setErrorUnreadCount(response.data?.message);
@@ -26,7 +24,7 @@ export const NotificationProvider = ({ children }) => {
       return response;
     } catch (err) {
       setErrorUnreadCount(err.response?.data?.message);
-    //   console.log("err: ", err)
+      //   console.log("err: ", err)
       setUnreadCount(0);
     } finally {
       setLoadingUnreadCount(false);

@@ -62,10 +62,9 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
   useEffect(() => {
     console.log("success: ");
     // Only run if a user is selected
-    console.log(user);
+
     console.log(user._id);
     if (user && user._id) {
-      console.log("In here");
       const fetchUserDetails = async () => {
         setIsLoadingDetails(true);
         setDetailsError(null);
@@ -113,7 +112,7 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
           <h2 className="text-lg font-semibold text-gray-900">User Details</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 hover:text-gray-600 cursor-pointer"
           >
             <svg
               className="w-6 h-6"
@@ -159,9 +158,7 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
               <h3 className="text-lg font-medium text-gray-900">
                 {detailedUser.full_name}
               </h3>
-              <p className="text-sm text-gray-500">
-                Tier {detailedUser.credit_tier}
-              </p>
+              <p className="text-sm text-gray-500">Tier {detailedUser.tier}</p>
 
               <div className="flex items-center space-x-6">
                 {/* Phone with icon */}
@@ -340,11 +337,14 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
                   Registered Date
                 </p>
                 <p className="text-lg font-semibold text-gray-900">
-                  {new Date(detailedUser.created_at).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
+                  {new Date(detailedUser.created_at).toLocaleDateString(
+                    "en-US",
+                    {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    }
+                  )}
                 </p>
               </div>
 
@@ -376,15 +376,16 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
                   Loan Due Date
                 </p>
                 <p className="text-lg font-semibold text-gray-900">
-                  {" "}
-                  {new Date(detailedUser.loan_due_date).toLocaleDateString(
-                    "en-US",
-                    {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    }
-                  )}
+                  {detailedUser.loan_due_date
+                    ? new Date(detailedUser.loan_due_date).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )
+                    : "N/A"}
                 </p>
               </div>
 

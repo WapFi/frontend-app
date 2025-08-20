@@ -9,10 +9,14 @@ import { useLanguage } from "../../../context/LanguageContext";
 import UKFlag from "../../../assets/UK Flag.svg";
 import NigerianFlag from "../../../assets/Nigerian Flag.svg";
 import logoutIcon from "../../../assets/logout icon.svg";
+import ActiveLoanModal from "../../admin/modals/ActiveLoanModal";
+import { useDashboard } from "../../../context/DashboardContext";
+import { use_UserData } from "../../../context/UserContext";
+import PageLoader from "../../PageLoader";
 
 function MobileMenu({
-  userData,
-  onTakeLoanClick,
+  // userData,
+  // onTakeLoanClick,
   onLogOut,
   onOpenUserProfile,
   onOpenUserNotifications,
@@ -21,15 +25,19 @@ function MobileMenu({
   errorUnreadCount,
 }) {
   const navigate = useNavigate();
-
-  const location = useLocation();
-  const isTakeLoanActive = location.pathname.startsWith("/take-a-loan");
+  const { dashboardData } = useDashboard();
+  const { userData } = use_UserData();
+  const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
   const { t } = useTranslation();
-
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // const [error, setError] = useState(false);
   const { language, setLanguage } = useLanguage();
+
+  if (!dashboardData || !userData) {
+    return <PageLoader />;
+  }
+
+  const isTakeLoanActive = location.pathname.startsWith("/take-a-loan");
 
   const nameParts = userData.full_name?.split(" ");
   const initials = nameParts
@@ -51,6 +59,24 @@ function MobileMenu({
     navigate("/settings");
   };
 
+  const handleTakeLoanClick = () => {
+    setMenuOpen(false); // close the menu if open
+    if (dashboardData?.active_loan) {
+      setShowActiveLoanModal(true);
+    } else if (
+      dashboardData?.pending_loan?.status === "PENDING" &&
+      userData.phone_verified === true
+    ) {
+      navigate("/take-a-loan/loan-repayment-overview");
+    } else if (dashboardData.credit_score.current_score === 0) {
+      navigate("/take-a-loan/enter-bvn");
+    } else if (userData.phone_verified === false) {
+      navigate("/take-a-loan/verify-phone");
+    } else {
+      navigate("/take-a-loan/form/loan-amount-purpose");
+    }
+  };
+
   return (
     <div className={`${menuOpen ? "bg-white h-screen" : "bg-[#f1f1f1]"}`}>
       <div className="lg:hidden bg-white border-b border-b-[rgba(0,0,0,0.08)] h-[50px] flex justify-between items-center shrink-0 py-10 px-2.5">
@@ -68,12 +94,7 @@ function MobileMenu({
                     {unreadNotificationCount}
                   </span>
                 )}
-                {/* 
-                {errorUnreadCount && (
-                  <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-400 bg-red-200 rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    {errorUnreadCount}
-                  </span>
-                )} */}
+              
               </button>
               <button
                 className={`rounded-full bg-[#171717] text-white text-center font-medium cursor-pointer w-9 h-9 ${
@@ -142,15 +163,12 @@ function MobileMenu({
           <div
             role="button"
             tabIndex={0}
-            onClick={() => {
-              setMenuOpen(false);
-              if (onTakeLoanClick) onTakeLoanClick();
-            }}
+            onClick={handleTakeLoanClick}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 setMenuOpen(false);
-                if (onTakeLoanClick) onTakeLoanClick();
+                // if (onTakeLoanClick) onTakeLoanClick();
               }
             }}
             className={`flex items-center gap-3 self-stretch h-[40px] py-[8px] px-[16px] cursor-pointer outline-none ${
@@ -361,6 +379,16 @@ function MobileMenu({
           </div>
         </div>
       )}
+      <ActiveLoanModal
+        visible={showActiveLoanModal}
+        onAction={() => {
+          setShowActiveLoanModal(false);
+          navigate("/dashboard");
+        }}
+        title={t("layout.activeLoanModal.title")}
+        body={t("layout.activeLoanModal.body")}
+        buttonLabel={t("layout.activeLoanModal.button")}
+      />
     </div>
   );
 }

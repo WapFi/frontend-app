@@ -1,4 +1,11 @@
 function RepaymentDetailsModal({ repayment, onClose, onViewUser }) {
+  console.log("my repayment: ", repayment);
+
+  const formatDate = (dateStr) => {
+    const [day, month, year] = dateStr.split("/");
+    return new Date(`${year}-${month}-${day}`);
+  };
+
   if (!repayment) return null;
 
   return (
@@ -9,7 +16,7 @@ function RepaymentDetailsModal({ repayment, onClose, onViewUser }) {
           <h2 className="text-lg font-semibold text-gray-900">Repayment</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 hover:text-gray-600 cursor-pointer"
           >
             <svg
               className="w-6 h-6"
@@ -123,11 +130,11 @@ function RepaymentDetailsModal({ repayment, onClose, onViewUser }) {
               <div className="flex justify-between items-center my-2">
                 <span className="text-sm text-gray-600">Due Date</span>
                 <span className="text-sm text-gray-900">
-                  {new Date(repayment.lastLoanDate).toLocaleDateString(
+                  {formatDate(repayment.lastLoanDate).toLocaleDateString(
                     "en-US",
                     {
                       year: "numeric",
-                      month: "short",
+                      month: "long",
                       day: "numeric",
                     }
                   )}
@@ -136,18 +143,6 @@ function RepaymentDetailsModal({ repayment, onClose, onViewUser }) {
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex space-x-3">
-            <button 
-              onClick={onViewUser}
-              className="flex-1 bg-yellow-500 text-white py-3 px-4 rounded-md font-medium hover:bg-yellow-600 transition-colors"
-            >
-              View Statement
-            </button>
-            <button className="flex-1 bg-red-100 text-red-700 py-3 px-4 rounded-md font-medium hover:bg-red-200 transition-colors">
-              Report Issue
-            </button>
-          </div>
         </div>
       </div>
     </div>

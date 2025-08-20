@@ -13,8 +13,7 @@ function Overview({ totalLoanTaken, amountRepaid, activeLoan, lastLoan }) {
         const response = await fetchRepayments();
         setFulfilledRepayments(response.data.repayments.length);
         setTotalRepayments(response.data.total_repayments);
-        // console.log(totalRepayments);
-        // console.log(response.data);
+        
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -40,13 +39,7 @@ function Overview({ totalLoanTaken, amountRepaid, activeLoan, lastLoan }) {
             <p className="text-[30px]">{totalLoanTaken.toLocaleString()}</p>
           </div>
           <p className="text-[14px] text-[#666]">
-            {/* {t("overview.lastLoan")}: ₦{" "}
-            {activeLoan?.loan_amount?.toLocaleString()} -{" "}
-            {new Date(activeLoan.due_date).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })} */}
+            
             {t("overview.lastLoan")}: ₦{" "}
             {(
               activeLoan?.loan_amount ??
@@ -54,9 +47,9 @@ function Overview({ totalLoanTaken, amountRepaid, activeLoan, lastLoan }) {
               0
             ).toLocaleString()}{" "}
             -{" "}
-            {activeLoan?.disbursement_date ?? lastLoan?.application_date
+            {activeLoan?.disbursement_date ?? lastLoan?.disbursement_date
               ? new Date(
-                  activeLoan?.disbursement_date ?? lastLoan?.application_date
+                  activeLoan?.disbursement_date ?? lastLoan?.disbursement_date
                 ).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "short",

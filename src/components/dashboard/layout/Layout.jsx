@@ -6,7 +6,6 @@ import { fetchUserMe, logOut } from "../../../api/apiData";
 import { useState, useEffect } from "react";
 import PageLoader from "../../PageLoader";
 import { useTranslation } from "react-i18next";
-import { useDashboard } from "../../../context/DashboardContext";
 import { use_UserData } from "../../../context/UserContext";
 import Toast from "./Toast";
 import UserProfilePage from "../../profile/UserProfilePage";
@@ -54,31 +53,6 @@ function Layout() {
 
     loadData();
   }, []);
-
-  // Dashboard Context for Active Loan Check ---
-  const { dashboardData } = useDashboard();
-  const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
-
-  // --- NEW: Take a Loan Click Handler ---
-  const handleTakeLoanClick = () => {
-    // console.log("user data: ", userData);
-    if (dashboardData?.active_loan) {
-      // User has an existing active loan
-      setShowActiveLoanModal(true);
-    } else if (
-      dashboardData?.pending_loan?.status === "PENDING" &&
-      userData.phone_verified === true
-    ) {
-      navigate("/take-a-loan/loan-repayment-overview");
-    } else if (dashboardData.credit_score.current_score === 0) {
-      navigate("/take-a-loan/enter-bvn");
-    } else if (userData.phone_verified === false) {
-      navigate("/take-a-loan/verify-phone");
-    } else {
-      // User is eligible
-      navigate("/take-a-loan/form/loan-amount-purpose");
-    }
-  };
 
   // useEffect to clear toast message after a few seconds
   useEffect(() => {
@@ -144,9 +118,9 @@ function Layout() {
       <Toast message={toastMessage} type={toastType} />
 
       {/* Sidebar for desktop */}
-      <aside className="md:w-[30%] hidden lg:block lg:w-[23%]">
+      <aside className="hidden lg:block lg:w-[18%]">
         <Sidebar
-          onTakeLoanClick={handleTakeLoanClick}
+          // onTakeLoanClick={handleTakeLoanClick}
           onLogOut={handleLogOut}
         />
       </aside>
@@ -170,7 +144,7 @@ function Layout() {
               userData={userData}
               onOpenUserProfile={openUserProfileModal}
               onOpenUserNotifications={openUserNotificationsModal}
-              onTakeLoanClick={handleTakeLoanClick}
+              // onTakeLoanClick={handleTakeLoanClick}
               onLogOut={handleLogOut}
               unreadNotificationCount={unreadCount}
               loadingUnreadCount={loadingUnreadCount}
@@ -186,7 +160,7 @@ function Layout() {
       </div>
 
       {/* --- NEW: Modal Overlay for Active Loan --- */}
-      {showActiveLoanModal && (
+      {/* {showActiveLoanModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-lg max-w-sm w-full p-6 text-center">
             <h2 className="text-xl font-bold mb-4 text-[#2D6157]">
@@ -206,7 +180,7 @@ function Layout() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
       {showUserProfileModal && (
         <UserProfilePage onClose={closeUserProfileModal} />
       )}

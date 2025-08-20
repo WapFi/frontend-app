@@ -60,55 +60,16 @@ export default function Step4Summary() {
     fetchAndSyncLoanData();
   }, [dashboardData.pending_loan, refreshDashboardData, updateLoanFormData]);
 
-  // // useEffect to ensure loanFormData is synced from backend on mount
-  // useEffect(() => {
-  //   const fetchAndSyncLoanData = async () => {
-  //     try {
-  //       const freshDashboardRes = await refreshDashboardData(); // Fetch latest from backend
-  //       if (freshDashboardRes && freshDashboardRes.pending_loan) {
-  //         // If there's a pending loan, update the context with its details
-  //         updateLoanFormData({
-  //           loan_amount: freshDashboardRes.pending_loan.loan_amount ?? "",
-  //           loan_purpose: freshDashboardRes.pending_loan.loan_purpose ?? "",
-  //           wapan_member: freshDashboardRes.pending_loan.wapan_member ?? false,
-  //           account_name:
-  //             freshDashboardRes.pending_loan.bank_account?.account_name ?? "",
-  //           account_number:
-  //             freshDashboardRes.pending_loan.disbursement_account ?? "",
-  //           bank_name:
-  //             freshDashboardRes.pending_loan.bank_account?.bank_name ?? "",
-  //           repayment_method:
-  //             freshDashboardRes.pending_loan.repayment_method ?? "",
-  //           recyclable_drop_off_known:
-  //             freshDashboardRes.pending_loan.recyclable_drop_off_known ?? false,
-  //           recyclable_drop_off_location:
-  //             freshDashboardRes.pending_loan.recyclable_drop_off_location ?? "",
-  //           repayment_schedule:
-  //             freshDashboardRes.pending_loan.repayment_schedule ?? "",
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.log("Failed to refresh dashboard data for summary:", error);
-  //       // Optionally, set an error state to inform the user
-  //     }
-  //   };
-
-  //   fetchAndSyncLoanData();
-  // }, [refreshDashboardData, updateLoanFormData]);
-
   console.log("loan form data: ", loanFormData);
 
-  // logging for test only
   console.log(
     "loan application data: ",
     localStorage.getItem("latestLoanApplicationData")
   );
 
-  // console.log("pending loan: ", dashboardData.pending_loan);
 
   const onSubmit = async () => {
     setLoading(true);
-    // setFormError(false);
 
     const payload = {
       loan_amount: loanFormData.loan_amount,
@@ -118,7 +79,7 @@ export default function Step4Summary() {
       account_number: loanFormData.account_number,
       bank_name: loanFormData.bank_name,
       recyclable_drop_off_known: loanFormData.recyclable_drop_off_known,
-      // recyclable_drop_off_location: loanFormData.recyclable_drop_off_location,
+      
       repayment_method: loanFormData.repayment_method,
       repayment_schedule: loanFormData.repayment_schedule,
     };

@@ -21,20 +21,6 @@ function CreditScore() {
 
   const { t } = useTranslation();
 
-  // const [scoreData, setScoreData] = useState(null);
-
-  // useEffect(() => {
-  //   fetchDashboardData().then((res) => {
-  //     if (res.status) {
-  //       setScoreData(res.data.creditScore);
-  //     }
-  //   });
-  // }, []);
-
-  // if (!scoreData) return <p>{t("creditScore.loading")}</p>;
-
-  // const { current_score, tier, next_tier_threshold } = scoreData;
-
   const radius = 135.8;
   const strokeWidth = 20;
   const circumference = 2 * Math.PI * radius;

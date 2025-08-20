@@ -1,32 +1,8 @@
-// import { createContext, useState, useContext, useEffect } from "react";
-
-// const UserContext = createContext();
-
-// export function UserContextProvider({ children }) {
-//   const [userData, setUserData] = useState(() => {
-//     const stored = localStorage.getItem("userData");
-//     return stored ? JSON.parse(stored) : [];
-//   });
-
-//   useEffect(() => {
-//     localStorage.setItem("userData", JSON.stringify(userData));
-//   }, [userData]);
-
-//   return (
-//     <UserContext.Provider value={{ userData, setUserData }}>
-//       {children}
-//     </UserContext.Provider>
-//   );
-// }
 
 
 
-// export function use_UserData() {
-//   return useContext(UserContext);
-// }
 
-
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useCallback } from "react";
 import { fetchUserMe } from "../api/apiData";
 
 const UserContext = createContext();
@@ -37,7 +13,6 @@ export function UserContextProvider({ children }) {
     return stored ? JSON.parse(stored) : null;
   });
 
-  // Keep localStorage in sync when userData changes
   useEffect(() => {
     if (userData) {
       localStorage.setItem("userData", JSON.stringify(userData));
@@ -46,10 +21,7 @@ export function UserContextProvider({ children }) {
     }
   }, [userData]);
 
-  /**
-   * New: fetch fresh user data from the server
-   */
-  const refreshUserData = async () => {
+  const refreshUserData = useCallback(async () => {
     try {
       const res = await fetchUserMe();
       if (res.status) {
@@ -61,7 +33,12 @@ export function UserContextProvider({ children }) {
     } catch (err) {
       console.error("Error in refreshUserData:", err);
     }
-  };
+  }, []);
+
+  // Initial fetch on mount
+  useEffect(() => {
+    refreshUserData();
+  }, [refreshUserData]); // Now it depends on the memoized function
 
   return (
     <UserContext.Provider value={{ userData, setUserData, refreshUserData }}>

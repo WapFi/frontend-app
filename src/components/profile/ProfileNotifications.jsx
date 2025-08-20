@@ -7,7 +7,6 @@ import {
   deleteNotification,
 } from "../../api/apiData";
 import { useTranslation } from "react-i18next";
-// import LoadingSpinner from "../LoadingSpinner";
 
 function formatTimeAgo(isoString, t) {
   if (!isoString) {
@@ -58,7 +57,7 @@ export default function ProfileNotifications({
   const [listError, setListError] = useState(null);
 
   const [isProcessingAction, setIsProcessingAction] = useState(false);
-  const [isMarkingAllAsRead, setIsMarkingAllAsRead] = useState(false); // New state variable
+  const [isMarkingAllAsRead, setIsMarkingAllAsRead] = useState(false); 
   const [isClearingAll, setIsClearingAll] = useState(false);
   const [actionError, setActionError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import UserManagementTable from "./UserManagementTable";
 import UserDetailsModal from "../modals/UserDetailsModal";
@@ -9,6 +10,11 @@ function UserManagement() {
   const [showFiltersModal, setShowFiltersModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
+  const [filters, setFilters] = useState({
+    tier: "",
+    kycStatus: [],
+  });
+  const [resultsCount, setResultsCount] = useState(0);
 
   const handleUserClick = (user) => {
     setSelectedUser(user);
@@ -26,6 +32,11 @@ function UserManagement() {
 
   const handleCloseFiltersModal = () => {
     setShowFiltersModal(false);
+  };
+
+  const handleApplyFilters = (newFilters) => {
+    setFilters(newFilters);
+    handleCloseFiltersModal();
   };
 
   return (
@@ -100,6 +111,8 @@ function UserManagement() {
           onUserClick={handleUserClick}
           searchTerm={searchTerm}
           selectedDate={selectedDate}
+          filters={filters}
+          onResultsCountUpdate={setResultsCount}
         />
       </div>
 
@@ -109,7 +122,14 @@ function UserManagement() {
       )}
 
       {/* Filters Modal */}
-      {showFiltersModal && <FiltersModal onClose={handleCloseFiltersModal} />}
+      {showFiltersModal && (
+        <FiltersModal
+          onClose={handleCloseFiltersModal}
+          currentFilters={filters}
+          onApply={handleApplyFilters}
+          resultsCount={resultsCount}
+        />
+      )}
     </div>
   );
 }

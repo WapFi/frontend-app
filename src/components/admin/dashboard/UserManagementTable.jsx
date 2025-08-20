@@ -25,7 +25,7 @@ function UserManagementTable({
   const fetchUsers = async (
     page = 1,
     search = "",
-    startDate = "",
+    startDate = ""
     // endDate = ""
   ) => {
     try {
@@ -39,7 +39,6 @@ function UserManagementTable({
       });
 
       if (response.status && response.data) {
-        console.log("res: ", response.data);
         const {
           users: userData,
           total_users,
@@ -47,7 +46,7 @@ function UserManagementTable({
           current_page,
         } = response.data;
 
-        console.log("user data: ", userData);
+        console.log("response: ", response.data)
 
         // Transform the data to match the expected format
         const transformedUsers = userData.map((user) => ({

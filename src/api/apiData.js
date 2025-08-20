@@ -20,12 +20,64 @@ export const fetchDashboardData = async () => {
 //   return response.data;
 // };
 
-export const fetchRepayments = async (page, limit) => {
-  const response = await axios.get(
-    `/loans/repayments/history?page=${page ? page : 1}&limit=${
-      limit ? limit : 10
-    }`
-  );
+
+// // fetch repayments
+// export const fetchRepayments = async (page = 1, limit = 10, filters = {}) => {
+//   const { query, startDate, endDate } = filters;
+//   let queryString = `page=${page}&limit=${limit}`;
+
+//   if (query) {
+//     // Check if the query is a number
+//     if (!isNaN(Number(query))) {
+//       // It's a number, so we assume it's a loan amount
+//       queryString += `&loan_amount=${query}`;
+//     } else {
+//       // It's not a number, so we assume it's a loan ID
+//       queryString += `&loan_id=${query}`;
+//     }
+//   }
+
+//   if (startDate) {
+//     queryString += `&start_date=${startDate}`;
+//   }
+
+//   if (endDate) {
+//     queryString += `&end_date=${endDate}`;
+//   }
+
+//   const response = await axios.get(`/loans/repayments/history?${queryString}`);
+//   console.log("Repayments: ", response.data);
+//   return response.data;
+// };
+
+// fetch repayments
+export const fetchRepayments = async (page = 1, limit = 10, filters = {}) => {
+  const { query, startDate, endDate, loanID } = filters;
+  let queryString = `page=${page}&limit=${limit}`;
+
+  if (query) {
+    // This is for general search functionality
+    if (!isNaN(Number(query))) {
+      queryString += `&loan_amount=${query}`;
+    } else {
+      queryString += `&loan_id=${query}`;
+    }
+  }
+
+  // This block is for filtering by a specific loan ID, which is more explicit
+  if (loanID) {
+    queryString += `&loan_id=${loanID}`;
+  }
+
+  if (startDate) {
+    queryString += `&start_date=${startDate}`;
+  }
+
+  if (endDate) {
+    queryString += `&end_date=${endDate}`;
+  }
+
+  const response = await axios.get(`/loans/repayments/history?${queryString}`);
   console.log("Repayments: ", response.data);
   return response.data;
 };
@@ -60,13 +112,40 @@ export const confirmLoanApplication = async (loan_id, password) => {
   return response;
 };
 
-// fetch loan history
-export const fetchLoans = async (page, limit) => {
-  const response = await axios.get(
-    `/loans/history?page=${page ? page : 1}&limit=${limit ? limit : 10}`
-  );
+// // fetch loan history
+// export const fetchLoans = async (page, limit) => {
+//   const response = await axios.get(
+//     `/loans/history?page=${page ? page : 1}&limit=${limit ? limit : 10}`
+//   );
+//   return response.data;
+// };
+
+// fetch loan history with filters
+export const fetchLoans = async (page = 1, limit = 10, filters = {}) => {
+  const { query, startDate, endDate } = filters;
+  let queryString = `page=${page}&limit=${limit}`;
+
+  if (query) {
+    // If query is numeric, search by loan_amount; else treat as loan_id
+    if (!isNaN(Number(query))) {
+      queryString += `&loan_amount=${query}`;
+    } else {
+      queryString += `&loan_id=${query}`;
+    }
+  }
+
+  if (startDate) {
+    queryString += `&start_date=${startDate}`;
+  }
+
+  if (endDate) {
+    queryString += `&end_date=${endDate}`;
+  }
+
+  const response = await axios.get(`/loans/history?${queryString}`);
   return response.data;
 };
+
 
 // update preferences
 // export const updatePreferences = async (type, state) => {
