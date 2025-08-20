@@ -1,216 +1,260 @@
-// import { useParams, useNavigate } from "react-router-dom";
-// import LoanDetails from "./LoanDetails";
-// import calendarIcon from "../../assets/calendar icon.svg";
 
-// function LoanDetailsScreen() {
-//   const { id } = useParams();
-//   const navigate = useNavigate();
 
-//   return (
-//     <div className="p-4 flex flex-col gap-4">
-//       <div className="flex justify-between items-center mb-14">
-//         <p className="font-raleway font-semibold text-[24px]">Repayments</p>
-//         <div className="ml-3.5 flex items-center gap-2.5 pl-3 shrink-0 rounded-[30px] border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)]">
-//           <p className="text-[16px] text-[rgba(34,34,34,0.80)] font-medium">
-//             May 2025
-//           </p>
-//           <span className="block p-4 rounded-[50%] bg-[#E6E6E6] cursor-pointer">
-//             <img src={calendarIcon} alt="calendar icon" />
-//           </span>
-//         </div>
-//       </div>
 
-//       <LoanDetails loanId={id} isVisible={true} />
-//       <button
-//         onClick={() => navigate(-1)}
-//         className="text-[#2D6157] text-[14px] mt-4 underline"
-//       >
-//         ← Back
-//       </button>
-//     </div>
-//   );
-// }
 
-// export default LoanDetailsScreen;
-
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import LoanDetails from "./LoanDetails";
 import calendarIcon from "../../assets/calendar icon.svg";
-import DateDisplay from "./DateDisplay";
+import searchIcon from "../../assets/search icon.svg";
 import { useTranslation } from "react-i18next";
-import { getLoanDetails } from "../../api/apiData";
-import { fetchRepayments } from "../../api/apiData";
+import { getLoanDetails, fetchRepayments } from "../../api/apiData";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+// Simple debounce hook
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debouncedValue;
+};
 
 function LoanDetailsScreenMobile() {
   const { t } = useTranslation();
-
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchPlaceholder, setSearchPlaceholder] = useState(
+    t("loanDetailsMobile.searchPlaceholder")
+  );
   const [repayments, setRepayments] = useState([]);
   const [selectedLoanId, setSelectedLoanId] = useState(id);
   const [loanDetails, setLoanDetails] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [dataLoaded, setDataLoaded] = useState(false); // Gate for showing no results
 
-    useEffect(() => {
-      // get loan by ID and render loan details
-      const getLoanByID = async (loanID) => {
-        try {
-          const response = await getLoanDetails(loanID);
-          if (response) {
-            setLoanDetails(response.data);
-            // console.log("Loan Details: ", response.data);
-          }
-        } catch (error) {
-          console.log("Error: ", error);
-        }
-      };
-      if (selectedLoanId) {
-        getLoanByID(selectedLoanId);
-      }
-    }, [selectedLoanId]);
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
+  // Fetch loan details
   useEffect(() => {
-    fetchRepayments().then((res) => {
-      if (res.status) {
-        setRepayments(res.data.repayments);
+    const getLoanByID = async (loanID) => {
+      try {
+        const response = await getLoanDetails(loanID);
+        if (response?.status) setLoanDetails(response.data);
+      } catch (err) {
+        console.error("Error fetching loan details:", err);
       }
-    });
-  }, []);
+    };
+    if (selectedLoanId) getLoanByID(selectedLoanId);
+  }, [selectedLoanId]);
 
-  const filteredRepayments = selectedMonth
-    ? repayments.filter((repayment) => {
-        const date = new Date(repayment.repayment_date);
-        const monthString = `${date.getFullYear()}-${String(
-          date.getMonth() + 1
-        ).padStart(2, "0")}`;
-        return monthString === selectedMonth;
-      })
-    : [];
+  const formatDate = (date) => {
+    if (!date) return null;
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(date.getDate()).padStart(2, "0")}`;
+  };
+
+  const fetchFilteredRepayments = async (filters = {}) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetchRepayments(1, 10, filters);
+      if (res?.status) {
+        setRepayments(res.data.repayments || []);
+      } else {
+        setRepayments([]);
+      }
+    } catch (err) {
+      console.error("Error fetching repayments:", err);
+      setRepayments([]);
+    } finally {
+      setLoading(false);
+      setDataLoaded(true); // Only marks loaded after actual response
+    }
+  };
+
+  const handleApplyFilters = () => {
+    const filters = {};
+    if (debouncedSearchQuery.trim()) {
+      filters.query = debouncedSearchQuery.trim();
+    }
+    if (startDate && endDate) {
+      filters.startDate = formatDate(startDate);
+      filters.endDate = formatDate(endDate);
+    }
+    fetchFilteredRepayments(filters);
+  };
+
+  const handleClearFilters = () => {
+    setSearchQuery("");
+    setStartDate(null);
+    setEndDate(null);
+    fetchFilteredRepayments({});
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleDateChange = ([start, end]) => {
+    if (start && !end) {
+      setStartDate(start);
+      setEndDate(start);
+    } else {
+      setStartDate(start);
+      setEndDate(end);
+    }
+  };
+
+  const selectedDateRangeText = () => {
+    if (startDate && endDate) {
+      const sameDay = startDate.getTime() === endDate.getTime();
+      if (sameDay) {
+        return startDate.toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      }
+      return `${startDate.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })} - ${endDate.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })}`;
+    }
+    return t("loanDetailsMobile.selectMonth");
+  };
+
+  if (loading) return <p>{t("loading") || "Loading..."}</p>;
+
+  const noRepayments = dataLoaded && !loading && repayments.length === 0;
 
   return (
     <div className="p-4 flex flex-col gap-4">
-      <div className="flex justify-between items-center mb-14 relative">
+      {/* Title + Date Picker */}
+      <div className="flex justify-between items-center mb-2 relative">
         <p className="font-raleway font-semibold text-[24px]">
-          {" "}
           {t("loanDetailsMobile.title")}
         </p>
-
         <div className="ml-3.5 relative">
-          <div className="flex items-center gap-2.5 pl-3 shrink-0 rounded-[30px] border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)]">
-            <p className="text-[16px] text-[rgba(34,34,34,0.80)] font-medium">
-              {selectedMonth
-                ? new Date(`${selectedMonth}-01`).toLocaleString("default", {
-                    month: "long",
-                    year: "numeric",
-                  })
-                : t("loanDetailsMobile.selectMonth")}
-            </p>
-            <span
-              className="block p-4 rounded-[50%] bg-[#E6E6E6] cursor-pointer"
-              onClick={() => setShowCalendar((prev) => !prev)}
-            >
-              <img src={calendarIcon} alt="calendar icon" />
-            </span>
-          </div>
-
-          {/* {showCalendar && (
-            <div className="absolute w-[150px] right-0 mt-2 z-50 bg-white border p-2 rounded shadow-md">
-              <input
-                type="month"
-                value={selectedMonth}
-                onChange={(e) => {
-                  setSelectedMonth(e.target.value);
-                  setShowCalendar(false);
-                }}
-                className="text-sm outline-none border-none"
-              />
-            </div>
-          )} */}
-          {showCalendar && (
-            <input
-              type="month"
-              value={selectedMonth}
-              onChange={(e) => {
-                setSelectedMonth(e.target.value);
-                setShowCalendar(false);
-              }}
-              className="absolute right-0 mt-2 z-50 bg-white border rounded w-[160px] h-[40px] text-sm"
-            />
-          )}
+          <DatePicker
+            selected={startDate}
+            onChange={handleDateChange}
+            startDate={startDate}
+            endDate={endDate}
+            selectsRange
+            maxDate={new Date()}
+            customInput={
+              <div className="flex items-center gap-2.5 pl-3 shrink-0 rounded-[30px]
+                              border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)] cursor-pointer">
+                <p className="text-[16px] text-[rgba(34,34,34,0.80)] font-medium">
+                  {selectedDateRangeText()}
+                </p>
+                <span className="block p-4 rounded-[50%] bg-[#E6E6E6]">
+                  <img src={calendarIcon} alt="calendar" />
+                </span>
+              </div>
+            }
+          />
         </div>
       </div>
 
-      {/* Repayment Buttons */}
+      {/* Search bar */}
+      <div className="flex items-center justify-between gap-2.5 pl-3 shrink-0 rounded-[30px]
+                      w-full border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)]">
+        <input
+          type="search"
+          placeholder={searchPlaceholder}
+          onFocus={() => setSearchPlaceholder("")}
+          onBlur={() => setSearchPlaceholder(t("loanDetailsMobile.searchPlaceholder"))}
+          className="text-[14px] w-[90%] text-[rgba(34,34,34,0.50)] rounded-full
+                     bg-transparent outline-none border-none"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          autoComplete="off"
+        />
+        <button className="cursor-pointer">
+          <img src={searchIcon} alt="search" />
+        </button>
+      </div>
+
+      {/* Apply / Clear */}
+      <div className="flex gap-4">
+        <button
+          onClick={handleApplyFilters}
+          className="flex-1 text-[14px] font-semibold text-blue-600"
+        >
+          {t("repaymentsSection.applyFilters")}
+        </button>
+        <button
+          onClick={handleClearFilters}
+          className="flex-1 text-[14px] font-semibold text-gray-600"
+        >
+          {t("repaymentsSection.clearFilters")}
+        </button>
+      </div>
+
+      {/* Repayments list / message */}
       <div className="flex flex-col gap-4">
-        {filteredRepayments.length === 0 && selectedMonth ? (
+        {error ? (
+          <p className="text-red-500 text-center">{error}</p>
+        ) : noRepayments ? (
           <p className="text-sm text-gray-500">
-            {" "}
             {t("loanDetailsMobile.noRepayments")}
           </p>
         ) : (
-          filteredRepayments.map((repayment) => (
+          repayments.map((repayment) => (
             <button
               key={repayment._id}
               onClick={() => setSelectedLoanId(repayment.loan._id)}
               className={`${
-                repayment.status === "VERIFIED"
+                repayment.status === "COMPLETED"
                   ? "bg-[#fafafa] text-[#2C2C2C]"
                   : "bg-[#439182] text-white"
-              } cursor-pointer rounded-[24px] flex justify-between items-center self-stretch py-[12px] px-[15px] gap-4 md:gap-8`}
+              } cursor-pointer rounded-[24px] flex justify-between items-center
+                 self-stretch py-[12px] px-[15px] gap-4`}
             >
               <div className="flex flex-col items-start gap-1 text-[16px]">
                 <span className="font-medium text-[15px]">
-                  {repayment.loan._id}
+                  {repayment.loan.loan_id}
                 </span>
                 <span className="text-[14px]">
-                  {new Date(repayment.repayment_date).toLocaleDateString(
-                    "en-US",
-                    {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    }
-                  )}
+                  {new Date(repayment.repayment_date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
                 </span>
               </div>
-
               <span
                 className={`rounded-[16px] ${
-                  repayment.status === "VERIFIED"
+                  repayment.status === "COMPLETED"
                     ? "bg-[#323232] text-white"
                     : "bg-white text-[#7D9776]"
                 } font-medium text-[12px] py-1 px-2`}
               >
-                {repayment.status === "VERIFIED"
+                {repayment.status === "COMPLETED"
                   ? t("loanDetailsMobile.statusCompleted")
                   : t("loanDetailsMobile.statusPending")}
               </span>
-
               <span
                 className={`font-medium flex items-center text-[16px] gap-1 ${
-                  repayment.status === "VERIFIED"
-                    ? "text-[#484747]"
-                    : "text-white"
+                  repayment.status === "COMPLETED" ? "text-[#484747]" : "text-white"
                 }`}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="13"
-                  viewBox="0 0 14 13"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M2.71429 11.5V2.37667C2.71423 2.18277 2.78041 1.99435 2.90245 1.84099C3.02448 1.68763 3.19545 1.57802 3.38851 1.52938C3.58157 1.48074 3.78578 1.49582 3.96907 1.57226C4.15235 1.64869 4.30433 1.78215 4.40114 1.95167L9.59886 11.0483C9.69567 11.2179 9.84765 11.3513 10.0309 11.4277C10.2142 11.5042 10.4184 11.5193 10.6115 11.4706C10.8045 11.422 10.9755 11.3124 11.0976 11.159C11.2196 11.0057 11.2858 10.8172 11.2857 10.6233V1.5M1 4.83333H13M1 8.16667H13"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
                 <span className="md:text-[20px]">
                   {repayment.amount_paid.toLocaleString()}
                 </span>
@@ -220,10 +264,10 @@ function LoanDetailsScreenMobile() {
         )}
       </div>
 
-      {loanDetails && (
-        <LoanDetails loanDetails={loanDetails} isVisible={true} />
-      )}
+      {/* Loan Details Card */}
+      {loanDetails && <LoanDetails loanDetails={loanDetails} isVisible={true} />}
 
+      {/* Back button */}
       <button
         onClick={() => navigate(-1)}
         className="text-[#2D6157] text-[14px] mt-4 underline"

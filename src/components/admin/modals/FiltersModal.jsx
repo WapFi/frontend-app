@@ -1,144 +1,179 @@
-import { useState } from "react";
 
-function FiltersModal({ onClose }) {
-  const [filters, setFilters] = useState({
-    tag: "",
-    year: "",
-    month: "",
-    kycStatus: "",
-    loanStatus: ""
-  });
+import { useEffect, useState } from "react";
 
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({
+function FiltersModal({ onClose, currentFilters, onApply}) {
+  const [localFilters, setLocalFilters] = useState(currentFilters);
+
+  useEffect(() => {
+    setLocalFilters(currentFilters);
+  }, [currentFilters]);
+
+  const handleTierChange = (tier) => {
+    setLocalFilters((prev) => ({
       ...prev,
-      [key]: value
+      tier: prev.tier === tier ? "" : tier,
     }));
   };
 
-  const handleReset = () => {
-    setFilters({
-      tag: "",
-      year: "",
-      month: "",
-      kycStatus: "",
-      loanStatus: ""
+  const handleKycStatusChange = (status) => {
+    setLocalFilters((prev) => {
+      const newStatus = prev.kycStatus.includes(status)
+        ? prev.kycStatus.filter((s) => s !== status)
+        : [...prev.kycStatus, status];
+      return { ...prev, kycStatus: newStatus };
     });
   };
 
-  const handleApply = () => {
-    // Apply filters logic here
-    onClose();
+  const handleReset = () => {
+    const defaultFilters = { tier: "", kycStatus: [] };
+    setLocalFilters(defaultFilters);
+    onApply(defaultFilters);
   };
+
+  const handleApply = () => {
+    onApply(localFilters);
+  };
+
+  const kycStatuses = ["BVN Verified", "BVN Unverified", "NIN Verified", "NIN Unverified"];
+
+  const hasChanges = JSON.stringify(localFilters) !== JSON.stringify(currentFilters);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="p-6 space-y-4">
-          {/* Tag */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Tag</label>
-            <select
-              value={filters.tag}
-              onChange={(e) => handleFilterChange("tag", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
+      <div className="bg-white rounded-[20px] shadow-xl w-full max-w-[400px]">
+        <div className="relative p-6 md:p-8">
+        
+          <div className="relative flex items-center justify-center pb-6">
+            <p className="text-[20px] md:text-2xl font-bold text-[#222] text-center">Filters</p>
+            <button
+              onClick={onClose}
+              className="absolute right-0 text-[#888] hover:text-gray-600 focus:outline-none"
             >
-              <option value="">Select</option>
-              <option value="new-user">New User</option>
-              <option value="verified">Verified</option>
-              <option value="unverified">Unverified</option>
-              <option value="defaulted">Defaulted</option>
-            </select>
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
           </div>
 
-          {/* Year */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
-            <select
-              value={filters.year}
-              onChange={(e) => handleFilterChange("year", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
-            >
-              <option value="">Select</option>
-              <option value="2025">2025</option>
-              <option value="2024">2024</option>
-              <option value="2023">2023</option>
-            </select>
-          </div>
-
-          {/* Month */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Month</label>
-            <select
-              value={filters.month}
-              onChange={(e) => handleFilterChange("month", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
-            >
-              <option value="">Select</option>
-              <option value="january">January</option>
-              <option value="february">February</option>
-              <option value="march">March</option>
-              <option value="april">April</option>
-              <option value="may">May</option>
-              <option value="june">June</option>
-              <option value="july">July</option>
-              <option value="august">August</option>
-              <option value="september">September</option>
-              <option value="october">October</option>
-              <option value="november">November</option>
-              <option value="december">December</option>
-            </select>
-          </div>
-
-          {/* KYC Status */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">KYC Status</label>
-            <div className="space-y-2">
-              {["BVN Verified", "NIN Verified", "Unverified", "BVN Unverified"].map((status) => (
-                <label key={status} className="flex items-center">
+          {/* Tier Filter */}
+          <div className="mb-6 border-t border-[#E8E8E8] pt-6">
+            <p className="text-[#222] text-sm font-semibold mb-3">Tier</p>
+            <div className="flex flex-wrap gap-3">
+              {["Tier 0", "Tier 1", "Tier 2"].map((tier) => (
+                <label
+                  key={tier}
+                  className="flex items-center space-x-2 cursor-pointer py-2 px-4 border border-[#E5E5E5] rounded-full transition-colors duration-200 bg-white"
+                >
                   <input
                     type="radio"
-                    name="kycStatus"
-                    value={status.toLowerCase().replace(' ', '-')}
-                    checked={filters.kycStatus === status.toLowerCase().replace(' ', '-')}
-                    onChange={(e) => handleFilterChange("kycStatus", e.target.value)}
-                    className="mr-2 text-yellow-500 focus:ring-yellow-500"
+                    name="tier"
+                    value={tier}
+                    checked={localFilters.tier === tier}
+                    onChange={() => handleTierChange(tier)}
+                    className="hidden"
                   />
-                  <span className="text-sm text-gray-700">{status}</span>
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors duration-200
+                      ${
+                        localFilters.tier === tier
+                          ? "border-[#B88E00] bg-[#B88E00]"
+                          : "border-[#D5D5D5]"
+                      }`}
+                  >
+                    {localFilters.tier === tier && (
+                      <svg
+                        className="w-3 h-3 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={4}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                  <span className="text-sm font-medium text-[#5F6366]">{tier}</span>
                 </label>
               ))}
             </div>
           </div>
-        </div>
 
-        {/* Footer */}
-        <div className="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-between">
-          <button
-            onClick={handleReset}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            Reset
-          </button>
-          <button
-            onClick={handleApply}
-            className="px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-md hover:bg-yellow-600"
-          >
-            Apply Filter
-          </button>
+          {/* KYC Status Filter */}
+          <div className="mb-8 border-t border-[#E8E8E8] pt-6">
+            <p className="text-[#222] text-sm font-semibold mb-3">KYC Status</p>
+            <div className="flex flex-wrap gap-3">
+              {kycStatuses.map((status) => (
+                <label
+                  key={status}
+                  className="flex items-center space-x-2 cursor-pointer py-2 px-4 border border-[#E5E5E5] rounded-full transition-colors duration-200 bg-white"
+                >
+                  <input
+                    type="checkbox"
+                    value={status}
+                    checked={localFilters.kycStatus.includes(status)}
+                    onChange={() => handleKycStatusChange(status)}
+                    className="hidden"
+                  />
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors duration-200
+                      ${
+                        localFilters.kycStatus.includes(status)
+                          ? "border-[#B88E00] bg-[#B88E00]"
+                          : "border-[#D5D5D5]"
+                      }`}
+                  >
+                    {localFilters.kycStatus.includes(status) && (
+                      <svg
+                        className="w-3 h-3 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={4}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                  <span className="text-sm font-medium text-[#5F6366]">{status}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col-reverse md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 mt-8">
+            <button
+              onClick={handleReset}
+              className="py-3 text-[rgba(34,34,34,0.80)] font-medium rounded-full bg-transparent border border-[#E5E5E5] hover:bg-gray-100 transition-colors duration-200 w-full"
+            >
+              Reset
+            </button>
+            <button
+              onClick={handleApply}
+              disabled={!hasChanges}
+              className="py-3 text-white font-medium rounded-full bg-[#B88E00] hover:bg-[#A07A00] transition-colors duration-200 w-full disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Apply Filters
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -4,12 +4,24 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 // import { useRepayments } from "../../../context/RepaymentsContext";
 import { useNavigate } from "react-router-dom";
-// import { useState } from "react";
+import { useState } from "react";
+import ActiveLoanModal from "../../admin/modals/ActiveLoanModal";
+import { useDashboard } from "../../../context/DashboardContext";
+import { use_UserData } from "../../../context/UserContext";
+import PageLoader from "../../PageLoader";
 
-function Sidebar({ onTakeLoanClick, onLogOut }) {
+function Sidebar({ onLogOut }) {
+  const { dashboardData } = useDashboard();
+  const { userData } = use_UserData();
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
+  const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
+
+   if (!dashboardData || !userData) {
+
+    return <PageLoader />
+  }
 
   // const repaymentsData = useRepayments();
   // const [error, setError] = useState(false);
@@ -28,8 +40,25 @@ function Sidebar({ onTakeLoanClick, onLogOut }) {
     navigate("/settings");
   };
 
+  const handleTakeLoanClick = () => {
+  if (dashboardData?.active_loan) {
+    setShowActiveLoanModal(true);
+  } else if (
+    dashboardData?.pending_loan?.status === "PENDING" &&
+    userData.phone_verified === true
+  ) {
+    navigate("/take-a-loan/loan-repayment-overview");
+  } else if (dashboardData.credit_score.current_score === 0) {
+    navigate("/take-a-loan/enter-bvn");
+  } else if (userData.phone_verified === false) {
+    navigate("/take-a-loan/verify-phone");
+  } else {
+    navigate("/take-a-loan/form/loan-amount-purpose");
+  }
+};
+
   return (
-    <div className="h-full text-[#A0B0AB] text-[16px] px-6 pt-5 bg-white grow rounded-tl-none rounded-bl-none rounded-tr-[20px] rounded-br-[20px] border-r border-[#00000014]">
+    <div className="h-full text-[#A0B0AB] md:text-[16px] px-4 pt-5 bg-white grow rounded-tl-none rounded-bl-none rounded-tr-[20px] rounded-br-[20px] border-r border-[#00000014]">
       <WapfiLogo className="md:!my-0 md:!ml-0" />
       <div className="flex flex-col items-start self-stretch mt-20 gap-4 grow shrink-0 basis-0">
         <NavLink
@@ -70,11 +99,11 @@ function Sidebar({ onTakeLoanClick, onLogOut }) {
         <div
           role="button"
           tabIndex={0}
-          onClick={onTakeLoanClick}
+          onClick={handleTakeLoanClick}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              onTakeLoanClick();
+              handleTakeLoanClick();
             }
           }}
           className={`2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] cursor-pointer outline-none ${
@@ -101,31 +130,6 @@ function Sidebar({ onTakeLoanClick, onLogOut }) {
           </svg>
           <p>{t("sidebar.takeLoan")}</p>
         </div>
-
-        {/* <NavLink
-          to="/repayments"
-          className={({ isActive }) =>
-            `2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] ${
-              isActive
-                ? "bg-[#439182] text-white p-6 rounded-[12px]"
-                : "text-[#A0B0AB] py-[8px] px-[16px]"
-            }`
-          }
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="16"
-            viewBox="0 0 18 16"
-            fill="none"
-          >
-            <path
-              d="M0 3.56818C0 2.75445 0.304782 1.97405 0.847298 1.39865C1.38981 0.823254 2.12562 0.5 2.89286 0.5H15.1071C15.8744 0.5 16.6102 0.823254 17.1527 1.39865C17.6952 1.97405 18 2.75445 18 3.56818V12.4318C18 13.2455 17.6952 14.026 17.1527 14.6013C16.6102 15.1767 15.8744 15.5 15.1071 15.5H2.89286C2.12562 15.5 1.38981 15.1767 0.847298 14.6013C0.304782 14.026 0 13.2455 0 12.4318V3.56818ZM2.89286 1.86364C2.46662 1.86364 2.05783 2.04322 1.75644 2.36289C1.45504 2.68255 1.28571 3.11611 1.28571 3.56818V4.59091H16.7143V3.56818C16.7143 3.11611 16.545 2.68255 16.2436 2.36289C15.9422 2.04322 15.5334 1.86364 15.1071 1.86364H2.89286ZM1.28571 12.4318C1.28571 12.8839 1.45504 13.3174 1.75644 13.6371C2.05783 13.9568 2.46662 14.1364 2.89286 14.1364H15.1071C15.5334 14.1364 15.9422 13.9568 16.2436 13.6371C16.545 13.3174 16.7143 12.8839 16.7143 12.4318V5.95455H1.28571V12.4318ZM12.2143 10.0455H14.1429C14.3134 10.0455 14.4769 10.1173 14.5974 10.2452C14.718 10.373 14.7857 10.5464 14.7857 10.7273C14.7857 10.9081 14.718 11.0815 14.5974 11.2094C14.4769 11.3373 14.3134 11.4091 14.1429 11.4091H12.2143C12.0438 11.4091 11.8803 11.3373 11.7597 11.2094C11.6392 11.0815 11.5714 10.9081 11.5714 10.7273C11.5714 10.5464 11.6392 10.373 11.7597 10.2452C11.8803 10.1173 12.0438 10.0455 12.2143 10.0455Z"
-              fill="currentColor"
-            />
-          </svg>
-          <p>{t("sidebar.repayments")}</p>
-        </NavLink> */}
 
         <div
           role="button"
@@ -248,6 +252,16 @@ function Sidebar({ onTakeLoanClick, onLogOut }) {
           <p>{t("sidebar.logout")}</p>
         </div>
       </div>
+      <ActiveLoanModal
+        visible={showActiveLoanModal}
+        onAction={() => {
+          setShowActiveLoanModal(false);
+          navigate("/dashboard");
+        }}
+        title={t("layout.activeLoanModal.title")}
+        body={t("layout.activeLoanModal.body")}
+        buttonLabel={t("layout.activeLoanModal.button")}
+      />
     </div>
   );
 }

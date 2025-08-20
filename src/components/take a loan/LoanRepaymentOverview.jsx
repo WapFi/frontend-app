@@ -61,28 +61,6 @@ export default function LoanRepaymentOverview() {
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
-  // // Reconstruct loanFormData from pending loan and userData if empty
-  // useEffect(() => {
-  //   // Check a key which determines if loanFormData is empty or invalid
-  //   if (!loanFormData.loan_amount || loanFormData.loan_amount === "") {
-  //     if (loanDetails) {
-  //       updateLoanFormData({
-  //         loan_amount: loanDetails.loan_amount ?? "",
-  //         loan_purpose: loanDetails.loan_purpose ?? "",
-  //         wapan_member: loanDetails.wapan_member ?? false,
-  //         account_name: loanDetails.bank_account.account_name ?? "",
-  //         account_number: loanDetails.disbursement_account ?? "",
-  //         bank_name: loanDetails.bank_account.bank_name ?? "",
-  //         repayment_method: loanDetails.repayment_method ?? "",
-  //         recyclable_drop_off_known:
-  //           loanDetails.recyclable_drop_off_known ?? false,
-  //         recyclable_drop_off_location: loanDetails.recyclable_drop_off_location ?? "",
-  //         repayment_schedule: loanDetails.repayment_schedule ?? "",
-  //       });
-  //     }
-  //   }
-  // }, [loanDetails, loanFormData.loan_amount, updateLoanFormData, userData]);
-
   // Reconstruct loanFormData from pending loan and userData if empty
   useEffect(() => {
     // Check a key which determines if loanFormData is empty or invalid

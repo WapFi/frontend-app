@@ -38,16 +38,6 @@ export default function SettingsWrapper() {
     isVerifyPhoneEmail ||
     isResetPassword;
 
-  // redirect only on larger screens >= 1024px, else settings menu items should show
-  // const isExactSettingsPath = location.pathname === "/settings";
-  // const isLargeScreen = window.innerWidth >= 1024;
-
-  // useEffect(() => {
-  //   if (isExactSettingsPath && isLargeScreen) {
-  //     navigate("/settings/identity-verification", { replace: true });
-  //   }
-  // }, [location.pathname, navigate]);
-
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
 
   // Monitor screen size changes

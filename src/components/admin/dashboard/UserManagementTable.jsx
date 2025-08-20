@@ -2,100 +2,125 @@ import UserAvatar from "../../common/UserAvatar";
 import { useState, useEffect } from "react";
 import { getUsers } from "../../../api/adminApi";
 
-function UserManagementTable({ onUserClick, onUserUpdate, searchTerm = '', selectedDate = '' }) {
-	const [users, setUsers] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
-	const [perPage, setPerPage] = useState(10);
-	const [pagination, setPagination] = useState({
-		currentPage: 1,
-		totalPages: 1,
-		totalUsers: 0
-	});
+function UserManagementTable({
+  onUserClick,
+  onUserUpdate,
+  searchTerm = "",
+  selectedDate = "",
+}) {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [perPage, setPerPage] = useState(10);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalUsers: 0,
+  });
 
-	useEffect(() => {
-		fetchUsers();
-	}, [perPage, searchTerm, selectedDate]);
+  useEffect(() => {
+    fetchUsers();
+  }, [perPage, searchTerm, selectedDate]);
 
-	const fetchUsers = async (page = 1, search = '', startDate = '', endDate = '') => {
-		try {
-			setLoading(true);
-			const response = await getUsers({ 
-				page, 
-				limit: perPage, 
-				search: search || searchTerm,
-				start_date: startDate || selectedDate,
-				// end_date: endDate || selectedDate
-			});
-			
-			if (response.status && response.data) {
-				const { users: userData, total_users, total_pages, current_page } = response.data;
-				
-				// Transform the data to match the expected format
-				const transformedUsers = userData.map(user => ({
-					id: user._id,
-					name: user.full_name || 'Unknown User',
-					email: user.identifier || 'No email',
-					phone: user.phone || 'No phone',
-					totalLoanTaken: `₦ ${user.total_loan_taken?.toLocaleString() || '0'}`,
-					outstandingLoan: `₦ ${user.outstanding_loan?.toLocaleString() || '0'}`,
-					amountRepaid: `₦ ${user.amount_repaid?.toLocaleString() || '0'}`,
-					lastLoanDate: user.loan_due_date ? new Date(user.loan_due_date).toLocaleDateString() : 'No loans',
-					avatar: user.avatar || null,
-                    bvnVerified: user.bvn_verified,
-                    phoneVerified: user.phone_verified,
-                    ninVerified: user.nin_verified
-				}));
-				
-				setUsers(transformedUsers);
-				setPagination({
-					currentPage: current_page,
-					totalPages: total_pages,
-					totalUsers: total_users
-				});
-			}
-		} catch (err) {
-			console.error('Error fetching users:', err);
-			setError('Failed to load users');
-		} finally {
-			setLoading(false);
-		}
-	};
+  const fetchUsers = async (
+    page = 1,
+    search = "",
+    startDate = ""
+    // endDate = ""
+  ) => {
+    try {
+      setLoading(true);
+      const response = await getUsers({
+        page,
+        limit: perPage,
+        search: search || searchTerm,
+        start_date: startDate || selectedDate,
+        // end_date: endDate || selectedDate
+      });
 
-	const handlePageChange = (page) => {
-		fetchUsers(page, searchTerm, selectedDate, selectedDate);
-	};
+      if (response.status && response.data) {
+        const {
+          users: userData,
+          total_users,
+          total_pages,
+          current_page,
+        } = response.data;
 
-	const handlePerPageChange = (newPerPage) => {
-		setPerPage(newPerPage);
-		setPagination(prev => ({ ...prev, currentPage: 1 }));
-	};
-	if (loading) {
-		return (
-			<div className="overflow-x-auto">
-				<div className="animate-pulse">
-					<div className="h-12 bg-gray-200 rounded mb-4"></div>
-					{[1, 2, 3, 4, 5].map((i) => (
-						<div key={i} className="h-16 bg-gray-100 rounded mb-2"></div>
-					))}
-				</div>
-			</div>
-		);
-	}
+        console.log("response: ", response.data)
 
-	if (error) {
-		return (
-			<div className="text-center py-8">
-				<p className="text-red-600">{error}</p>
-				<button 
-					onClick={() => fetchUsers()} 
-					className="mt-2 text-blue-600 hover:text-blue-800"
-				>
-					Retry
-				</button>
-			</div>
-		);
-	}
+        // Transform the data to match the expected format
+        const transformedUsers = userData.map((user) => ({
+          _id: user._id,
+          full_name: user.full_name || "Unknown User",
+          email: user.identifier || "No email",
+          phone: user.phone || "No phone",
+          totalLoanTaken: `₦ ${user.total_loan_taken?.toLocaleString() || "0"}`,
+          outstandingLoan: `₦ ${
+            user.outstanding_loan?.toLocaleString() || "0"
+          }`,
+          amountRepaid: `₦ ${user.amount_repaid?.toLocaleString() || "0"}`,
+          lastLoanDate: user.loan_due_date
+            ? new Date(user.loan_due_date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+            : "No loans",
+          profile_picture: user.profile_picture || null,
+          bvnVerified: user.bvn_verified,
+          phoneVerified: user.phone_verified,
+          ninVerified: user.nin_verified,
+        }));
+
+        setUsers(transformedUsers);
+        setPagination({
+          currentPage: current_page,
+          totalPages: total_pages,
+          totalUsers: total_users,
+        });
+      }
+    } catch (err) {
+      console.error("Error fetching users:", err);
+      setError("Failed to load users");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePageChange = (page) => {
+    fetchUsers(page, searchTerm, selectedDate, selectedDate);
+  };
+
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+  };
+  if (loading) {
+    return (
+      <div className="overflow-x-auto">
+        <div className="animate-pulse">
+          <div className="h-12 bg-gray-200 rounded mb-4"></div>
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="h-16 bg-gray-100 rounded mb-2"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-600">{error}</p>
+        <button
+          onClick={() => fetchUsers()}
+          className="mt-2 text-blue-600 hover:text-blue-800"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-x-auto">
@@ -117,18 +142,22 @@ function UserManagementTable({ onUserClick, onUserUpdate, searchTerm = '', selec
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Loan Due Date
             </th>
-            
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {users.map((user) => (
-            <tr key={user.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => onUserClick(user)}>
+            <tr
+              key={user._id}
+              className="hover:bg-gray-50 cursor-pointer"
+              onClick={() => onUserClick(user)}
+            >
               <td className="px-6 py-4 whitespace-nowrap">
-
                 <div className="flex items-center">
                   <UserAvatar user={user} />
                   <div className="ml-3">
-                    <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {user.full_name}
+                    </div>
                     <div className="text-sm text-gray-500">{user.phone}</div>
                   </div>
                 </div>
@@ -145,7 +174,6 @@ function UserManagementTable({ onUserClick, onUserUpdate, searchTerm = '', selec
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {user.lastLoanDate}
               </td>
-              
             </tr>
           ))}
         </tbody>
@@ -155,9 +183,11 @@ function UserManagementTable({ onUserClick, onUserUpdate, searchTerm = '', selec
       <div className="mt-6 flex items-center justify-between p-4">
         <div className="flex items-center space-x-4">
           <span className="text-sm text-gray-700">
-            Showing {((pagination.currentPage - 1) * perPage) + 1} to {Math.min(pagination.currentPage * perPage, pagination.totalUsers)} of {pagination.totalUsers} results
+            Showing {(pagination.currentPage - 1) * perPage + 1} to{" "}
+            {Math.min(pagination.currentPage * perPage, pagination.totalUsers)}{" "}
+            of {pagination.totalUsers} results
           </span>
-          
+
           <div className="flex items-center space-x-2">
             <label className="text-sm text-gray-700">Per page:</label>
             <select
@@ -181,11 +211,11 @@ function UserManagementTable({ onUserClick, onUserUpdate, searchTerm = '', selec
           >
             Previous
           </button>
-          
+
           <span className="px-3 py-1 text-sm text-gray-700">
             Page {pagination.currentPage} of {pagination.totalPages}
           </span>
-          
+
           <button
             onClick={() => handlePageChange(pagination.currentPage + 1)}
             disabled={pagination.currentPage >= pagination.totalPages}

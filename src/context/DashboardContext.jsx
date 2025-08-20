@@ -1,5 +1,6 @@
 
-import { createContext, useContext, useEffect, useState } from "react";
+
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { fetchDashboardData } from "../api/apiData";
 
 const DashboardContext = createContext();
@@ -10,6 +11,7 @@ export function DashboardProvider({ children }) {
     return stored ? JSON.parse(stored) : null;
   });
 
+  // Keep localStorage in sync when dashboardData changes
   useEffect(() => {
     if (dashboardData) {
       localStorage.setItem("dashboardData", JSON.stringify(dashboardData));
@@ -18,12 +20,12 @@ export function DashboardProvider({ children }) {
     }
   }, [dashboardData]);
 
-  const refreshDashboardData = async () => {
+  // Use useCallback to memoize the refresh function
+  const refreshDashboardData = useCallback(async () => {
     try {
       const res = await fetchDashboardData();
       if (res.data) {
         setDashboardData(res.data);
-        // console.log("Dashboard data refreshed:", res.data);
         return res.data;
       } else {
         console.log("Failed to fetch dashboard data:", res);
@@ -35,11 +37,12 @@ export function DashboardProvider({ children }) {
       setDashboardData(null);
       return null;
     }
-  };
+  }, []); // Empty dependency array is crucial here!
 
+  // Initial data fetch on mount
   useEffect(() => {
     refreshDashboardData();
-  }, []);
+  }, [refreshDashboardData]); // Now it depends on the memoized function
 
   return (
     <DashboardContext.Provider

@@ -147,8 +147,20 @@
     "title": "Biyan Kuɗi",
     "mobileTitle": "Biya",
     "selectMonth": "Zaɓi Wata",
+    "selectDate": "Zaɓi kwanan wata",
     "searchPlaceholder": "Nemo ID ɗin Bashi da Adadi....",
-    "viewAll": "Duba Duka"
+    "noResultsMessage": "Ba a samu wani biyan bashi ba.",
+    "applyFilters": "Aiwatar da Masu tacewa",
+    "clearFilters": "Share Masu tacewa",
+    "viewAll": "Duba Duka",
+    "loanHistory": {
+      "title": "Tarihin Bashin da aka Karba"
+    },
+    "pagination": {
+      "previous": "Baya",
+      "next": "Gaba",
+      "perPage": "A shafi daya"
+    }
   },
   "repaymentsList": {
     "noRepayments": "Babu biyan kuɗi a wannan watan.",
@@ -214,7 +226,8 @@
   "loanDetailsMobile": {
     "title": "Biya Lamuni",
     "selectMonth": "Zaɓi Wata",
-    "noRepayments": "Babu biya a wannan watan.",
+    "noRepayments": "Ba a samu wani biyan bashi ba.",
+     "searchPlaceholder": "Nemo ID ɗin Bashi da Adadi....",
     "statusCompleted": "An gama",
     "statusPending": "Ana jiran biya",
     "back": "Koma baya"
@@ -477,6 +490,7 @@
       "selectDob": "Zabi ranar haihuwa",
       "dobWarning": "Da fatan za a shigar da ranar haihuwa daidai, ba za ka iya canza ta ba daga baya.",
       "country": "Ƙasa",
+      "selectCountry": "Zaɓi ƙasa",
       "state": "Jihar",
       "selectState": "Zaɓi Jihar",
       "street": "Titi",
@@ -491,6 +505,7 @@
       "dobFormat": "Ranar haihuwa dole ne ya zama a tsarin YYYY-MM-DD",
       "dobFailed": "Tabbatar da ranar haihuwa bai yi nasara ba. Da fatan za a sake gwadawa.",
       "dobGenericError": "Wani abu ya faru yayin tabbatar da ranar haihuwar ku. Da fatan za a sake gwadawa.",
+      "dobRequired": "Dole ne a shigar da ranar haihuwa.",
       "countryRequired": "Ƙasa wajibi ne",
       "stateRequired": "Jihar wajibi ce",
       "streetRequired": "Titin wajibi ne",
@@ -647,7 +662,7 @@
     "picture_deleted_success": "An goge hoton bayanan martaba da nasara!",
     "picture_deleted_error": "Goge hoton bayanan martaba ya gaza.",
     "file_type_error": "Da fatan za a zaɓi fayil ɗin hoto.",
-    "file_size_error": "Girmar fayil ta wuce iyakar 5MB.",
+    "file_size_error": "Girmar fayil ya wuce iyakar 500KB.",
     "file_read_error": "Karanta fayil ya gaza.",
     "no_file_selected": "Da fatan za a zaɓi fayil don ɗorawa.",
     "picture_updated_success": "An sabunta hoton bayanan martaba da nasara!",
@@ -657,6 +672,7 @@
     "save_picture": "Ajiye",
     "full_name": "Cikakken Suna",
     "contact": "Lambar waya",
+    "credit_score": "Matsayin Kiredit",
     "date_of_birth": "Ranar Haihuwa",
     "edit_profile": "Shirya",
     "support_message": "An riga an tabbatar da bayanan bayanan martabarka kuma ba za a iya canza su ba a wannan lokacin. Idan kana buƙatar sabunta kowane dalla-dalla, da fatan za a tuntuɓe mu a support@wapfi.com."
@@ -664,5 +680,33 @@
   "common": {
     "cancel": "Soke",
     "delete": "Goge"
+  },
+  "loanHistory": {
+    "title": "Tarihin Bashi",
+    "searchPlaceholder": "Bincika ID na Lamuni ko Adadi...",
+    "selectMonth": "Zabi wata",
+    "selectDate": "Zaɓi Kwana",
+    "loanAmount": "Adadin Bashin:",
+    "applyFilters": "Aiwatar da Tacewa",
+    "clearFilters": "Share Tacewa",
+    "status": "Matsayi:",
+    "appliedOn": "An Nema a:",
+    "amountRepaid": "Kudin da aka biya:",
+    "method": "Hanya:",
+    "noLoansMessage": "Ba ka karbi wani bashi ba tukuna.",
+    "takeALoanButton": "Karbi Bashi"
+  },
+  "loanStatus": {
+    "disbursed": "An Bayar",
+    "completed": "An Kammala",
+    "overdue": "Ya wuce wa'adi",
+    "rejected": "An Ki",
+    "pending": "Ana Jira",
+    "repaid": "An Biya"
+  },
+  "pagination": {
+    "previous": "Baya",
+    "next": "Gaba",
+    "perPage": "A shafi daya"
   }
 }

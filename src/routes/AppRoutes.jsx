@@ -57,7 +57,7 @@ import Notifications from "../components/settings/Notifications";
 import Support from "../components/settings/Support";
 
 // profile
-import ProfileNotifications from "../components/profile/ProfileNotifications";
+// import ProfileNotifications from "../components/profile/ProfileNotifications";
 import { NotificationProvider } from "../context/NotificationContext";
 
 const router = createBrowserRouter([
@@ -199,15 +199,7 @@ const router = createBrowserRouter([
         element: <CreditScore />,
       },
 
-      // {
-      //   path: "/notif",
-      //   element: <ProfileNotifications />,
-      // },
-
-      // {
-      //   path: "take-a-loan/loan-approval-modal",
-      //   element: <LoanApprovalModal />,
-      // },
+     
       {
         path: "settings",
         element: <SettingsWrapper></SettingsWrapper>,
@@ -244,22 +236,7 @@ const router = createBrowserRouter([
             path: "support",
             element: <Support />,
           },
-          // {
-          //   path: "bank-account-confirmation",
-          //   element: <Step2BankAccount />,
-          // },
-          // {
-          //   path: "loan-repayment-method",
-          //   element: <Step3LoanRepayment />,
-          // },
-          // {
-          //   path: "loan-form-summary",
-          //   element: <Step4Summary />,
-          // },
-          // {
-          //   path: "loan-repayment-overview",
-          //   element: <LoanRepaymentOverview />,
-          // },
+         
         ],
       },
     ],
@@ -270,7 +247,9 @@ const router = createBrowserRouter([
     path: "/admin",
     element: (
       <AdminRoute>
-        <AdminLayout />
+        <NotificationProvider>
+          <AdminLayout />
+        </NotificationProvider>
       </AdminRoute>
     ),
     children: [

@@ -1,39 +1,4 @@
-// import colonIcon from "../../assets/colon icon.svg";
 
-// function CountdownTimer() {
-//   return (
-//     <div className="md:flex justify-between self-stretch">
-//       <p className="lg:w-[33%] 2xl:w-[20%] lg:flex lg:self-center">Time left to next payment:</p>
-//       {/* <p>
-//         <span>30 Days</span> :<span>05 Hours</span> :<span>10 Miniutes</span> :
-//         <span>15 Seconds</span> :
-//       </p> */}
-//       <div className="flex gap-4 justify-center border w-full items-center md:justify-between">
-//         <div className="text-[#222] flex flex-col items-center justify-center md:flex-row md:gap-2">
-//           <p className="text-[18px] font-semibold md:text-[24px]">30</p>
-//           <p className="text-[12px] font-medium md:text-[18px]">Days</p>
-//         </div>
-//         <img src={colonIcon} alt="time colon icon" />
-//         <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">
-//           <p className="text-[18px] font-semibold md:text-[24px]">05</p>
-//           <p className="text-[12px] font-medium md:text-[18px]">Hours</p>
-//         </div>
-//         <img src={colonIcon} alt="time colon icon" />
-//         <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">
-//           <p className="text-[18px] font-semibold md:text-[24px]">10</p>
-//           <p className="text-[12px] font-medium md:text-[18px]">Minutes</p>
-//         </div>
-//         <img src={colonIcon} alt="time colon icon" />
-//         <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">
-//           <p className="text-[18px] font-semibold md:text-[24px]">15</p>
-//           <p className="text-[12px] font-medium md:text-[18px]">Seconds</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default CountdownTimer;
 
 import { useEffect, useState, useRef } from "react";
 import colonIcon from "../../assets/colon icon.svg";
