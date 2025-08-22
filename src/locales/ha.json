@@ -113,6 +113,7 @@
     "dashboard": "Allon Kulawa",
     "takeLoan": "Karɓi Rance",
     "repayments": "Biyan Bashi",
+    "disbursedLoans": "Basusukan Da Aka Raba",
     "creditScore": "Matsayin Ƙima",
     "settings": "Saituna",
     "logout": "Fita",
@@ -123,6 +124,7 @@
     "dashboard": "Allon Kulawa",
     "takeLoan": "Karɓi Rance",
     "repayments": "Biyan Bashi",
+    "disbursedLoans": "Basusukan Da Aka Raba",
     "creditScore": "Matsayin Ƙima",
     "settings": "Saituna",
     "logout": "Fita"
@@ -162,10 +164,47 @@
       "perPage": "A shafi daya"
     }
   },
+
+  "disbursedLoansSection": {
+    "title": "Basusukan Da Aka Raba",
+    "searchPlaceholder": "Nemo ID ɗin Bashi da Adadi....",
+    "selectDate": "Zaɓi Kwanan Wata",
+    "viewAll": "Duba Duka",
+    "applyFilters": "Aiwatar da Tace",
+    "clearFilters": "Share Abubuwan Tace",
+    "noResultsMessage": "Babu basusukan da suka dace.",
+    "ctaMessage": "Ba ku taɓa karɓar lamuni ba. Fara yanzu.",
+    "ctaButton": "Karɓi Lamuni"
+  },
+
+  "disbursedLoans": {
+    "title": "Bashin da Aka Bada",
+    "loanHistory": {
+      "title": "Tarihin Bashin da aka Karba"
+    },
+    "searchPlaceholder": "Nemo ID ɗin Bashi da Adadi....",
+    "selectDate": "Zaɓi kwanan wata",
+    "applyFilters": "Aiwatar da Masu tacewa",
+    "clearFilters": "Share Masu tacewa",
+    "newUserCtaMessage": "Ba ka da wani bashin da aka ba ka ba tukuna. Karbi bashi yanzu!",
+    "newUserCtaButton": "Karɓi bashi",
+    "pagination": {
+      "previous": "Baya",
+      "next": "Gaba",
+      "perPage": "A shafi daya"
+    }
+  },
+
   "repaymentsList": {
     "noRepayments": "Babu biyan kuɗi a wannan watan.",
     "statusCompleted": "An gama",
     "statusPending": "Ana jira"
+  },
+
+  "disbursedLoansList": {
+    "statusCompleted": "An gama",
+    "statusPending": "Ana jira",
+    "noResultsMessage": "Babu basusukan da suka dace."
   },
   "creditScore": {
     "title": "Matsayin Bashi",
@@ -227,7 +266,7 @@
     "title": "Biya Lamuni",
     "selectMonth": "Zaɓi Wata",
     "noRepayments": "Ba a samu wani biyan bashi ba.",
-     "searchPlaceholder": "Nemo ID ɗin Bashi da Adadi....",
+    "searchPlaceholder": "Nemo ID ɗin Bashi da Adadi....",
     "statusCompleted": "An gama",
     "statusPending": "Ana jiran biya",
     "back": "Koma baya"

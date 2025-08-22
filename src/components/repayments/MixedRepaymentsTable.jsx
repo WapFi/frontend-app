@@ -185,7 +185,8 @@ export default function MixedRepaymentsTable() {
 
         {repayments.length === 0 && (
           <div className="text-center text-[#666] py-6">
-            {t("mixedRepaymentsTable.noRepayments")}
+            {/* {t("mixedRepaymentsTable.noRepayments")} */}
+            No repayments found.
           </div>
         )}
 
@@ -296,7 +297,8 @@ export default function MixedRepaymentsTable() {
       <div className="block lg:hidden space-y-4 bg-white rounded-2xl py-6 px-4">
         {repayments.length === 0 && (
           <div className="text-center text-[#666] py-6">
-            {t("mixedRepaymentsTable.noRepayments")}
+            {/* {t("mixedRepaymentsTable.noRepayments")} */}
+            No repayments found.
           </div>
         )}
 

@@ -80,6 +80,7 @@ function Layout() {
         localStorage.removeItem("dashboardData");
         localStorage.removeItem("loanConfirmationData");
         localStorage.removeItem("repaymentsData");
+        localStorage.removeItem("disbursedLoansData");
         localStorage.removeItem("userData");
 
         setTimeout(() => {
@@ -118,7 +119,7 @@ function Layout() {
       <Toast message={toastMessage} type={toastType} />
 
       {/* Sidebar for desktop */}
-      <aside className="hidden lg:block lg:w-[18%]">
+      <aside className="hidden lg:block lg:w-[20%]">
         <Sidebar
           // onTakeLoanClick={handleTakeLoanClick}
           onLogOut={handleLogOut}

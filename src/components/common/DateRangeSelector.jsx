@@ -1,9 +1,13 @@
-
-
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import calendarIcon from "../../assets/calendar icon.svg";
+
+const pad = (n) => n.toString().padStart(2, "0");
+const getLocalDateString = (date) =>
+  date
+    ? `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+    : "";
 
 function formatDateText(date) {
   if (!date) return "";
@@ -22,8 +26,8 @@ function DateRangeSelector({ onDateChange }) {
     setFrom(date);
     if (date && to) {
       onDateChange({
-        from: date.toISOString().slice(0, 10),
-        to: to.toISOString().slice(0, 10),
+        from: getLocalDateString(date),
+        to: getLocalDateString(to),
       });
     }
   };
@@ -32,8 +36,8 @@ function DateRangeSelector({ onDateChange }) {
     setTo(date);
     if (from && date) {
       onDateChange({
-        from: from.toISOString().slice(0, 10),
-        to: date.toISOString().slice(0, 10),
+        from: getLocalDateString(from),
+        to: getLocalDateString(date),
       });
     }
   };

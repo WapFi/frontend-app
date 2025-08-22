@@ -20,7 +20,6 @@ export const fetchDashboardData = async () => {
 //   return response.data;
 // };
 
-
 // // fetch repayments
 // export const fetchRepayments = async (page = 1, limit = 10, filters = {}) => {
 //   const { query, startDate, endDate } = filters;
@@ -122,7 +121,7 @@ export const confirmLoanApplication = async (loan_id, password) => {
 
 // fetch loan history with filters
 export const fetchLoans = async (page = 1, limit = 10, filters = {}) => {
-  const { query, startDate, endDate } = filters;
+  const { query, startDate, endDate, status } = filters;
   let queryString = `page=${page}&limit=${limit}`;
 
   if (query) {
@@ -142,10 +141,13 @@ export const fetchLoans = async (page = 1, limit = 10, filters = {}) => {
     queryString += `&end_date=${endDate}`;
   }
 
+  if (status) {
+    queryString += `&status=${status}`;
+  }
+  
   const response = await axios.get(`/loans/history?${queryString}`);
   return response.data;
 };
-
 
 // update preferences
 // export const updatePreferences = async (type, state) => {
