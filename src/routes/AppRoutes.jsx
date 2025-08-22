@@ -42,6 +42,10 @@ import Repayments from "../components/repayments/Repayments";
 // import RecyclablesRepaymentTable from "../components/repayments/RecyclabesRepaymentTable";
 import RepaymentsHistoryWrapper from "../components/repayments/RepaymentsHistoryWrapper";
 
+// disbursed loans
+import { DisbursedLoansProvider } from "../context/DisbursedLoansContext";
+import DisbursedLoans from "../components/disbursed loans/DisbursedLoans";
+
 // credit scores
 import CreditScore from "../components/credit score/CreditScore";
 import SettingsWrapper from "../components/settings/SettingsWrapper";
@@ -109,25 +113,57 @@ const router = createBrowserRouter([
       },
 
       // repayments routes
-      {
-        path: "repayments",
+      // {
+      //   path: "repayments",
+      //   element: (
+      //     <RepaymentsProvider>
+      //       <Repayments />
+      //     </RepaymentsProvider>
+      //   ),
+      // },
+
+      // {
+      //   path: "repayments/:id",
+      //   element: (
+      //     <RepaymentsProvider>
+      //       <LoanDetailsScreenMobile />
+      //     </RepaymentsProvider>
+      //   ),
+      // },
+      // {
+      //   path: "repayments/repayment-history/:id",
+      //   element: (
+      //     <RepaymentsProvider>
+      //       <RepaymentsHistoryWrapper />
+      //     </RepaymentsProvider>
+      //   ),
+      // },
+      // {
+      //   path: "/repayments/loans/history",
+      //   element: <LoanHistory />,
+      // },
+
+      // disbursed loans routes
+
+       {
+        path: "/loans/disbursed-loans",
         element: (
-          <RepaymentsProvider>
-            <Repayments />
-          </RepaymentsProvider>
+          <DisbursedLoansProvider>
+            <DisbursedLoans />
+          </DisbursedLoansProvider>
         ),
       },
 
       {
-        path: "repayments/:id",
+        path: "/loans/disbursed-loans/:id",
         element: (
-          <RepaymentsProvider>
+          <DisbursedLoansProvider>
             <LoanDetailsScreenMobile />
-          </RepaymentsProvider>
+          </DisbursedLoansProvider>
         ),
       },
       {
-        path: "repayments/repayment-history/:id",
+        path: "/loans/repayments/repayment-history/:id",
         element: (
           <RepaymentsProvider>
             <RepaymentsHistoryWrapper />
@@ -135,7 +171,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/repayments/loans/history",
+        path: "/loans/history",
         element: <LoanHistory />,
       },
 

@@ -113,6 +113,7 @@
     "dashboard": "Dashboard",
     "takeLoan": "Take a Loan",
     "repayments": "Repayments",
+    "disbursedLoans": "Disbursed Loans",
     "creditScore": "Credit Score",
     "settings": "Settings",
     "logout": "Log Out",
@@ -123,6 +124,7 @@
     "dashboard": "Dashboard",
     "takeLoan": "Take a Loan",
     "repayments": "Repayments",
+    "disbursedLoans": "Disbursed Loans",
     "creditScore": "Credit Score",
     "settings": "Settings",
     "logout": "Log Out",
@@ -148,18 +150,45 @@
 
   "repaymentsSection": {
     "title": "Repayments",
-    "mobileTitle": "Repayment",
-    "selectMonth": "Select Month",
-     "selectDate": "Select Date",
-     
+    "mobileTitle": "Repayments",
+    "selectDate": "Select Date",
+
     "searchPlaceholder": "Search Loan ID and Amount....",
     "viewAll": "View All",
     "noResultsMessage": "No repayments found.",
-      "applyFilters": "Apply Filters",
+    "applyFilters": "Apply Filters",
     "clearFilters": "Clear Filters",
     "loanHistory": {
       "title": "Loan History"
     },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "perPage": "Per page"
+    }
+  },
+  "disbursedLoansSection": {
+    "title": "Disbursed Loans",
+    "searchPlaceholder": "Search by Loan ID and Amount...",
+    "selectDate": "Select Date",
+    "viewAll": "View All",
+    "applyFilters": "Apply Filters",
+    "clearFilters": "Clear Filters",
+    "noResultsMessage": "No loans matched.",
+    "ctaMessage": "You haven't taken any loans yet. Apply now to get started.",
+    "ctaButton": "Take a Loan"
+  },
+  "disbursedLoans": {
+    "title": "Disbursed Loans",
+    "loanHistory": {
+      "title": "Loan History"
+    },
+    "searchPlaceholder": "Search Loan ID and Amount....",
+    "selectDate": "Select Date",
+    "applyFilters": "Apply Filters",
+    "clearFilters": "Clear Filters",
+    "newUserCtaMessage": "You haven't taken any loans yet. Apply now to get started.",
+    "newUserCtaButton": "Take a Loan",
     "pagination": {
       "previous": "Previous",
       "next": "Next",
@@ -171,6 +200,13 @@
     "statusCompleted": "Completed",
     "statusPending": "Pending"
   },
+
+  "disbursedLoansList": {
+    "statusCompleted": "Completed",
+    "statusPending": "Pending",
+    "noResultsMessage": "No loans matched."
+  },
+
   "creditScore": {
     "title": "Credit Score",
     "totalCredit": "Total Credit",
@@ -223,7 +259,7 @@
     "mobileTitle": "Repayment",
     "searchPlaceholder": "Search Loan ID and Amount....",
     "viewAll": "View All",
-    "ctaMessage": "You haven’t taken any loans yet. Apply now to get started!",
+    "ctaMessage": "You haven’t taken any loans yet. Apply now to get started.",
     "ctaButton": "Take a Loan"
   },
   "loanDetailsMobile": {
@@ -685,7 +721,7 @@
     "cancel": "Cancel",
     "delete": "Delete"
   },
-    "loanHistory": {
+  "loanHistory": {
     "title": "Loan History",
     "searchPlaceholder": "Search Loan ID and Amount....",
     "selectMonth": "Select month",
@@ -697,7 +733,7 @@
     "method": "Method:",
     "noLoansMessage": "You haven't taken any loans yet.",
     "takeALoanButton": "Take a Loan",
-     "applyFilters": "Apply Filters",
+    "applyFilters": "Apply Filters",
     "clearFilters": "Clear Filters"
   },
   "loanStatus": {

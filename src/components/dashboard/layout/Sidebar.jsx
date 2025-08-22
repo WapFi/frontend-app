@@ -29,7 +29,7 @@ function Sidebar({ onLogOut }) {
   const isTakeLoanActive = location.pathname.startsWith("/take-a-loan");
 
   const handleRepaymentsClick = () => {
-    navigate("/repayments");
+    navigate("/loans/disbursed-loans");
   };
 
   const handleCreditScoreClick = () => {
@@ -142,12 +142,12 @@ function Sidebar({ onLogOut }) {
             }
           }}
           className={`2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] cursor-pointer outline-none ${
-            location.pathname.startsWith("/repayments")
+            location.pathname.startsWith("/loans") 
               ? "bg-[#439182] text-white p-6 rounded-[12px]"
               : "text-[#A0B0AB] py-[8px] px-[16px]"
           }`}
           aria-current={
-            location.pathname.startsWith("/repayments") ? "page" : undefined
+            location.pathname.startsWith("/loans") ? "page" : undefined
           }
         >
           <svg
@@ -163,7 +163,8 @@ function Sidebar({ onLogOut }) {
             />
           </svg>
           {/* ...icon and label... */}
-          <p>{t("sidebar.repayments")}</p>
+          <p>{t("sidebar.disbursedLoans")}</p>
+          {/* <p>Disbursed Loans</p> */}
         </div>
         <div
           role="button"

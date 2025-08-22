@@ -46,7 +46,7 @@ function MobileMenu({
 
   const handleRepaymentsClick = () => {
     setMenuOpen(false);
-    navigate("/repayments");
+    navigate("loans/disbursed-loans");
   };
 
   const handleCreditScoreClick = () => {
@@ -228,12 +228,12 @@ function MobileMenu({
               }
             }}
             className={`2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] px-[16px] cursor-pointer outline-none ${
-              location.pathname.startsWith("/repayments")
+              location.pathname.startsWith("/loans")
                 ? "text-[#439182]"
                 : "text-[#A0B0AB]"
             }`}
             aria-current={
-              location.pathname.startsWith("/repayments") ? "page" : undefined
+              location.pathname.startsWith("/loans") ? "page" : undefined
             }
           >
             <svg
@@ -249,7 +249,8 @@ function MobileMenu({
               />
             </svg>
             {/* ...icon and label... */}
-            <p>{t("sidebar.repayments")}</p>
+            <p>{t("mobile_menu.disbursedLoans")}</p>
+            {/* <p>Disbursed Loans</p> */}
           </div>
           <div
             role="button"

@@ -9,6 +9,7 @@ import RepaymentProgressBar from "./RepaymentProgressBar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import banks from "../../data/banks.json";
+import DisbursedLoansProgressBar from "./DisbursedLoansProgressBar";
 
 function LoanDetails({ loanDetails }) {
  
@@ -17,8 +18,6 @@ function LoanDetails({ loanDetails }) {
     return null; 
   }
 
-  console.log("loan details: ", loanDetails)
-  console.log("loan amount: ", loanDetails.data.loan_amount)
 
   const { data } = loanDetails;
   
@@ -27,7 +26,7 @@ function LoanDetails({ loanDetails }) {
 
   const handleRepaymentHistoryClick = () => {
     const loanID = data.loan_id;
-    navigate(`/repayments/repayment-history/${loanID}`);
+    navigate(`/loans/repayments/repayment-history/${loanID}`);
   };
 
   // Find the bank object based on the bank name from loanDetails
@@ -101,7 +100,7 @@ function LoanDetails({ loanDetails }) {
             {t("loanDetails.repaymentProgress")}
           </p>
           <div className="relative">
-            <RepaymentProgressBar
+            <DisbursedLoansProgressBar
               totalloanAmount={data.loan_amount + data.interest_amount}
               amountRepaid={data.amount_paid}
             />
