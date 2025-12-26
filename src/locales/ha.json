@@ -368,6 +368,7 @@
   },
   "loanStep3": {
     "formTitle": "Ta yaya kake son biyan wannan rancen?",
+    "button": "Ci gaba",
     "repaymentOptions": {
       "RECYCLABLES": "Kayan Sake Amfani (misali robobi)",
       "CASH": "Kudi",

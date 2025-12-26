@@ -368,6 +368,7 @@
   },
   "loanStep3": {
     "formTitle": "How would you like to repay this loan?",
+     "button": "Continue",
     "repaymentOptions": {
       "RECYCLABLES": "Recyclables (e.g. plastics)",
       "CASH": "Cash",
