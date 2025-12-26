@@ -3,10 +3,12 @@ import { updateUserStatus, getUserDetails } from "../../../api/adminApi";
 import { toast } from "react-toastify";
 import PageLoader from "../../PageLoader";
 import NairaIcon from "../../../assets/naira icon.svg";
+import RepaymentDetailsModal from "./RepaymentDetailsModal";
 
 function UserDetailsModal({ user, onClose, onUserUpdate }) {
   const [showBlockModal, setShowBlockModal] = useState(false);
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
+  const [showRepaymentDetails, setShowRepaymentDetails] = useState(false);
   const [loading, setLoading] = useState(false);
   const [detailedUser, setDetailedUser] = useState(null);
   const [detailsError, setDetailsError] = useState(null);
@@ -100,6 +102,30 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
     // and `isLoadingDetails` is set back to false.
     return null;
   }
+
+  const repaymentDataForModal = {
+    profile_picture: detailedUser.profile_picture,
+    name: detailedUser.full_name,
+    tier: detailedUser.tier,
+    loanAmount: formatCurrency(detailedUser.loan_amount),
+    outstandingLoan: formatCurrency(detailedUser.outstanding_loan),
+    installmentPayment: detailedUser.last_repayment_amount,
+    datePaid: detailedUser.last_repayment_date
+      ? new Date(detailedUser.last_repayment_date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      : "N/A",
+    repayment_method: detailedUser.repayment_type,
+    lastLoanDate: detailedUser.loan_due_date
+      ? new Date(detailedUser.loan_due_date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      : "N/A",
+  };
 
   console.log("detailed user: ", detailedUser);
   // console.log(user.loan_due_date);
@@ -419,16 +445,19 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
             <button
               onClick={() => setShowBlockModal(true)}
               style={{ background: "#B88E00" }}
-              className="text-sm border-gray-100 w-32 bg-yellow-500 text-white py-2 px-2 rounded-full font-medium hover:bg-yellow-600 transition-colors"
+              className="text-sm border-gray-100 w-33 bg-yellow-500 text-white py-2 px-2 rounded-full font-medium hover:bg-yellow-600 transition-colors"
             >
               Block User
             </button>
-            <button className="text-sm w-32 border border-gray-100 text-dark py-2 px-2 rounded-full font-medium hover:bg-yellow-600 transition-colors">
-              View Repayment
+            <button
+              onClick={() => setShowRepaymentDetails(true)}
+              className="text-sm w-33 border border-gray-100 text-dark py-2 px-2 rounded-full font-medium hover:bg-yellow-600 transition-colors"
+            >
+              Latest Repayment
             </button>
             <button
               onClick={() => setShowDeactivateModal(true)}
-              className="text-sm w-32 border border-gray-100 text-red-700 py-2 px-2 rounded-full font-medium hover:bg-red-200 transition-colors"
+              className="text-sm w-33 border border-gray-100 text-red-700 py-2 px-2 rounded-full font-medium hover:bg-red-200 transition-colors"
             >
               Deactivate User
             </button>
@@ -494,6 +523,12 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
             </div>
           </div>
         </div>
+      )}
+      {showRepaymentDetails && detailedUser && (
+        <RepaymentDetailsModal
+          repayment={repaymentDataForModal}
+          onClose={() => setShowRepaymentDetails(false)}
+        />
       )}
     </div>
   );

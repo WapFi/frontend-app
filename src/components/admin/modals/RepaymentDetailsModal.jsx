@@ -130,14 +130,7 @@ function RepaymentDetailsModal({ repayment, onClose, onViewUser }) {
               <div className="flex justify-between items-center my-2">
                 <span className="text-sm text-gray-600">Due Date</span>
                 <span className="text-sm text-gray-900">
-                  {formatDate(repayment.lastLoanDate).toLocaleDateString(
-                    "en-US",
-                    {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    }
-                  )}
+                  {repayment.lastLoanDate}
                 </span>
               </div>
             </div>

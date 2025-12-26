@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect, useRef } from "react";
 import RepaymentDetailsModal from "../modals/RepaymentDetailsModal";
 import UserDetailsModal from "../modals/UserDetailsModal";
@@ -59,7 +57,7 @@ function LoanRepaymentManagement() {
         const { repayments, total_repayments, total_pages, current_page } =
           response.data;
 
-          console.log("repay: ", repayments);
+        console.log("repay: ", repayments);
 
         const transformedRepayments = repayments.map((repayment) => ({
           id: repayment._id,
@@ -78,10 +76,10 @@ function LoanRepaymentManagement() {
           datePaid: repayment.repayment_date
             ? new Date(repayment.repayment_date).toLocaleDateString("en-US", {
                 year: "numeric",
-                month: "long",
+                month: "short",
                 day: "numeric",
               })
-            : "Unknown",
+            : "N/A",
           profile_picture: repayment.user?.profile_picture || null,
           totalLoanTaken: `₦ ${
             repayment.loan?.loan_amount?.toLocaleString() || "0"
@@ -90,8 +88,12 @@ function LoanRepaymentManagement() {
             repayment.loan?.amount_paid?.toLocaleString() || "0"
           }`,
           lastLoanDate: repayment.loan?.due_date
-            ? new Date(repayment.loan.due_date).toLocaleDateString()
-            : "Unknown",
+            ? new Date(repayment.loan.due_date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })
+            : "N/A",
         }));
 
         setRepaymentData(transformedRepayments);
@@ -360,7 +362,6 @@ function LoanRepaymentManagement() {
                 results
               </p>
             </div>
-            
 
             <div className="flex items-center">
               <label className="text-sm text-gray-700 mr-2">Per page</label>

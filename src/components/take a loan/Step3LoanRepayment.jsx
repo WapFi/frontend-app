@@ -1,5 +1,3 @@
-
-
 import chevronDown from "../../assets/chevron-down.svg";
 import chevronUp from "../../assets/chevron-up.svg";
 import LoadingSpinner from "../LoadingSpinner";
@@ -330,7 +328,7 @@ export default function Step3RepaymentUnderstanding() {
             loading ? "duration-300 cursor-not-allowed" : "cursor-pointer"
           }`}
         >
-          {loading ? <LoadingSpinner /> : "Continue"}
+          {loading ? <LoadingSpinner /> : t("loanStep3.button")}
         </button>
       </form>
     </div>
