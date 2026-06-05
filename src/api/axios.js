@@ -2,7 +2,7 @@ import axios from "axios";
 
 const instance = axios.create({
   baseURL:
- 
+    import.meta.env.VITE_API_BASE_URL ||
     "https://wapfi-backend-service-staging-718658406507.europe-west1.run.app/api/v1",
     
   headers: {
