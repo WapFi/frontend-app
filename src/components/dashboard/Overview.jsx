@@ -14,8 +14,7 @@ function Overview({ totalLoanTaken, amountRepaid, activeLoan, lastLoan }) {
         setFulfilledRepayments(response.data.repayments.length);
         setTotalRepayments(response.data.total_repayments);
         
-      } catch (error) {
-        console.log("Error: ", error);
+      } catch {
       }
     }
 

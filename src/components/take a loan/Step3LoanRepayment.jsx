@@ -100,8 +100,7 @@ export default function Step3RepaymentUnderstanding() {
       setTimeout(() => {
         navigate("/take-a-loan/form/loan-form-summary");
       }, 2000);
-    } catch (error) {
-      console.log("Something went wrong: ", error);
+    } catch {
       setFormError(true);
     } finally {
       setLoading(false);

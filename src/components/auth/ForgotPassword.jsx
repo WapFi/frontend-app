@@ -51,17 +51,6 @@ function ForgotPassword() {
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
-  // const onSubmit = (data) => {
-  //   console.log(data);
-
-  //   if (data.emailPhone !== "test@gmail.com") {
-  //     setShowFormError(true);
-  //   } else {
-  //     setShowFormError(false);
-  //     navigate("/change-password");
-  //   }
-  // };
-
   const onSubmit = async (phoneEmailData) => {
     setLoading(true);
     try {
@@ -70,7 +59,6 @@ function ForgotPassword() {
       });
 
       if (response.status === 200) {
-        console.log("Forgot password success:", response.data);
         setShowSuccessMessage(response.data?.message);
 
         localStorage.setItem("userIdentifier", phoneEmailData.emailPhone);

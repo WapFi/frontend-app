@@ -54,14 +54,12 @@ function ChangePassword() {
       return;
     }
     try {
-      console.log(localStorage.getItem("otpCode"));
       const response = await axios.patch("/auth/reset_password", {
         code: localStorage.getItem("otpCode"),
         new_password: passwordData.newPassword,
       });
 
       if (response.status === 200) {
-        console.log("Password change success:", response.data);
         setShowSuccessMessage(response.data?.message);
 
         // reset form

@@ -13,7 +13,6 @@ function DashboardChart({
   trend = "up", // expects 'up' or 'down'
 }) {
   // Transform data for recharts
-  console.log("chart data: ", data)
   const chartData = data.map((item) => ({
     name: item.date // The date is consistent across all three API data sets.
       ? new Date(item.date).toLocaleDateString("en-US", {

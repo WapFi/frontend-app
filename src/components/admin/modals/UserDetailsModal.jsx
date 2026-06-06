@@ -62,17 +62,13 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
 
   // useEffect to fetch the full user details
   useEffect(() => {
-    console.log("success: ");
     // Only run if a user is selected
-
-    console.log(user._id);
     if (user && user._id) {
       const fetchUserDetails = async () => {
         setIsLoadingDetails(true);
         setDetailsError(null);
         try {
           const response = await getUserDetails(user._id);
-          console.log(response);
           if (response && response.data) {
             const fullUserData = response.data;
             setDetailedUser(fullUserData);
@@ -126,9 +122,6 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
         })
       : "N/A",
   };
-
-  console.log("detailed user: ", detailedUser);
-  // console.log(user.loan_due_date);
 
   return (
     <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 p-4">

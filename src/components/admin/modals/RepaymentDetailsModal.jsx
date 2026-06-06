@@ -1,6 +1,4 @@
 function RepaymentDetailsModal({ repayment, onClose, onViewUser }) {
-  console.log("my repayment: ", repayment);
-
   const formatDate = (dateStr) => {
     const [day, month, year] = dateStr.split("/");
     return new Date(`${year}-${month}-${day}`);

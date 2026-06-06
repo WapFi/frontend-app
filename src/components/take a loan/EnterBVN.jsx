@@ -45,7 +45,6 @@ export default function EnterBVN() {
     try {
       const response = await verifyIdentity("bvn", data.bvn);
       if (response.status === 200) {
-        console.log("BVN Verification Success: ", response);
         reset();
         // refresh user data to make sure we get the latest data
         await refreshUserData();

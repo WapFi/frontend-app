@@ -92,7 +92,6 @@ function SignUpAccountVerification() {
       });
 
       if (response.status === 200) {
-        console.log("Sign up success:", response.data);
 
         setShowSuccessMessage(response.data?.message);
 

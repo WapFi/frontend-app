@@ -50,8 +50,6 @@ export default function UserProfilePage({ onClose }) {
   const profilePictureData = userData?.profile_picture;
   const creditScore = userData?.credit_score.current_score;
 
-  console.log("user d: ", userData);
-
   const handleShowDeleteConfirm = () => {
     if (!profilePictureData || isPictureUpdating) return;
     setShowConfirmModal(true);

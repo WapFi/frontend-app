@@ -16,7 +16,6 @@ function CreditScore() {
   const bvn_verified = userData.bvn_verified;
   const nin_verified = userData.nin_verified;
   const address_verified = userData.address_verified;
-  // console.log(userCreditScore);
   const tier = userCreditScore.tier;
 
   const { t } = useTranslation();

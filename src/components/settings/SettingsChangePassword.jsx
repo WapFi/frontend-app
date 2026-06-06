@@ -60,7 +60,6 @@ export default function SettingsChangePassword() {
         new_password: passwordData.newPassword,
       });
       if (response.status === 200) {
-        console.log("success msg: ", response);
         setShowSuccessMessage(response.data?.message);
 
         // reset form after success
@@ -69,7 +68,6 @@ export default function SettingsChangePassword() {
         setShowFormError(response.data?.message);
       }
     } catch (error) {
-      console.log("err msg: ", error.response?.data?.message);
       setShowFormError(error.response?.data?.message);
     } finally {
       setLoading(false);

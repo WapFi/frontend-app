@@ -55,7 +55,6 @@ export default function ForgotPassword() {
         setShowSuccessMessage(response.data?.message);
       } else {
         setShowFormError(response.data?.message);
-        // console.log("err in else: ", response);
       }
 
       // For resending code

@@ -14,7 +14,6 @@ import DisbursedLoansProgressBar from "./DisbursedLoansProgressBar";
 function LoanDetails({ loanDetails }) {
  
   if (!loanDetails || !loanDetails.data) {
-    console.log("LoanDetails is not available yet, rendering null.");
     return null; 
   }
 

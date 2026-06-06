@@ -57,8 +57,6 @@ function LoanRepaymentManagement() {
         const { repayments, total_repayments, total_pages, current_page } =
           response.data;
 
-        console.log("repay: ", repayments);
-
         const transformedRepayments = repayments.map((repayment) => ({
           id: repayment._id,
           name: repayment.user?.full_name || "Unknown User",

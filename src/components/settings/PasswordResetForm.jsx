@@ -62,7 +62,6 @@ export default function PasswordResetForm() {
         setShowFormError(response.data?.message);
       }
     } catch (error) {
-      console.log(error);
       setShowFormError(error.response?.data?.message);
     } finally {
       setTimeout(() => {

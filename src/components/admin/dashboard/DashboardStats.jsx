@@ -10,9 +10,6 @@ const calculateChange = (currentValue, previousValue) => {
   currentValue = Number(currentValue);
   previousValue = Number(previousValue);
 
-  // Log to debug issues
-  //   console.log("curr: ", currentValue, "prev: ", previousValue);
-
   // If both values are equal, change is "0%"
   if (currentValue === previousValue) {
     return { change: "0%", trend: "up" };
@@ -72,8 +69,6 @@ function DashboardStats() {
         const response = await getDashboardStats();
         if (response.status && response.data) {
           const dashboardData = response.data;
-          //   console.log("stats: ", dashboardData)
-
           // Make sure to parse as numbers
           const loansChange = calculateChange(
             dashboardData.total_loans_disbursed,

@@ -18,13 +18,11 @@ export const NotificationProvider = ({ children }) => {
         setUnreadCount(response.data?.data?.unread_count);
       } else {
         setErrorUnreadCount(response.data?.message);
-        // console.log(response.data?.message);
         setUnreadCount(0);
       }
       return response;
     } catch (err) {
       setErrorUnreadCount(err.response?.data?.message);
-      //   console.log("err: ", err)
       setUnreadCount(0);
     } finally {
       setLoadingUnreadCount(false);

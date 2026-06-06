@@ -165,7 +165,6 @@ export default function LoanHistory() {
   };
 
   const handleTakeLoanClick = () => {
-    // console.log("user data: ", userData);
     if (dashboardData?.active_loan) {
       // User has an existing active loan
       setShowActiveLoanModal(true);

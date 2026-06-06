@@ -60,11 +60,7 @@ export function LanguageProvider({ children }) {
 
     const emailPref = freshUser?.preferences?.notification?.email;
     const smsPref = freshUser?.preferences?.notification?.sms;
-    // console.log(backendLangCode);
-
     try {
-      console.log("email: ", userData.preferences?.notification?.email);
-      console.log("sms: ", userData.preferences?.notification?.sms);
       const response = await updatePreferences(
         emailPref, // Current email preference
         smsPref, // Current SMS preference
@@ -79,7 +75,7 @@ export function LanguageProvider({ children }) {
         // simply return
         return;
       }
-    } catch (error) {
+    } catch {
       // simply return
       return;
     }

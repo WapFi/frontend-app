@@ -102,8 +102,6 @@ export default function VerifyPhoneNumber() {
         setShowVerificationSuccess(response.data?.message);
         await refreshNotificationsCount();
         
-        console.log(response.data?.message);
-
         // refresh user data to make sure we get the latest data
         const updatedUserData = await refreshUserData();
 

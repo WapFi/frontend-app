@@ -49,7 +49,6 @@ export default function Notifications() {
         newLang
       );
       if (response.status === 200) {
-        // console.log("res: ", response);
         setSuccessMessage(
           response.data?.message || t("notificationsSettings.success")
         );
@@ -68,7 +67,6 @@ export default function Notifications() {
     } catch (error) {
       const err =
         error.response.data?.message || t("notificationsSettings.error");
-      console.log("err: ", err);
       setErrorMessage(err);
       setShowErrorMessage(true);
       setSuccessMessage("");
@@ -96,7 +94,9 @@ export default function Notifications() {
   const handleEmailToggle = async () => {
     try {
       await sendPreferenceToBackend("email", !emailEnabled);
-    } catch {}
+    } catch {
+      // Error feedback is handled inside sendPreferenceToBackend.
+    }
   };
 
   return (

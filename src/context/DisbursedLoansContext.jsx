@@ -19,9 +19,8 @@ export function DisbursedLoansProvider({ children }) {
         if (Array.isArray(parsed)) {
           initialData = parsed;
         }
-      } catch (e) {
+      } catch {
         // This handles cases where localStorage has invalid JSON (e.g., "undefined")
-        // console.error("Failed to parse localStorage 'disbursedLoansData', resetting to empty.", e);
         initialData = [];
       }
     }

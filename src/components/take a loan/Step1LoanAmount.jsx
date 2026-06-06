@@ -112,8 +112,7 @@ export default function Step1LoanAmount() {
           navigate("/take-a-loan/form/bank-account-confirmation");
         }
       }, 2000);
-    } catch (error) {
-      console.log("Something went wrong: ", error);
+    } catch {
       setFormError(true);
     } finally {
       setLoading(false);

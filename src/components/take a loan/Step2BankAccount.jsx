@@ -87,8 +87,7 @@ export default function Step2BankAccount() {
           navigate("/take-a-loan/form/loan-repayment-method");
         }
       }, 2000);
-    } catch (error) {
-      console.log("Something went wrong: ", error);
+    } catch {
       setFormError(true);
     } finally {
       setLoading(false);

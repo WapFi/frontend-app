@@ -191,9 +191,7 @@ export default function IdentityVerification() {
 
     setTimeout(async () => {
       try {
-        console.log("before refresh: ", userData);
         const freshUserData = await refreshUserData();
-        console.log("after refresh: ", freshUserData);
         if (freshUserData) {
           reset();
           await refreshDashboardData();

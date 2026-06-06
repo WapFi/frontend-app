@@ -46,8 +46,7 @@ export function LoanFormProvider({ children }) {
           repayment_schedule: restoredData.repayment_schedule ?? "",
         });
       }
-    } catch (e) {
-      console.error("Failed to restore loan form data:", e);
+    } catch {
       // Clear corrupted data if needed
       localStorage.removeItem("latestLoanApplicationData");
     }
@@ -59,7 +58,6 @@ export function LoanFormProvider({ children }) {
       if (JSON.stringify(prev) !== JSON.stringify(updated)) {
         setHasUnsavedChanges(true);
       }
-      console.log("Updated Loan Form Data:", updated);
       return updated;
     });
   }

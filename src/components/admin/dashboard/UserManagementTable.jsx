@@ -46,8 +46,6 @@ function UserManagementTable({
           current_page,
         } = response.data;
 
-        console.log("response: ", response.data)
-
         // Transform the data to match the expected format
         const transformedUsers = userData.map((user) => ({
           _id: user._id,

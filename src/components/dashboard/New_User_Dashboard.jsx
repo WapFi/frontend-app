@@ -19,14 +19,11 @@ function New_User_Dashboard({ dashboardData }) {
 
   const { t } = useTranslation();
 
-  console.log("dasboard data: ", dashboardData);
-
   const [currentMonth, setCurrentMonth] = useState("");
   const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
 
 
     const handleTakeLoanClick = () => {
-    // console.log("user data: ", userData);
     if (dashboardData?.active_loan) {
       // User has an existing active loan
       setShowActiveLoanModal(true);
@@ -51,8 +48,7 @@ function New_User_Dashboard({ dashboardData }) {
       if (res.status) {
        
       }
-    } catch (error) {
-      console.log("Unable to load dashboard. Please try again.");
+    } catch {
     }
   };
   loadData();

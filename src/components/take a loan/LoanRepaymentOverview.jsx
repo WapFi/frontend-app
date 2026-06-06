@@ -38,8 +38,6 @@ export default function LoanRepaymentOverview() {
 
   // This is the single source of truth for display
   const loanDetails = dashboardData?.pending_loan;
-  console.log("loan details: ", loanDetails);
-
   // Local UI states
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
@@ -112,12 +110,6 @@ export default function LoanRepaymentOverview() {
 
       const loanIdToConfirm = freshDashboardRes?.pending_loan?._id;
 
-      // if (!loanIdToConfirm) {
-      //   setFormError(true);
-      //   setLoading(false);
-      //   return;
-      // }
-
       const response = await confirmLoanApplication(
         loanIdToConfirm,
         passwordData.password
@@ -127,7 +119,6 @@ export default function LoanRepaymentOverview() {
         clearLoanFormData();
         localStorage.removeItem("pendingLoanID");
         setFormSuccess(response.data?.message);
-        console.log("my loan: ", response);
         setTimeout(() => {
           setShowApprovalModal(true);
         }, 3500);

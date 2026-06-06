@@ -140,7 +140,6 @@ function LoanApplications() {
   const handleDecline = async (loanId) => {
     try {
       let response = await updateLoanApplicationStatus(loanId, "REJECTED");
-      console.log("response: ", response);
       if (response.status) {
         toast.success("Loan application declined successfully");
         fetchLoanApplications();

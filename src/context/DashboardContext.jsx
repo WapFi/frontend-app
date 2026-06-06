@@ -28,12 +28,10 @@ export function DashboardProvider({ children }) {
         setDashboardData(res.data);
         return res.data;
       } else {
-        console.log("Failed to fetch dashboard data:", res);
         setDashboardData(null);
         return null;
       }
-    } catch (err) {
-      console.log("Error in refreshDashboardData:", err);
+    } catch {
       setDashboardData(null);
       return null;
     }

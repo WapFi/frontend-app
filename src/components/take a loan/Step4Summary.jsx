@@ -51,21 +51,14 @@ export default function Step4Summary() {
                 freshDashboardRes.pending_loan.repayment_schedule ?? "",
             });
           }
-        } catch (error) {
-          console.log("Failed to refresh dashboard data for summary:", error);
+        } catch {
+          // Keep the existing form state when dashboard refresh fails.
         }
       }
     };
 
     fetchAndSyncLoanData();
   }, [dashboardData.pending_loan, refreshDashboardData, updateLoanFormData]);
-
-  console.log("loan form data: ", loanFormData);
-
-  console.log(
-    "loan application data: ",
-    localStorage.getItem("latestLoanApplicationData")
-  );
 
 
   const onSubmit = async () => {
@@ -95,10 +88,7 @@ export default function Step4Summary() {
       payload.loan_purpose_other = loanFormData.other_purpose;
     }
 
-    console.log("payload: ", payload);
-
     if (dashboardData.pending_loan) {
-      console.log("i am Updating loan");
       try {
         // update loan details
         // pendingLoanID = localStorage.getItem("pendingLoanID");
@@ -107,18 +97,12 @@ export default function Step4Summary() {
           // pendingLoanID
           dashboardData.pending_loan._id
         );
-        console.log("updated: ", updatedLoanDetails);
-
         if (updatedLoanDetails.status === 200) {
           setFormSuccess(updatedLoanDetails.data?.message);
           // save updatedLoanDetails and navigate to overview page
           localStorage.setItem(
             "latestLoanApplicationData",
             JSON.stringify(updatedLoanDetails.data?.data)
-          );
-          console.log(
-            "my loan is here: ",
-            localStorage.getItem("latestLoanApplicationData")
           );
           setTimeout(() => {
             navigate("/take-a-loan/loan-repayment-overview");
@@ -127,8 +111,6 @@ export default function Step4Summary() {
           setFormError(updatedLoanDetails.data?.message);
         }
       } catch (error) {
-        // console.log("Something went wrong: ", error);
-
         setFormError(error.response?.data?.message);
       } finally {
         setLoading(false);
@@ -138,13 +120,10 @@ export default function Step4Summary() {
         }, 3000);
       }
     } else {
-      // console.log("payload: ", payload);
       try {
         const response = await applyForLoan(payload);
         if (response.status === 201) {
-          console.log("applying");
           setFormSuccess(response.data?.message);
-          // console.log("api data: ", response.data);
           localStorage.setItem(
             "latestLoanApplicationData",
             JSON.stringify(response.data?.data)
@@ -153,12 +132,9 @@ export default function Step4Summary() {
             navigate("/take-a-loan/loan-repayment-overview");
           }, 3500);
         } else {
-          console.log("in else block");
           setFormError(response.data?.message);
         }
       } catch (error) {
-        console.log("error: ", error);
-        // console.log("Something went wrong: ", error);
         setFormError(error.response?.data?.message);
       } finally {
         setLoading(false);

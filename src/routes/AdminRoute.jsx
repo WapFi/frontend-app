@@ -24,8 +24,7 @@ function AdminRoute({ children }) {
         } else {
           setAuthStatus("unauthenticated");
         }
-      } catch (error) {
-        console.log("Auth check failed.");
+      } catch {
         setAuthStatus("unauthenticated");
       }
     };
