@@ -25,7 +25,7 @@ function PrivateRoute({ children }) {
         } else {
           setAuthStatus("unauthenticated");
         }
-      } catch (error) {
+      } catch {
         setAuthStatus("unauthenticated");
       }
     };

@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -37,12 +36,13 @@ function ChangePassword() {
       ),
   });
 
-  const [showFormError, setShowFormError] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showFormError, setShowFormError] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState("");
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
@@ -54,24 +54,35 @@ function ChangePassword() {
       return;
     }
     try {
-      console.log(localStorage.getItem("otpCode"));
       const response = await axios.patch("/auth/reset_password", {
         code: localStorage.getItem("otpCode"),
         new_password: passwordData.newPassword,
       });
-      setShowFormError(false);
-      setShowSuccessMessage(true);
 
-      localStorage.removeItem("otpCode");
-      // navigate to sign in page
-      setTimeout(() => {
-        navigate("/sign-in");
-      }, 2000);
+      if (response.status === 200) {
+        setShowSuccessMessage(response.data?.message);
+
+        // reset form
+        reset();
+
+        localStorage.removeItem("otpCode");
+        // navigate to sign in page
+        setTimeout(() => {
+          navigate("/sign-in");
+        }, 4000);
+      } else {
+        setShowFormError(response.data?.message);
+      }
     } catch (error) {
       console.error("Password change error:", error);
-      setShowFormError(true);
+      setShowFormError(error.response?.data?.message);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        // reset success and error states
+        setShowFormError("");
+        setShowSuccessMessage("");
+      }, 3500);
     }
   };
   return (
@@ -98,12 +109,12 @@ function ChangePassword() {
             </div>
             {showFormError && (
               <p className="text-red-500 mb-3">
-                {t("change_password.general_error")}
+                {showFormError || t("change_password.general_error")}
               </p>
             )}
             {showSuccessMessage && (
               <p className="text-green-500 mb-3">
-                {t("change_password.success")}
+                {showSuccessMessage || t("change_password.success")}
               </p>
             )}
 
@@ -185,7 +196,9 @@ function ChangePassword() {
                   type="button"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  aria-label={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
                 >
                   {showConfirmPassword ? (
                     <svg

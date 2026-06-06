@@ -10,6 +10,7 @@ export function LoanFormProvider({ children }) {
   const [loanFormData, setLoanFormData] = useState({
     loan_amount: "",
     loan_purpose: "",
+    other_purpose: "",
     wapan_member: "",
     account_name: "",
     account_number: "",
@@ -34,6 +35,7 @@ export function LoanFormProvider({ children }) {
         setLoanFormData({
           loan_amount: restoredData.loan_amount ?? "",
           loan_purpose: restoredData.loan_purpose ?? "",
+          other_purpose: restoredData.loan_purpose_other ?? "",
           wapan_member: restoredData.wapan_member ?? false,
           account_name: restoredData.bank_account?.account_name ?? "",
           account_number: restoredData.bank_account?.account_number ?? "",
@@ -44,8 +46,7 @@ export function LoanFormProvider({ children }) {
           repayment_schedule: restoredData.repayment_schedule ?? "",
         });
       }
-    } catch (e) {
-      // console.error("Failed to restore loan form data:", e);
+    } catch {
       // Clear corrupted data if needed
       localStorage.removeItem("latestLoanApplicationData");
     }

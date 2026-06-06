@@ -6,9 +6,11 @@ import { fetchUserMe, logOut } from "../../../api/apiData";
 import { useState, useEffect } from "react";
 import PageLoader from "../../PageLoader";
 import { useTranslation } from "react-i18next";
-import { useDashboard } from "../../../context/DashboardContext";
 import { use_UserData } from "../../../context/UserContext";
 import Toast from "./Toast";
+import UserProfilePage from "../../profile/UserProfilePage";
+import ProfileNotifications from "../../profile/ProfileNotifications";
+import { useNotifications } from "../../../context/NotificationContext";
 // import RepaymentsSection from "../RepaymentsSection";
 // import Repayments from "../../repayments/Repayments";
 
@@ -23,6 +25,15 @@ function Layout() {
   const [error, setError] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
   const [toastType, setToastType] = useState(null);
+  const [showUserProfileModal, setShowUserProfileModal] = useState(false);
+  const [showUserNotificationsModal, setShowUserNotificationsModal] =
+    useState(false);
+  const {
+    unreadCount,
+    loadingUnreadCount,
+    errorUnreadCount,
+    refreshNotificationsCount,
+  } = useNotifications();
 
   useEffect(() => {
     const loadData = async () => {
@@ -42,31 +53,6 @@ function Layout() {
 
     loadData();
   }, []);
-
-  // Dashboard Context for Active Loan Check ---
-  const { dashboardData } = useDashboard();
-  const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
-
-  // --- NEW: Take a Loan Click Handler ---
-  const handleTakeLoanClick = () => {
-    // console.log("user data: ", userData);
-    if (dashboardData?.active_loan) {
-      // User has an existing active loan
-      setShowActiveLoanModal(true);
-    } else if (
-      dashboardData?.pending_loan?.status === "PENDING" &&
-      userData.phone_verified === true
-    ) {
-      navigate("/take-a-loan/loan-repayment-overview");
-    } else if (dashboardData.credit_score.current_score === 0) {
-      navigate("/take-a-loan/enter-bvn");
-    } else if (userData.phone_verified === false) {
-      navigate("/take-a-loan/verify-phone");
-    } else {
-      // User is eligible
-      navigate("/take-a-loan/form/loan-amount-purpose");
-    }
-  };
 
   // useEffect to clear toast message after a few seconds
   useEffect(() => {
@@ -94,6 +80,7 @@ function Layout() {
         localStorage.removeItem("dashboardData");
         localStorage.removeItem("loanConfirmationData");
         localStorage.removeItem("repaymentsData");
+        localStorage.removeItem("disbursedLoansData");
         localStorage.removeItem("userData");
 
         setTimeout(() => {
@@ -110,6 +97,19 @@ function Layout() {
     }
   };
 
+  // Functions to open/close the UserProfilePage modal
+  const openUserProfileModal = () => setShowUserProfileModal(true);
+  const closeUserProfileModal = () => setShowUserProfileModal(false);
+
+  // Functions to open/close the User Notifications modal
+  const openUserNotificationsModal = () => setShowUserNotificationsModal(true);
+  const closeUserNotificationsModal = () => {
+    setShowUserNotificationsModal(false);
+
+    // refresh unread count when modal closes
+    refreshNotificationsCount();
+  };
+
   // --- Loading/Error States for User Data ---
   if (error) return <div className="p-4 text-red-600">{t("layout.error")}</div>;
   if (!userData) return <PageLoader />;
@@ -119,9 +119,9 @@ function Layout() {
       <Toast message={toastMessage} type={toastType} />
 
       {/* Sidebar for desktop */}
-      <aside className="md:w-[30%] hidden lg:block lg:w-[23%]">
+      <aside className="hidden lg:block lg:w-[20%]">
         <Sidebar
-          onTakeLoanClick={handleTakeLoanClick}
+          // onTakeLoanClick={handleTakeLoanClick}
           onLogOut={handleLogOut}
         />
       </aside>
@@ -131,13 +131,25 @@ function Layout() {
         {/* Top bar: HeaderBar on desktop, MobileMenu on mobile */}
         <header>
           <div className="hidden lg:block">
-            <HeaderBar userName={userData} />
+            <HeaderBar
+              userData={userData}
+              onOpenUserProfile={openUserProfileModal}
+              onOpenUserNotifications={openUserNotificationsModal}
+              unreadNotificationCount={unreadCount}
+              loadingUnreadCount={loadingUnreadCount}
+              errorUnreadCount={errorUnreadCount}
+            />
           </div>
           <div className="lg:hidden">
             <MobileMenu
-              userName={userData}
-              onTakeLoanClick={handleTakeLoanClick}
+              userData={userData}
+              onOpenUserProfile={openUserProfileModal}
+              onOpenUserNotifications={openUserNotificationsModal}
+              // onTakeLoanClick={handleTakeLoanClick}
               onLogOut={handleLogOut}
+              unreadNotificationCount={unreadCount}
+              loadingUnreadCount={loadingUnreadCount}
+              errorUnreadCount={errorUnreadCount}
             />
           </div>
         </header>
@@ -149,7 +161,7 @@ function Layout() {
       </div>
 
       {/* --- NEW: Modal Overlay for Active Loan --- */}
-      {showActiveLoanModal && (
+      {/* {showActiveLoanModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-lg max-w-sm w-full p-6 text-center">
             <h2 className="text-xl font-bold mb-4 text-[#2D6157]">
@@ -169,6 +181,17 @@ function Layout() {
             </button>
           </div>
         </div>
+      )} */}
+      {showUserProfileModal && (
+        <UserProfilePage onClose={closeUserProfileModal} />
+      )}
+
+      {showUserNotificationsModal && (
+        <ProfileNotifications
+          onClose={closeUserNotificationsModal}
+          // refresh notification whenever an action is taken inside notifications modal
+          onNotificationAction={refreshNotificationsCount}
+        />
       )}
     </div>
   );

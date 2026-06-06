@@ -16,24 +16,9 @@ function CreditScore() {
   const bvn_verified = userData.bvn_verified;
   const nin_verified = userData.nin_verified;
   const address_verified = userData.address_verified;
-  // console.log(userCreditScore);
   const tier = userCreditScore.tier;
 
   const { t } = useTranslation();
-
-  // const [scoreData, setScoreData] = useState(null);
-
-  // useEffect(() => {
-  //   fetchDashboardData().then((res) => {
-  //     if (res.status) {
-  //       setScoreData(res.data.creditScore);
-  //     }
-  //   });
-  // }, []);
-
-  // if (!scoreData) return <p>{t("creditScore.loading")}</p>;
-
-  // const { current_score, tier, next_tier_threshold } = scoreData;
 
   const radius = 135.8;
   const strokeWidth = 20;

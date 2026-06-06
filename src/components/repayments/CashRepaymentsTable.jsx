@@ -156,7 +156,7 @@ export default function CashRepaymentsTable() {
               <span>
                 {new Intl.NumberFormat("en-NG", {
                   style: "decimal",
-                  
+
                   maximumFractionDigits: 2,
                 }).format(repayment.amount_paid)}
               </span>
@@ -279,7 +279,7 @@ export default function CashRepaymentsTable() {
                 <span>
                   {new Intl.NumberFormat("en-NG", {
                     style: "decimal",
-                    
+
                     maximumFractionDigits: 2,
                   }).format(repayment.amount_paid)}
                 </span>

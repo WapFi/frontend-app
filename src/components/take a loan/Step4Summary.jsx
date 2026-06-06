@@ -11,9 +11,11 @@ import { updatePendingLoanDetails } from "../../api/apiData";
 export default function Step4Summary() {
   const { t } = useTranslation();
   const { loanFormData, updateLoanFormData } = useLoanForm();
+  // const { refreshDashboardData } = useDashboard();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [formError, setFormError] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
   const { dashboardData, refreshDashboardData } = useDashboard();
 
   // useEffect to ensure loanFormData is synced from backend on mount
@@ -28,6 +30,7 @@ export default function Step4Summary() {
             updateLoanFormData({
               loan_amount: freshDashboardRes.pending_loan.loan_amount ?? "",
               loan_purpose: freshDashboardRes.pending_loan.loan_purpose ?? "",
+              other_purpose: freshDashboardRes.pending_loan.loan_purpose_other ?? "",
               wapan_member:
                 freshDashboardRes.pending_loan.wapan_member ?? false,
               account_name:
@@ -48,30 +51,18 @@ export default function Step4Summary() {
                 freshDashboardRes.pending_loan.repayment_schedule ?? "",
             });
           }
-        } catch (error) {
-          // console.log("Failed to refresh dashboard data for summary:", error);
+        } catch {
+          // Keep the existing form state when dashboard refresh fails.
         }
       }
     };
 
     fetchAndSyncLoanData();
-    // Keep these dependencies. React needs to know if these change to potentially re-run.
-    // The `initialLoanDataSynced` dependency will stop the loop.
-  }, [
-    dashboardData.pending_loan,
-    refreshDashboardData,
-    updateLoanFormData,
-  ]);
+  }, [dashboardData.pending_loan, refreshDashboardData, updateLoanFormData]);
 
-  console.log("loan form data: ", loanFormData);
-  console.log(
-    "loan application data: ",
-    localStorage.getItem("latestLoanApplicationData")
-  );
 
   const onSubmit = async () => {
     setLoading(true);
-    setFormError(false);
 
     const payload = {
       loan_amount: loanFormData.loan_amount,
@@ -81,44 +72,76 @@ export default function Step4Summary() {
       account_number: loanFormData.account_number,
       bank_name: loanFormData.bank_name,
       recyclable_drop_off_known: loanFormData.recyclable_drop_off_known,
-      recyclable_drop_off_location: loanFormData.recyclable_drop_off_location,
+      
       repayment_method: loanFormData.repayment_method,
       repayment_schedule: loanFormData.repayment_schedule,
     };
 
+    // include the location choice only if user does not know the location
+    if (loanFormData.recyclable_drop_off_known === false) {
+      payload.recyclable_drop_off_location =
+        loanFormData.recyclable_drop_off_location;
+    }
+
+    // include in payload only if user chooses 'Other' for loan purpose
+    if (loanFormData.loan_purpose === "OTHER") {
+      payload.loan_purpose_other = loanFormData.other_purpose;
+    }
+
     if (dashboardData.pending_loan) {
       try {
         // update loan details
+        // pendingLoanID = localStorage.getItem("pendingLoanID");
         const updatedLoanDetails = await updatePendingLoanDetails(
           payload,
+          // pendingLoanID
           dashboardData.pending_loan._id
         );
-
-        // save updatedLoanDetails and navigate to overview page
-        localStorage.setItem(
-          "latestLoanApplicationData",
-          JSON.stringify(updatedLoanDetails.data)
-        );
-
-        navigate("/take-a-loan/loan-repayment-overview");
+        if (updatedLoanDetails.status === 200) {
+          setFormSuccess(updatedLoanDetails.data?.message);
+          // save updatedLoanDetails and navigate to overview page
+          localStorage.setItem(
+            "latestLoanApplicationData",
+            JSON.stringify(updatedLoanDetails.data?.data)
+          );
+          setTimeout(() => {
+            navigate("/take-a-loan/loan-repayment-overview");
+          }, 3500);
+        } else {
+          setFormError(updatedLoanDetails.data?.message);
+        }
       } catch (error) {
-        setFormError(true);
+        setFormError(error.response?.data?.message);
       } finally {
         setLoading(false);
+        setTimeout(() => {
+          setFormError("");
+          setFormSuccess("");
+        }, 3000);
       }
     } else {
       try {
         const response = await applyForLoan(payload);
-
-        localStorage.setItem(
-          "latestLoanApplicationData",
-          JSON.stringify(response.data)
-        );
-        navigate("/take-a-loan/loan-repayment-overview");
+        if (response.status === 201) {
+          setFormSuccess(response.data?.message);
+          localStorage.setItem(
+            "latestLoanApplicationData",
+            JSON.stringify(response.data?.data)
+          );
+          setTimeout(() => {
+            navigate("/take-a-loan/loan-repayment-overview");
+          }, 3500);
+        } else {
+          setFormError(response.data?.message);
+        }
       } catch (error) {
-        setFormError(true);
+        setFormError(error.response?.data?.message);
       } finally {
         setLoading(false);
+        setTimeout(() => {
+          setFormError("");
+          setFormSuccess("");
+        }, 3000);
       }
     }
   };
@@ -126,7 +149,13 @@ export default function Step4Summary() {
   return (
     <div className="w-[95%] mx-auto md:w-[75%] flex flex-col gap-3">
       {formError && (
-        <p className="text-red-500 mb-3">{t("loanStep4.errorForm")}</p>
+        <p className="text-red-500 mb-3 text-center">
+          {formError || t("loanStep4.errorForm")}
+        </p>
+      )}
+
+      {formSuccess && (
+        <p className="text-green-500 mb-3 text-center">{formSuccess || ""}</p>
       )}
       <div className="flex flex-col gap-1.5">
         <div className="flex justify-between text-[#222]">
@@ -151,6 +180,7 @@ export default function Step4Summary() {
           <span className="text-[rgba(34,34,34,0.50)]">
             {t("loanStep4.howMuchToBorrowLabel")}
           </span>
+          {/* <span className="font-medium">₦{loanFormData.loan_amount}</span> */}
           <span className="font-medium">
             {new Intl.NumberFormat("en-NG", {
               style: "currency",
@@ -167,6 +197,17 @@ export default function Step4Summary() {
             {loanFormData.loan_purpose || "N/A"}
           </span>
         </p>
+        {loanFormData.loan_purpose === "OTHER" && (
+          <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
+            <span className="text-[rgba(34,34,34,0.50)]">
+              {t("loanStep4.otherPurposeLabel")}
+            </span>
+            <span className="font-medium">
+              {loanFormData.other_purpose || "N/A"}
+            </span>
+          </p>
+        )}
+
         <p className="flex justify-between text-[#222] text-[14px] md:text-[16px]">
           <span className="text-[rgba(34,34,34,0.50)]">
             {t("loanStep4.wapanMemberLabel")}

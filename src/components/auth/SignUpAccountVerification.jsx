@@ -1,4 +1,5 @@
 
+
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -14,6 +15,11 @@ import axios from "../../api/axios";
 function SignUpAccountVerification() {
   const [fadeIn, setFadeIn] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [showFormError, setShowFormError] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     setFadeIn(true);
@@ -65,16 +71,14 @@ function SignUpAccountVerification() {
       ),
   });
 
-  const [showFormError, setShowFormError] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const {
     register,
     handleSubmit,
+    reset,
+    // setValue,
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
+
 
   const onSubmit = async (signUpData) => {
     setLoading(true);
@@ -84,19 +88,32 @@ function SignUpAccountVerification() {
         full_name: signUpData.fullName,
         identifier: signUpData.emailPhone,
         password: signUpData.password,
+        // confirmedPassword: signUpData.confirmedPassword,
       });
 
-      setShowFormError(false);
-      setShowSuccessMessage(true);
+      if (response.status === 200) {
 
-      setTimeout(() => {
-        navigate("/sign-in");
-      }, 2000);
+        setShowSuccessMessage(response.data?.message);
+
+        // reset form
+        reset();
+
+        setTimeout(() => {
+          navigate("/sign-in");
+        }, 3500);
+      } else {
+        setShowFormError(response.data?.message);
+      }
     } catch (error) {
-
-      setShowFormError(true);
+      console.error("Sign up error:", error);
+      setShowFormError(error.response?.data?.message);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        // reset success and error states
+        setShowFormError("");
+        setShowSuccessMessage("");
+      }, 3000);
     }
   };
 
@@ -123,11 +140,15 @@ function SignUpAccountVerification() {
             </div>
 
             {showFormError && (
-              <p className="text-red-500 mb-3">{t("sign_up.error")}</p>
+              <p className="text-red-500 mb-3">
+                {showFormError || t("sign_up.error")}
+              </p>
             )}
 
             {showSuccessMessage && (
-              <p className="text-green-500 mb-3">{t("sign_up.success")}</p>
+              <p className="text-green-500 mb-3">
+                {showSuccessMessage || "sign_up.success"}
+              </p>
             )}
 
             <label className="text-[#222] gap-2">
@@ -167,7 +188,12 @@ function SignUpAccountVerification() {
             <label className="text-[#222] gap-2">
               {t("sign_up.password")}
               <br />
-
+              {/* <input
+                {...register("password")}
+                type="password"
+                placeholder={t("sign_up.placeholders.password")}
+                className="text-[rgba(34,34,34,0.50)] border-[#00000026] w-full gap-3 border-1 rounded-lg p-[14px]"
+              /> */}
               <div className="relative w-full">
                 <input
                   {...register("password")}
@@ -234,6 +260,12 @@ function SignUpAccountVerification() {
 
             <label className="text-[#222] gap-2">
               {t("sign_up.confirm_password")} <br />
+              {/* <input
+                {...register("confirmedPassword")}
+                type="password"
+                placeholder={t("sign_up.placeholders.confirm_password")}
+                className="text-[rgba(34,34,34,0.50)] border-[#00000026] w-full gap-3 border-1 rounded-lg p-[14px]"
+              /> */}
               <div className="relative w-full">
                 <input
                   {...register("confirmedPassword")}
@@ -245,7 +277,9 @@ function SignUpAccountVerification() {
                   type="button"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  aria-label={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
                 >
                   {showConfirmPassword ? (
                     <svg

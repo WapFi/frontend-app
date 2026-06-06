@@ -1,4 +1,3 @@
-
 import chevronDown from "../../assets/chevron-down.svg";
 import chevronUp from "../../assets/chevron-up.svg";
 import LoadingSpinner from "../LoadingSpinner";
@@ -101,7 +100,7 @@ export default function Step3RepaymentUnderstanding() {
       setTimeout(() => {
         navigate("/take-a-loan/form/loan-form-summary");
       }, 2000);
-    } catch (error) {
+    } catch {
       setFormError(true);
     } finally {
       setLoading(false);
@@ -297,7 +296,7 @@ export default function Step3RepaymentUnderstanding() {
           </div>
           {displayScheduleForm && (
             <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
-              {["Weekly", "Biweekly", "Monthly"].map((option) => (
+              {["Weekly", "Bi-Weekly", "Monthly"].map((option) => (
                 <button
                   key={option}
                   type="button"
@@ -328,7 +327,7 @@ export default function Step3RepaymentUnderstanding() {
             loading ? "duration-300 cursor-not-allowed" : "cursor-pointer"
           }`}
         >
-          {loading ? <LoadingSpinner /> : "Continue"}
+          {loading ? <LoadingSpinner /> : t("loanStep3.button")}
         </button>
       </form>
     </div>

@@ -1,5 +1,3 @@
-
-
 import arrowTimer from "../../assets/arrow-timer.svg";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -60,9 +58,10 @@ export default function SettingsVerifyEmailPhone() {
       }),
   });
 
-  const [showFormError, setShowFormError] = useState(false);
-  const [showVerificationSuccess, setShowVerificationSuccess] = useState(false);
-  const [showResendSuccess, setShowResendSuccess] = useState(false);
+  const [showFormError, setShowFormError] = useState("");
+  const [showVerificationSuccess, setShowVerificationSuccess] = useState("");
+  const [showResendSuccess, setShowResendSuccess] = useState("");
+  const [showResendFailure, setShowResendFailure] = useState("");
   const [resending, setResending] = useState(false);
 
   const [secondsLeft, setSecondsLeft] = useState(60);
@@ -75,7 +74,13 @@ export default function SettingsVerifyEmailPhone() {
     return () => clearInterval(interval);
   }, [secondsLeft]);
 
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    setValue,
+  } = useForm({
     resolver: yupResolver(schema),
   });
 
@@ -97,21 +102,28 @@ export default function SettingsVerifyEmailPhone() {
       otpCode.fourthDigit;
 
     try {
-      await axios.get(`/auth/verify/${code}`);
+      const response = await axios.get(`/auth/verify/${code}`);
       localStorage.setItem("otpCode", code);
 
-      setShowFormError(false);
-      setShowVerificationSuccess(true);
+      if (response.status === 200) {
+        setShowVerificationSuccess(response.data?.message);
+        reset();
+        setTimeout(() => {
+          navigate("/settings/reset-password");
+        }, 3000);
+      } else {
+        setShowFormError(response.data?.message);
+      }
 
       localStorage.removeItem("userIdentifier");
-
-      setTimeout(() => {
-        setLoading(false);
-        navigate("/settings/reset-password");
-      }, 2000);
     } catch (error) {
-      setShowFormError(true);
+      setShowFormError(error.response?.data?.message);
+    } finally {
       setLoading(false);
+      setTimeout(() => {
+        setShowFormError("");
+        setShowVerificationSuccess("");
+      }, 2500);
     }
   };
 
@@ -119,21 +131,30 @@ export default function SettingsVerifyEmailPhone() {
     setResending(true);
     try {
       const identifier = localStorage.getItem("userIdentifier");
-      await axios.post("/auth/request_reset", {
+      const response = await axios.post("/auth/request_reset", {
         identifier,
       });
-      setShowResendSuccess(true);
-      setSecondsLeft(60);
-      // Optionally reset input fields:
-      setValue("firstDigit", "");
-      setValue("secondDigit", "");
-      setValue("thirdDigit", "");
-      setValue("fourthDigit", "");
-      firstRef.current && firstRef.current.focus();
+
+      if (response.status === 200) {
+        setShowResendSuccess(response.data?.message);
+        setSecondsLeft(60);
+        // Optionally reset input fields:
+        setValue("firstDigit", "");
+        setValue("secondDigit", "");
+        setValue("thirdDigit", "");
+        setValue("fourthDigit", "");
+        firstRef.current && firstRef.current.focus();
+      } else {
+        setShowResendFailure(response.data?.message);
+      }
     } catch (error) {
-      // Optionally show error to user
+      setShowResendFailure(error.response?.data?.message);
     } finally {
       setResending(false);
+      setTimeout(() => {
+        setShowResendSuccess("");
+        setShowResendFailure("");
+      }, 2500);
     }
   };
 
@@ -169,16 +190,23 @@ export default function SettingsVerifyEmailPhone() {
           </p>
 
           {showFormError && (
-            <p className="text-red-500 mb-3">{t("settingsVerify.error")}</p>
+            <p className="text-red-500 mb-3 text-center">
+              {showFormError || t("settingsVerify.error")}
+            </p>
           )}
 
           {showVerificationSuccess && (
-            <p className="text-green-500 mb-3">{t("settingsVerify.success")}</p>
+            <p className="text-green-500 mb-3 text-center">
+              {showVerificationSuccess || t("settingsVerify.success")}
+            </p>
           )}
 
+          {showResendFailure && (
+            <p className="text-red-500 mb-3 text-center">{showResendFailure}</p>
+          )}
           {showResendSuccess && (
-            <p className="text-green-500 mb-3">
-              {t("settingsVerify.resend_success")}
+            <p className="text-green-500 mb-3 text-center">
+              {showResendSuccess || t("settingsVerify.resend_success")}
             </p>
           )}
 
@@ -247,7 +275,9 @@ export default function SettingsVerifyEmailPhone() {
           type="button"
         >
           <img src={arrowTimer} alt="Arrow Timer" className="block" />
-          <p className="text-[18px] text-[#2D6157]">{t("settingsVerify.resend")}</p>
+          <p className="text-[18px] text-[#2D6157]">
+            {t("settingsVerify.resend")}
+          </p>
         </button>
       </form>
     </div>

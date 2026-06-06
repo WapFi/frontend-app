@@ -9,27 +9,44 @@ import { useLanguage } from "../../../context/LanguageContext";
 import UKFlag from "../../../assets/UK Flag.svg";
 import NigerianFlag from "../../../assets/Nigerian Flag.svg";
 import logoutIcon from "../../../assets/logout icon.svg";
+import ActiveLoanModal from "../../admin/modals/ActiveLoanModal";
+import { useDashboard } from "../../../context/DashboardContext";
+import { use_UserData } from "../../../context/UserContext";
+import PageLoader from "../../PageLoader";
 
-function MobileMenu({ userName, onTakeLoanClick, onLogOut }) {
+function MobileMenu({
+  // userData,
+  // onTakeLoanClick,
+  onLogOut,
+  onOpenUserProfile,
+  onOpenUserNotifications,
+  unreadNotificationCount,
+  loadingUnreadCount,
+  errorUnreadCount,
+}) {
   const navigate = useNavigate();
-
-  const location = useLocation();
-  const isTakeLoanActive = location.pathname.startsWith("/take-a-loan");
+  const { dashboardData } = useDashboard();
+  const { userData } = use_UserData();
+  const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
   const { t } = useTranslation();
-
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // const [error, setError] = useState(false);
   const { language, setLanguage } = useLanguage();
 
-  const nameParts = userName.full_name?.split(" ");
+  if (!dashboardData || !userData) {
+    return <PageLoader />;
+  }
+
+  const isTakeLoanActive = location.pathname.startsWith("/take-a-loan");
+
+  const nameParts = userData.full_name?.split(" ");
   const initials = nameParts
     ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
     : "";
 
   const handleRepaymentsClick = () => {
     setMenuOpen(false);
-    navigate("/repayments");
+    navigate("loans/disbursed-loans");
   };
 
   const handleCreditScoreClick = () => {
@@ -42,6 +59,24 @@ function MobileMenu({ userName, onTakeLoanClick, onLogOut }) {
     navigate("/settings");
   };
 
+  const handleTakeLoanClick = () => {
+    setMenuOpen(false); // close the menu if open
+    if (dashboardData?.active_loan) {
+      setShowActiveLoanModal(true);
+    } else if (
+      dashboardData?.pending_loan?.status === "PENDING" &&
+      userData.phone_verified === true
+    ) {
+      navigate("/take-a-loan/loan-repayment-overview");
+    } else if (dashboardData.credit_score.current_score === 0) {
+      navigate("/take-a-loan/enter-bvn");
+    } else if (userData.phone_verified === false) {
+      navigate("/take-a-loan/verify-phone");
+    } else {
+      navigate("/take-a-loan/form/loan-amount-purpose");
+    }
+  };
+
   return (
     <div className={`${menuOpen ? "bg-white h-screen" : "bg-[#f1f1f1]"}`}>
       <div className="lg:hidden bg-white border-b border-b-[rgba(0,0,0,0.08)] h-[50px] flex justify-between items-center shrink-0 py-10 px-2.5">
@@ -49,15 +84,34 @@ function MobileMenu({ userName, onTakeLoanClick, onLogOut }) {
         <div className="flex justify-center items-center gap-6 cursor-pointer">
           {!menuOpen && (
             <>
-              <div className="rounded-full py-2 px-[8px] bg-[#fff] text-white text-center font-medium relative">
+              <button
+                className="rounded-full py-2 px-[8px] bg-[#fff] text-white text-center font-medium relative cursor-pointer"
+                onClick={onOpenUserNotifications}
+              >
                 <img src={bellIcon} alt="notification bell" />
-                <span className="border-[rgba(229,62,62,0.30)] bg-[rgba(229,62,62,0.08)] absolute -top-1 -right-[3px] text-[#E53E3E] text-[12px] w-5 h-5 p-[1px] gap-[10px] flex items-center justify-center rounded-[6px] font-semibold">
-                  4
-                </span>
-              </div>
-              <div className="rounded-full py-1 px-[7px] bg-[#171717] text-white text-center font-medium">
-                <p>{initials}</p>
-              </div>
+                {!loadingUnreadCount && !errorUnreadCount && (
+                  <span className="border-[rgba(229,62,62,0.30)] bg-[rgba(229,62,62,0.08)] absolute -top-1 -right-[3px] text-[#E53E3E] text-[12px] w-5 h-5 p-[1px] gap-[10px] flex items-center justify-center rounded-[6px] font-semibold">
+                    {unreadNotificationCount}
+                  </span>
+                )}
+              
+              </button>
+              <button
+                className={`rounded-full bg-[#171717] text-white text-center font-medium cursor-pointer w-9 h-9 ${
+                  userData.profile_picture ? "p-0" : "py-1 px-[7px]"
+                }`}
+                onClick={onOpenUserProfile}
+              >
+                {userData.profile_picture ? (
+                  <img
+                    src={userData.profile_picture}
+                    alt={`${userData.full_name}'s avatar`}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <p>{initials}</p>
+                )}
+              </button>
             </>
           )}
 
@@ -109,15 +163,12 @@ function MobileMenu({ userName, onTakeLoanClick, onLogOut }) {
           <div
             role="button"
             tabIndex={0}
-            onClick={() => {
-              setMenuOpen(false);
-              if (onTakeLoanClick) onTakeLoanClick();
-            }}
+            onClick={handleTakeLoanClick}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 setMenuOpen(false);
-                if (onTakeLoanClick) onTakeLoanClick();
+                // if (onTakeLoanClick) onTakeLoanClick();
               }
             }}
             className={`flex items-center gap-3 self-stretch h-[40px] py-[8px] px-[16px] cursor-pointer outline-none ${
@@ -177,12 +228,12 @@ function MobileMenu({ userName, onTakeLoanClick, onLogOut }) {
               }
             }}
             className={`2xl:w-[95%] flex items-center gap-3 self-stretch h-[40px] rounded-[12px] px-[16px] cursor-pointer outline-none ${
-              location.pathname.startsWith("/repayments")
+              location.pathname.startsWith("/loans")
                 ? "text-[#439182]"
                 : "text-[#A0B0AB]"
             }`}
             aria-current={
-              location.pathname.startsWith("/repayments") ? "page" : undefined
+              location.pathname.startsWith("/loans") ? "page" : undefined
             }
           >
             <svg
@@ -198,7 +249,8 @@ function MobileMenu({ userName, onTakeLoanClick, onLogOut }) {
               />
             </svg>
             {/* ...icon and label... */}
-            <p>{t("sidebar.repayments")}</p>
+            <p>{t("mobile_menu.disbursedLoans")}</p>
+            {/* <p>Disbursed Loans</p> */}
           </div>
           <div
             role="button"
@@ -328,6 +380,16 @@ function MobileMenu({ userName, onTakeLoanClick, onLogOut }) {
           </div>
         </div>
       )}
+      <ActiveLoanModal
+        visible={showActiveLoanModal}
+        onAction={() => {
+          setShowActiveLoanModal(false);
+          navigate("/dashboard");
+        }}
+        title={t("layout.activeLoanModal.title")}
+        body={t("layout.activeLoanModal.body")}
+        buttonLabel={t("layout.activeLoanModal.button")}
+      />
     </div>
   );
 }

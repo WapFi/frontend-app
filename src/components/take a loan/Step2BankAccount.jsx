@@ -1,4 +1,6 @@
 
+
+
 import LoadingSpinner from "../LoadingSpinner";
 import { useState, useEffect } from "react";
 import * as yup from "yup";
@@ -85,7 +87,7 @@ export default function Step2BankAccount() {
           navigate("/take-a-loan/form/loan-repayment-method");
         }
       }, 2000);
-    } catch (error) {
+    } catch {
       setFormError(true);
     } finally {
       setLoading(false);

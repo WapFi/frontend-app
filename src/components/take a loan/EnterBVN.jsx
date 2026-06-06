@@ -7,6 +7,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import { verifyIdentity } from "../../api/apiData";
 import { use_UserData } from "../../context/UserContext";
+import { useNotifications } from "../../context/NotificationContext";
 
 export default function EnterBVN() {
   const navigate = useNavigate();
@@ -14,8 +15,9 @@ export default function EnterBVN() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
-  const [formError, setFormError] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState("");
+  const { refreshNotificationsCount } = useNotifications();
 
   const { refreshUserData } = use_UserData();
 
@@ -33,26 +35,37 @@ export default function EnterBVN() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
   const onSubmit = async (data) => {
     setLoading(true);
-    setFormError(false);
 
     try {
       const response = await verifyIdentity("bvn", data.bvn);
+      if (response.status === 200) {
+        reset();
+        // refresh user data to make sure we get the latest data
+        await refreshUserData();
+        setShowSuccessMessage(response.data?.message);
 
-      // refresh user data to make sure we get the latest data
-      await refreshUserData();
-      setShowSuccessMessage(true);
-      setTimeout(() => {
-        navigate("/take-a-loan/verify-phone");
-      }, 2000);
+        await refreshNotificationsCount();
+
+        setTimeout(() => {
+          navigate("/take-a-loan/verify-phone");
+        }, 3500);
+      } else {
+        setFormError(response.data?.message);
+      }
     } catch (error) {
-      setFormError(true);
+      setFormError(error.response?.data?.message);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        setFormError("");
+        setShowSuccessMessage("");
+      }, 3000);
     }
   };
   return (
@@ -68,10 +81,12 @@ export default function EnterBVN() {
         <p className="text-[18px] text-[#656565]">{t("bvn.subtext")}</p>
 
         {formError && (
-          <p className="text-red-500 mb-3">{t("bvn.errors.error")}</p>
+          <p className="text-red-500 mb-3">{formError || "bvn.errors.error"}</p>
         )}
         {showSuccessMessage && (
-          <p className="text-green-500 mb-3">{t("bvn.success")}</p>
+          <p className="text-green-500 mb-3">
+            {showSuccessMessage || t("bvn.success")}
+          </p>
         )}
 
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>

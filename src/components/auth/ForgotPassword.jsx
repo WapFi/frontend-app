@@ -1,4 +1,3 @@
-
 import WapfiLogo from "../WapfiLogo";
 import BackgroundImage from "../BackgroundImage";
 import { useForm } from "react-hook-form";
@@ -31,21 +30,36 @@ function ForgotPassword() {
           .toLowerCase()
       )
       .required(t("forgot_password.errors.email_or_phone_required"))
-      .test("is-email-phone", t("forgot_password.errors.invalid_email_or_phone"), (value) => {
-        return (
-          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{11}$/.test(value)
-        );
-      }),
+      .test(
+        "is-email-phone",
+        t("forgot_password.errors.invalid_email_or_phone"),
+        (value) => {
+          return (
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{11}$/.test(value)
+          );
+        }
+      ),
   });
 
-  const [showFormError, setShowFormError] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showFormError, setShowFormError] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState("");
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
+
+  // const onSubmit = (data) => {
+
+  //   if (data.emailPhone !== "test@gmail.com") {
+  //     setShowFormError(true);
+  //   } else {
+  //     setShowFormError(false);
+  //     navigate("/change-password");
+  //   }
+  // };
 
   const onSubmit = async (phoneEmailData) => {
     setLoading(true);
@@ -53,18 +67,29 @@ function ForgotPassword() {
       const response = await axios.post("/auth/request_reset", {
         identifier: phoneEmailData.emailPhone,
       });
-      setShowFormError(false);
-      setShowSuccessMessage(true);
 
-      localStorage.setItem("userIdentifier", phoneEmailData.emailPhone);
+      if (response.status === 200) {
+        setShowSuccessMessage(response.data?.message);
 
-      setTimeout(() => {
-        navigate("/verify-code");
-      }, 2000);
+        localStorage.setItem("userIdentifier", phoneEmailData.emailPhone);
+
+        // reset form
+        reset();
+        setTimeout(() => {
+          navigate("/verify-code");
+        }, 3500);
+      } else {
+        setShowFormError(response.data?.message);
+      }
     } catch (error) {
-      setShowFormError(true);
+      console.error("Forgot password error:", error);
+      setShowFormError(error.response?.data?.message);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        setShowFormError("");
+        setShowSuccessMessage("");
+      }, 3000);
     }
   };
 
@@ -74,6 +99,7 @@ function ForgotPassword() {
         fadeIn ? "opacity-100" : "opacity-0"
       }`}
     >
+      {/* <WapfiLogo /> */}
       <div className="px-3">
         <WapfiLogo />
         <div className="mx-auto flex flex-col items-center gap-[40px] w-full mb-12 max-w-[95%] md:text-[18px] md:max-w-[75%] lg:max-w-[511px] lg:gap-[40px] lg:self-center lg:mx-12 xl:mx-14 2xl:ml-32">
@@ -91,12 +117,14 @@ function ForgotPassword() {
             </div>
 
             {showFormError && (
-              <p className="text-red-500 mb-3">{t("forgot_password.error")}</p>
+              <p className="text-red-500 mb-3">
+                {showFormError || t("forgot_password.error")}
+              </p>
             )}
 
             {showSuccessMessage && (
               <p className="text-green-500 mb-3">
-                {t("forgot_password.success")}
+                {showSuccessMessage || t("forgot_password.success")}
               </p>
             )}
 

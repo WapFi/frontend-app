@@ -1,4 +1,5 @@
 
+
 import chevronDown from "../../assets/chevron-down.svg";
 import chevronUp from "../../assets/chevron-up.svg";
 import LoadingSpinner from "../LoadingSpinner";
@@ -54,7 +55,12 @@ export default function Step1LoanAmount() {
     wapanMembership: yup
       .string()
       .required(t("loanStep1.errors.membershipRequired")),
-    otherPurpose: yup.string(),
+    otherPurpose: yup.string().when("loanPurpose", {
+      is: "OTHER",
+      then: (schema) =>
+        schema.required(t("loanStep1.errors.otherPurposeRequired")),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   });
 
   const {
@@ -106,7 +112,7 @@ export default function Step1LoanAmount() {
           navigate("/take-a-loan/form/bank-account-confirmation");
         }
       }, 2000);
-    } catch (error) {
+    } catch {
       setFormError(true);
     } finally {
       setLoading(false);

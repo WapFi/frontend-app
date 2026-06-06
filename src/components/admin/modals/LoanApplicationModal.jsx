@@ -2,13 +2,11 @@ function LoanApplicationModal({ loan, onClose }) {
   if (!loan) return null;
 
   const handleApprove = () => {
-    console.log("Approve loan:", loan.id);
     // Add approval logic here
     onClose();
   };
 
   const handleDecline = () => {
-    console.log("Decline loan:", loan.id);
     // Add decline logic here
     onClose();
   };

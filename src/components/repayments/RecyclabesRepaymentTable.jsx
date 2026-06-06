@@ -447,7 +447,6 @@ export default function RecyclablesRepaymentTable() {
 //       );
 //       setRepaymentsByID(filtered);
 //     } catch (err) {
-//       console.error("Error filtering repayments:", err);
 //     } finally {
 //       setLoading(false);
 //     }

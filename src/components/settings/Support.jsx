@@ -39,6 +39,7 @@ export default function SupportSection() {
             <p className="text-[#666] text-[14px] md:text-[16px] break-all">
               {t("supportSection.email.desc")}
             </p>
+            <p className="text-[14px] py-1">info@wapfilending.com</p>
           </div>
         </a>
 

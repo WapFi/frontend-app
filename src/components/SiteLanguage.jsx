@@ -1,52 +1,31 @@
+
+
 import LoadingSpinner from "./LoadingSpinner";
 import WapfiLogo from "./WapfiLogo";
 import UKFlag from "../assets/UK Flag.svg";
 import NigerianFlag from "../assets/Nigerian Flag.svg";
 import { useLanguage } from "../context/LanguageContext";
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import i18n from "../i18n";
+import { useNavigate } from "react-router-dom";
 
 function SiteLanguage() {
-  const [fadeIn, setFadeIn] = useState(false);
-
   const [loading, setLoading] = useState(false);
-
-  // useEffect(() => {
-  //   setFadeIn(true);
-  // }, []);
-  useEffect(() => {
-    const storedLang = localStorage.getItem("language");
-    if (storedLang) {
-      setLanguage(storedLang);
-      i18n.changeLanguage(storedLang === "hausa" ? "ha" : "en");
-      navigate("/sign-in");
-    } else {
-      setFadeIn(true);
-    }
-  }, []);
-
-  const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
-
-  // const handleChange = (e) => {
-  //   const selectedLang = e.target.value;
-  //   console.log(selectedLang);
-  //   setLanguage(selectedLang);
-  //   i18n.changeLanguage(selectedLang === "hausa" ? "ha" : "en");
-  // };
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const selectedLang = e.target.value;
     setLanguage(selectedLang);
-    localStorage.setItem("language", selectedLang);
-    i18n.changeLanguage(selectedLang === "hausa" ? "ha" : "en");
+    // You can update the language in i18n immediately for a better user experience
+    i18n.changeLanguage(selectedLang === "ha" ? "ha" : "en");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (language !== "") {
+    if (language) {
       setLoading(true);
+      // Wait for the mock loading, then navigate
       setTimeout(() => {
         navigate("/sign-in");
       }, 3000);
@@ -55,9 +34,7 @@ function SiteLanguage() {
 
   return (
     <div
-      className={`w-[85%] min-h-screen mx-auto min-md:w-[90%] md:mt-6 transition-opacity duration-[2500ms] ease-in-out ${
-        fadeIn ? "opacity-100" : "opacity-0"
-      }`}
+      className={`w-[85%] min-h-screen mx-auto min-md:w-[90%] md:mt-6 transition-opacity duration-[2500ms] ease-in-out opacity-100`}
     >
       <WapfiLogo />
       <div className="flex justify-center items-center">

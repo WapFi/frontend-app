@@ -1,4 +1,5 @@
 
+
 import { createContext, useContext, useState, useEffect } from "react";
 import i18n from "../i18n";
 import { updatePreferences } from "../api/apiData";
@@ -25,7 +26,7 @@ export function LanguageProvider({ children }) {
     }
 
     // 3. Fallback to default (English)
-    return "en";
+    return null;
   });
 
   useEffect(() => {
@@ -50,20 +51,19 @@ export function LanguageProvider({ children }) {
 
   // Function to update language preference on the backend
   const updateLanguagePreferenceBackend = async (newLang) => {
-    if (!userData) {
-      // Ensure user data is available
-      return;
-    }
+
+    // fetch fresh userData
+    const freshUser = await refreshUserData();
 
     // Map internal 'en'/'ha' to backend 'ENG'/'HAU'
     const backendLangCode = newLang === "en" ? "ENG" : "HAU";
 
+    const emailPref = freshUser?.preferences?.notification?.email;
+    const smsPref = freshUser?.preferences?.notification?.sms;
     try {
       const response = await updatePreferences(
-        null, // No specific type for notifications here
-        null, // No specific state for notifications here
-        userData.preferences?.notification?.email, // Current email preference
-        userData.preferences?.notification?.sms, // Current SMS preference
+        emailPref, // Current email preference
+        smsPref, // Current SMS preference
         backendLangCode // The new language preference
       );
 
@@ -75,7 +75,7 @@ export function LanguageProvider({ children }) {
         // simply return
         return;
       }
-    } catch (error) {
+    } catch {
       // simply return
       return;
     }

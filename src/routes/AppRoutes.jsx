@@ -1,90 +1,104 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import SplashScreen from "../components/SplashScreen";
-import SiteLanguage from "../components/SiteLanguage";
-import SignUpAccountVerification from "../components/auth/SignUpAccountVerification";
-import SignIn from "../components/auth/SignIn";
-import ForgotPassword from "../components/auth/ForgotPassword";
-import VerifyPhoneEmail from "../components/auth/VerifyPhoneEmail";
-import ChangePassword from "../components/auth/ChangePassword";
-import Layout from "../components/dashboard/layout/Layout";
-import LoanDetailsScreenMobile from "../components/dashboard/LoanDetailsScreenMobile";
+import PageLoader from "../components/PageLoader";
+
+// Structural components — always needed immediately, not lazy-loaded
 import PrivateRoute from "./PrivateRoute";
 import AdminRoute from "./AdminRoute";
-import DashboardWrapper from "../components/dashboard/DashboardWrapper";
-
-// Admin components
+import Layout from "../components/dashboard/layout/Layout";
 import AdminLayout from "../components/admin/layout/AdminLayout";
-import AdminDashboard from "../components/admin/dashboard/AdminDashboard";
-import UserManagement from "../components/admin/user-management/UserManagement";
-import AdminManagement from "../components/admin/admin-management/AdminManagement";
-import BVNVerification from "../components/admin/kyc/BVNVerification";
-import NINVerification from "../components/admin/kyc/NINVerification";
-import LoanApplications from "../components/admin/loans/LoanApplications";
-import LoanRepaymentManagement from "../components/admin/repayments/LoanRepaymentManagement";
-import AddRepayment from "../components/admin/repayments/AddRepayment";
-import Analytics from "../components/admin/analytics/Analytics";
-
-// Loan form steps
 import { LoanFormProvider } from "../context/LoanFormContext";
-import LoanFlowWrapper from "../components/take a loan/LoanFlowWrapper";
-import EnterBVN from "../components/take a loan/EnterBVN";
-import VerifyPhoneNumber from "../components/take a loan/VerifyPhoneNumber";
-import Step1LoanAmount from "../components/take a loan/Step1LoanAmount";
-import Step2BankAccount from "../components/take a loan/Step2BankAccount";
-import Step3LoanRepayment from "../components/take a loan/Step3LoanRepayment";
-import Step4Summary from "../components/take a loan/Step4Summary";
-import LoanRepaymentOverview from "../components/take a loan/LoanRepaymentOverview";
-// import LoanApprovalModal from "../components/take a loan/LoanApprovalModal";
-
-// repayments
 import { RepaymentsProvider } from "../context/RepaymentsContext";
-import Repayments from "../components/repayments/Repayments";
-// import RecyclablesRepaymentTable from "../components/repayments/RecyclabesRepaymentTable";
-import RepaymentsHistoryWrapper from "../components/repayments/RepaymentsHistoryWrapper";
-
-// credit scores
-import CreditScore from "../components/credit score/CreditScore";
-import SettingsWrapper from "../components/settings/SettingsWrapper";
-
-// settings
-import IdentityVerification from "../components/settings/IdentityVerification";
+import { DisbursedLoansProvider } from "../context/DisbursedLoansContext";
 import { UserContextProvider } from "../context/UserContext";
-import SettingsChangePassword from "../components/settings/SettingsChangePassword";
-import SettingsForgotPassword from "../components/settings/SettingsForgotPassword";
-import SettingsVerifyEmailPhone from "../components/settings/SettingsVerifyEmailPhone";
-import PasswordResetForm from "../components/settings/PasswordResetForm";
-import Notifications from "../components/settings/Notifications";
-import Support from "../components/settings/Support";
+import { NotificationProvider } from "../context/NotificationContext";
+
+// Lazy-loaded page components
+const SplashScreen = lazy(() => import("../components/SplashScreen"));
+const SiteLanguage = lazy(() => import("../components/SiteLanguage"));
+const SignUpAccountVerification = lazy(() => import("../components/auth/SignUpAccountVerification"));
+const SignIn = lazy(() => import("../components/auth/SignIn"));
+const ForgotPassword = lazy(() => import("../components/auth/ForgotPassword"));
+const VerifyPhoneEmail = lazy(() => import("../components/auth/VerifyPhoneEmail"));
+const ChangePassword = lazy(() => import("../components/auth/ChangePassword"));
+const LoanDetailsScreenMobile = lazy(() => import("../components/dashboard/LoanDetailsScreenMobile"));
+const DashboardWrapper = lazy(() => import("../components/dashboard/DashboardWrapper"));
+
+// Admin pages
+const AdminDashboard = lazy(() => import("../components/admin/dashboard/AdminDashboard"));
+const UserManagement = lazy(() => import("../components/admin/user-management/UserManagement"));
+const AdminManagement = lazy(() => import("../components/admin/admin-management/AdminManagement"));
+const BVNVerification = lazy(() => import("../components/admin/kyc/BVNVerification"));
+const NINVerification = lazy(() => import("../components/admin/kyc/NINVerification"));
+const LoanApplications = lazy(() => import("../components/admin/loans/LoanApplications"));
+const LoanRepaymentManagement = lazy(() => import("../components/admin/repayments/LoanRepaymentManagement"));
+const AddRepayment = lazy(() => import("../components/admin/repayments/AddRepayment"));
+const Analytics = lazy(() => import("../components/admin/analytics/Analytics"));
+
+// Loan flow pages
+const LoanFlowWrapper = lazy(() => import("../components/take a loan/LoanFlowWrapper"));
+const EnterBVN = lazy(() => import("../components/take a loan/EnterBVN"));
+const VerifyPhoneNumber = lazy(() => import("../components/take a loan/VerifyPhoneNumber"));
+const Step1LoanAmount = lazy(() => import("../components/take a loan/Step1LoanAmount"));
+const Step2BankAccount = lazy(() => import("../components/take a loan/Step2BankAccount"));
+const Step3LoanRepayment = lazy(() => import("../components/take a loan/Step3LoanRepayment"));
+const Step4Summary = lazy(() => import("../components/take a loan/Step4Summary"));
+const LoanRepaymentOverview = lazy(() => import("../components/take a loan/LoanRepaymentOverview"));
+const LoanHistory = lazy(() => import("../components/repayments/LoanHistory"));
+
+// Repayments
+const RepaymentsHistoryWrapper = lazy(() => import("../components/repayments/RepaymentsHistoryWrapper"));
+
+// Disbursed loans
+const DisbursedLoans = lazy(() => import("../components/disbursed loans/DisbursedLoans"));
+
+// Credit score
+const CreditScore = lazy(() => import("../components/credit score/CreditScore"));
+
+// Settings
+const SettingsWrapper = lazy(() => import("../components/settings/SettingsWrapper"));
+const IdentityVerification = lazy(() => import("../components/settings/IdentityVerification"));
+const SettingsChangePassword = lazy(() => import("../components/settings/SettingsChangePassword"));
+const SettingsForgotPassword = lazy(() => import("../components/settings/SettingsForgotPassword"));
+const SettingsVerifyEmailPhone = lazy(() => import("../components/settings/SettingsVerifyEmailPhone"));
+const PasswordResetForm = lazy(() => import("../components/settings/PasswordResetForm"));
+const Notifications = lazy(() => import("../components/settings/Notifications"));
+const Support = lazy(() => import("../components/settings/Support"));
+
+// Tiny helper to avoid repeating Suspense on every route element
+const S = ({ children }) => (
+  <Suspense fallback={<PageLoader />}>{children}</Suspense>
+);
 
 const router = createBrowserRouter([
   // Public routes
   {
     path: "/",
-    element: <SplashScreen />,
+    element: <S><SplashScreen /></S>,
   },
   {
     path: "/select-language",
-    element: <SiteLanguage />,
+    element: <S><SiteLanguage /></S>,
   },
   {
     path: "/sign-up",
-    element: <SignUpAccountVerification />,
+    element: <S><SignUpAccountVerification /></S>,
   },
   {
     path: "/sign-in",
-    element: <SignIn />,
+    element: <S><SignIn /></S>,
   },
   {
     path: "/forgot-password",
-    element: <ForgotPassword />,
+    element: <S><ForgotPassword /></S>,
   },
   {
     path: "/change-password",
-    element: <ChangePassword />,
+    element: <S><ChangePassword /></S>,
   },
   {
     path: "/verify-code",
-    element: <VerifyPhoneEmail />,
+    element: <S><VerifyPhoneEmail /></S>,
   },
 
   // Protected layout shell for dashboard + loan routes
@@ -92,161 +106,134 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <PrivateRoute>
-        <Layout />
+        <NotificationProvider>
+          <Layout />
+        </NotificationProvider>
       </PrivateRoute>
     ),
     children: [
-      // Dashboard
       {
         path: "dashboard",
-        element: <DashboardWrapper />,
+        element: <S><DashboardWrapper /></S>,
       },
 
-      // repayments routes
+      // disbursed loans routes
       {
-        path: "repayments",
+        path: "/loans/disbursed-loans",
         element: (
-          <RepaymentsProvider>
-            <Repayments />
-          </RepaymentsProvider>
-        ),
-      },
-
-      {
-        path: "repayments/:id",
-        element: (
-          <RepaymentsProvider>
-            <LoanDetailsScreenMobile />
-          </RepaymentsProvider>
+          <DisbursedLoansProvider>
+            <S><DisbursedLoans /></S>
+          </DisbursedLoansProvider>
         ),
       },
       {
-        path: "repayments/repayment-history/:id",
+        path: "/loans/disbursed-loans/:id",
+        element: (
+          <DisbursedLoansProvider>
+            <S><LoanDetailsScreenMobile /></S>
+          </DisbursedLoansProvider>
+        ),
+      },
+      {
+        path: "/loans/repayments/repayment-history/:id",
         element: (
           <RepaymentsProvider>
-            <RepaymentsHistoryWrapper />
+            <S><RepaymentsHistoryWrapper /></S>
           </RepaymentsProvider>
         ),
-
-
+      },
+      {
+        path: "/loans/history",
+        element: <S><LoanHistory /></S>,
       },
 
       // Loan flow
       {
         path: "take-a-loan/enter-bvn",
-        element: <EnterBVN />,
+        element: <S><EnterBVN /></S>,
       },
       {
         path: "take-a-loan/verify-phone",
-        element: <VerifyPhoneNumber />,
+        element: <S><VerifyPhoneNumber /></S>,
       },
-      // {
-      //   path: "/repayments-header",
-      //   element: <RecyclablesRepaymentTable />,
-      // },
       {
         path: "take-a-loan/form",
         element: (
           <LoanFormProvider>
-            <LoanFlowWrapper />
+            <S><LoanFlowWrapper /></S>
           </LoanFormProvider>
         ),
         children: [
           {
             path: "loan-amount-purpose",
-            element: <Step1LoanAmount />,
+            element: <S><Step1LoanAmount /></S>,
           },
           {
             path: "bank-account-confirmation",
-            element: <Step2BankAccount />,
+            element: <S><Step2BankAccount /></S>,
           },
           {
             path: "loan-repayment-method",
-            element: <Step3LoanRepayment />,
+            element: <S><Step3LoanRepayment /></S>,
           },
           {
             path: "loan-form-summary",
-            element: <Step4Summary />,
+            element: <S><Step4Summary /></S>,
           },
-          // {
-          //   path: "loan-repayment-overview",
-          //   element: <LoanRepaymentOverview />,
-          // },
         ],
       },
       {
-        // path: "take-a-loan/form/loan-repayment-overview",
-        // element: <LoanRepaymentOverview />,
         path: "take-a-loan/loan-repayment-overview",
         element: (
           <LoanFormProvider>
-            <LoanRepaymentOverview />
+            <S><LoanRepaymentOverview /></S>
           </LoanFormProvider>
         ),
       },
 
-      // credit score routes
+      // credit score
       {
         path: "/credit-score",
-        element: <CreditScore />,
+        element: <S><CreditScore /></S>,
       },
 
-      // {
-      //   path: "take-a-loan/loan-approval-modal",
-      //   element: <LoanApprovalModal />,
-      // },
+      // settings
       {
         path: "settings",
-        element: <SettingsWrapper></SettingsWrapper>,
+        element: <S><SettingsWrapper /></S>,
         children: [
           {
             path: "identity-verification",
             element: (
               <UserContextProvider>
-                <IdentityVerification />,
+                <S><IdentityVerification /></S>
               </UserContextProvider>
             ),
           },
           {
             path: "change-password",
-            element: <SettingsChangePassword />,
+            element: <S><SettingsChangePassword /></S>,
           },
           {
             path: "forgot-password",
-            element: <SettingsForgotPassword />,
+            element: <S><SettingsForgotPassword /></S>,
           },
           {
             path: "verify-phone-email",
-            element: <SettingsVerifyEmailPhone />,
+            element: <S><SettingsVerifyEmailPhone /></S>,
           },
           {
             path: "reset-password",
-            element: <PasswordResetForm />,
+            element: <S><PasswordResetForm /></S>,
           },
           {
             path: "notifications",
-            element: <Notifications />,
+            element: <S><Notifications /></S>,
           },
           {
             path: "support",
-            element: <Support />,
+            element: <S><Support /></S>,
           },
-          // {
-          //   path: "bank-account-confirmation",
-          //   element: <Step2BankAccount />,
-          // },
-          // {
-          //   path: "loan-repayment-method",
-          //   element: <Step3LoanRepayment />,
-          // },
-          // {
-          //   path: "loan-form-summary",
-          //   element: <Step4Summary />,
-          // },
-          // {
-          //   path: "loan-repayment-overview",
-          //   element: <LoanRepaymentOverview />,
-          // },
         ],
       },
     ],
@@ -257,45 +244,47 @@ const router = createBrowserRouter([
     path: "/admin",
     element: (
       <AdminRoute>
-        <AdminLayout />
+        <NotificationProvider>
+          <AdminLayout />
+        </NotificationProvider>
       </AdminRoute>
     ),
     children: [
       {
         path: "dashboard",
-        element: <AdminDashboard />,
+        element: <S><AdminDashboard /></S>,
       },
       {
         path: "user-management",
-        element: <UserManagement />,
+        element: <S><UserManagement /></S>,
       },
       {
         path: "admin-management",
-        element: <AdminManagement />,
+        element: <S><AdminManagement /></S>,
       },
       {
         path: "bvn-verification",
-        element: <BVNVerification />,
+        element: <S><BVNVerification /></S>,
       },
       {
         path: "nin-verification",
-        element: <NINVerification />,
+        element: <S><NINVerification /></S>,
       },
       {
         path: "loan-applications",
-        element: <LoanApplications />,
+        element: <S><LoanApplications /></S>,
       },
       {
         path: "loan-repayment",
-        element: <LoanRepaymentManagement />,
+        element: <S><LoanRepaymentManagement /></S>,
       },
       {
         path: "add-repayment",
-        element: <AddRepayment />,
+        element: <S><AddRepayment /></S>,
       },
       {
         path: "analytics",
-        element: <Analytics />,
+        element: <S><Analytics /></S>,
       },
     ],
   },

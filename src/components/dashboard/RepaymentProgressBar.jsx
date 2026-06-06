@@ -1,11 +1,10 @@
-import React, { useRef, useEffect, useState } from "react";
-import NairaIcon from "../../assets/naira icon.svg"; // adjust path if needed
-// import { fetchDashboardData } from "../../api/mockApi";
+import { useRef, useEffect, useState } from "react";
+import NairaIcon from "../../assets/naira icon.svg"; 
 
-export default function RepaymentProgressBar({ loanAmount, amountRepaid }) {
-  // const [dashboardData, setDashboardData] = useState(null);
-  const containerRef = useRef(null); // ✅ moved to top
-  const [barWidth, setBarWidth] = useState(0); // ✅ moved to top
+export default function RepaymentProgressBar({ totalloanAmount, amountRepaid }) {
+  
+  const containerRef = useRef(null); 
+  const [barWidth, setBarWidth] = useState(0); 
 
   useEffect(() => {
     // if (!dashboardData) return;
@@ -26,23 +25,18 @@ export default function RepaymentProgressBar({ loanAmount, amountRepaid }) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", updateWidth);
     };
-  }, [loanAmount]); // ✅ Runs only when data is available
+  }, [totalloanAmount]); 
 
-  // if (!dashboardData) return <p>Loading dashboard...</p>;
-
-  // const { totalLoanTaken, amountRepaid } = dashboardData;
 
   const barHeight = 8;
   const tagWidth = 60;
-  const progress = Math.max(0, Math.min(amountRepaid / loanAmount, 1));
+  const progress = Math.max(0, Math.min(amountRepaid / totalloanAmount, 1));
 
   const anchorX = Math.max(
     tagWidth / 2,
     Math.min(barWidth * progress, barWidth - tagWidth / 2)
   );
 
-  // const total = 20000;
-  // const paid = 10000; // Change to test animation
 
   return (
     <div className="w-full sm:px-0">
@@ -112,7 +106,7 @@ export default function RepaymentProgressBar({ loanAmount, amountRepaid }) {
               style: "decimal",
 
               maximumFractionDigits: 2,
-            }).format(loanAmount)}
+            }).format(totalloanAmount)}
           </span>
         </p>
 
