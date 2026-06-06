@@ -110,12 +110,6 @@ export default function LoanRepaymentOverview() {
 
       const loanIdToConfirm = freshDashboardRes?.pending_loan?._id;
 
-      // if (!loanIdToConfirm) {
-      //   setFormError(true);
-      //   setLoading(false);
-      //   return;
-      // }
-
       const response = await confirmLoanApplication(
         loanIdToConfirm,
         passwordData.password

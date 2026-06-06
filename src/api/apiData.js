@@ -12,39 +12,6 @@ export const fetchDashboardData = async () => {
   return response.data;
 };
 
-// fetch repayments history
-// export const fetchRepayments = async () => {
-//   const response = await axios.get("/loans/repayments/history");
-//   return response.data;
-// };
-
-// // fetch repayments
-// export const fetchRepayments = async (page = 1, limit = 10, filters = {}) => {
-//   const { query, startDate, endDate } = filters;
-//   let queryString = `page=${page}&limit=${limit}`;
-
-//   if (query) {
-//     // Check if the query is a number
-//     if (!isNaN(Number(query))) {
-//       // It's a number, so we assume it's a loan amount
-//       queryString += `&loan_amount=${query}`;
-//     } else {
-//       // It's not a number, so we assume it's a loan ID
-//       queryString += `&loan_id=${query}`;
-//     }
-//   }
-
-//   if (startDate) {
-//     queryString += `&start_date=${startDate}`;
-//   }
-
-//   if (endDate) {
-//     queryString += `&end_date=${endDate}`;
-//   }
-
-//   const response = await axios.get(`/loans/repayments/history?${queryString}`);
-//   return response.data;
-// };
 
 // fetch repayments
 export const fetchRepayments = async (page = 1, limit = 10, filters = {}) => {
@@ -107,14 +74,6 @@ export const confirmLoanApplication = async (loan_id, password) => {
   return response;
 };
 
-// // fetch loan history
-// export const fetchLoans = async (page, limit) => {
-//   const response = await axios.get(
-//     `/loans/history?page=${page ? page : 1}&limit=${limit ? limit : 10}`
-//   );
-//   return response.data;
-// };
-
 // fetch loan history with filters
 export const fetchLoans = async (page = 1, limit = 10, filters = {}) => {
   const { query, startDate, endDate, status } = filters;
@@ -145,66 +104,6 @@ export const fetchLoans = async (page = 1, limit = 10, filters = {}) => {
   return response.data;
 };
 
-// update preferences
-// export const updatePreferences = async (type, state) => {
-//   if (type === "sms") {
-//     const response = await axios.patch("/users/update-preferences", {
-//       preferences: {
-//         notification: {
-//           sms: state,
-//         },
-//       },
-//     });
-//     return response;
-//   } else if (type === "email") {
-//     const response = await axios.patch("/users/update-preferences", {
-//       preferences: {
-//         notification: {
-//           email: state,
-//         },
-//       },
-//     });
-//     return response;
-//   }
-// };
-
-// export const updatePreferences = async (
-//   type, // 'sms' or 'email' (can be null if only language is updated)
-//   state, // true/false (can be null if only language is updated)
-//   currentEmailState, // Current state of email preference
-//   currentSmsState, // Current state of SMS preference
-//   newLanguageCode // The new language code (e.g., 'ENG', 'HAU')
-// ) => {
-//   const preferencesPayload = {
-//     notification: {
-//       email: currentEmailState, // Always send current email state
-//       sms: currentSmsState, // Always send current SMS state
-//     },
-//   };
-
-//   // If a specific notification type is being updated, override its value
-//   if (type === "sms" && state !== null) {
-//     // Check state !== null in case 'false' is passed explicitly
-//     preferencesPayload.notification.sms = state;
-//   } else if (type === "email" && state !== null) {
-//     preferencesPayload.notification.email = state;
-//   }
-
-//   // Add language to the payload if it's provided
-//   if (newLanguageCode) {
-//     preferencesPayload.language = newLanguageCode;
-//   }
-
-//   try {
-//     const response = await axios.patch("/users/update-preferences", {
-//       preferences: preferencesPayload,
-//     });
-
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
 
 // update preferences (sms, email, language)
 export const updatePreferences = async (
@@ -288,27 +187,6 @@ export const deleteNotification = async (notification_id) => {
   return response;
 };
 
-// record a payment
-// export const recordPayment = async (dashboardData) => {
-
-//   const response = await axios.post("", {
-//     loan_id: dashboardData.active_loan.loan_id,
-//     repayment_method: dashboardData.active_loan.repayment_method,
-//     plastic_weight_kg:
-//       dashboardData.active_loan_repayment_method === "RECYCLABLES" ||
-//       dashboardData.active_loan.repayment_method === "BOTH"
-//         ? (40 / 100) * dashboardData.active_loan.loan_amount
-//         : 0,
-//     cash_amount:
-//       dashboardData.active_loan.repayment_method === "CASH" ||
-//       dashboardData.active_loan.repayment_method === "BOTH"
-//         ? (40 / 100) * dashboardData.active_loan.loan_amount
-//         : 0,
-//     drop_off_location: "Lagos Collection Center",
-//     receipt_number: "RCP001",
-//   });
-//   return response.data;
-// };
 
 // get loan by ID
 export const getLoanDetails = async (loanID) => {

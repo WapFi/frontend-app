@@ -211,100 +211,6 @@ function Dashboard({ dashboardData }) {
     );
   };
 
-  // const renderRepaymentsSection = () => {
-  //   if (isNewUser) {
-  //     return (
-  //       <>
-  //         <div className="hidden md:flex justify-between items-start self-stretch w-full">
-  //           <div className="flex justify-between items-center md:w-[45%] relative">
-  //             <p className="font-raleway font-semibold md:text-[24px]">
-  //               {t("newUserRepayments.title")}
-                
-  //             </p>
-  //             <div className="ml-3.5 relative">
-  //               <div className="hidden lg:flex lg:items-center gap-2.5 pl-3 shrink-0 rounded-[30px] border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)] opacity-50 cursor-not-allowed">
-  //                 <p className="text-[16px] text-[rgba(34,34,34,0.80)] font-medium">
-  //                   {new Date().toLocaleString("default", {
-  //                     month: "long",
-  //                     year: "numeric",
-  //                   })}
-  //                 </p>
-  //                 <span className="block p-4 rounded-[50%] bg-[#E6E6E6]">
-  //                   <img src={calendarIcon} alt="calendar icon" />
-  //                 </span>
-  //               </div>
-  //             </div>
-  //           </div>
-  //           <div className="md:w-[50%] flex justify-between items-center gap-4">
-  //             <div className="flex items-center justify-between gap-2.5 pl-3 shrink-0 rounded-[30px] w-full md:w-[60%] border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)] opacity-50 cursor-not-allowed">
-  //               <input
-  //                 type="search"
-  //                 disabled
-  //                 placeholder={t("newUserRepayments.searchPlaceholder")}
-  //                 className="text-[14px] w-[90%] md:text-[16px] text-[rgba(34,34,34,0.50)] rounded-full bg-transparent outline-none border-none"
-  //               />
-  //               <button className="cursor-not-allowed" disabled>
-  //                 <img src={searchIcon} alt="search icon" />
-  //               </button>
-  //             </div>
-  //             <Link
-  //               className="text-[14px] md:text-[16px] text-[#2D6157] text-center font-semibold shrink-0 opacity-50 pointer-events-none"
-  //               onClick={(e) => e.preventDefault()}
-  //             >
-  //               {t("newUserRepayments.viewAll")}
-  //             </Link>
-  //           </div>
-  //         </div>
-  //         <div className="flex flex-col md:hidden w-full">
-  //           <div className="flex justify-between items-center self-stretch mb-4">
-  //             <p className="font-raleway font-semibold text-[24px]">
-  //               {t("newUserRepayments.title")}
-              
-  //             </p>
-  //             <Link
-  //               className="text-[14px] md:text-[16px] text-[#2D6157] text-center font-semibold opacity-50 pointer-events-none"
-  //               onClick={(e) => e.preventDefault()}
-  //             >
-  //               {t("newUserRepayments.viewAll")}
-  //             </Link>
-  //           </div>
-  //           <div className="flex items-center justify-between gap-2.5 pl-3 shrink-0 rounded-[30px] w-full border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)] opacity-50 cursor-not-allowed">
-  //             <input
-  //               type="search"
-  //               disabled
-  //               placeholder={t("newUserRepayments.searchPlaceholder")}
-  //               className="text-[14px] w-[90%] md:text-[16px] text-[rgba(34,34,34,0.50)] rounded-full bg-transparent outline-none border-none"
-  //             />
-  //             <button className="cursor-not-allowed" disabled>
-  //               <img src={searchIcon} alt="search icon" />
-  //             </button>
-  //           </div>
-  //         </div>
-  //         <div className="w-full text-[18px] flex flex-col justify-center items-center gap-6 py-12 lg:py-20">
-  //           <p className="text-[#222] text-center">
-  //             {t("newUserRepayments.ctaMessage")}
-  //           </p>
-  //           <button
-  //             onClick={handleTakeLoanClick}
-  //             className="flex justify-center items-center gap-2.5 bg-[#439182] rounded-[40px] py-2.5 px-6 cursor-pointer hover:opacity-80"
-  //           >
-  //             <img src={plusIcon} alt="plus icon" />
-  //             <span className="text-white text-[16px] font-medium">
-  //               {t("newUserRepayments.ctaButton")}
-  //             </span>
-  //           </button>
-  //         </div>
-  //       </>
-  //     );
-  //   }
-  //   // Returning user repayments
-  //   return (
-  //     <RepaymentsProvider>
-  //       <RepaymentsSection totalLoansTaken={dashboardData.total_loans_taken} />
-  //     </RepaymentsProvider>
-  //   );
-  // };
-
   // Renders the modal directly in the component
   const renderActiveLoanModal = () => {
     if (showActiveLoanModal) {
@@ -376,11 +282,6 @@ function Dashboard({ dashboardData }) {
       {/* Overview Section */}
 
       {renderOverviewSection()}
-
-      {/* Repayments Section */}
-      {/* <div className="rounded-xl flex flex-col self-stretch justify-center w-full items-start gap-6 border-[rgba(255,255,255,0.80)] border-1 bg-[#fff] p-6">
-        {renderRepaymentsSection()}
-      </div> */}
 
       {/* Disbursed Loans Section */}
       <div className="rounded-xl flex flex-col self-stretch justify-center w-full items-start gap-6 border-[rgba(255,255,255,0.80)] border-1 bg-[#fff] p-6">

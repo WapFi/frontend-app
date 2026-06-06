@@ -111,25 +111,6 @@ function SignIn() {
         }
       }
 
-      // localStorage.setItem("auth_token", response.data.token);
-      // setShowFormError(false);
-      // setShowSuccessMessage(true);
-
-      // // navigate to dashboard
-      // const userRole = response.data?.role || null;
-      // if (userRole === "WAPFI_SUPER_ADMIN" || userRole === "WAPFI_ADMIN") {
-      //   setTimeout(() => {
-      //     // reset state and navigate
-      //     setShowSuccessMessage(false);
-      //     navigate("/admin/dashboard");
-      //   }, 3000);
-      // } else {
-      //   setTimeout(() => {
-      //     // reset state and navigate
-      //     setShowSuccessMessage(false);
-      //     navigate("/dashboard");
-      //   }, 3000);
-      // }
     } catch (error) {
       console.error("Login error:", error);
       setShowFormError(error.response?.data?.message);
@@ -195,12 +176,6 @@ function SignIn() {
             <br />
             <label className="text-[#222] gap-2">
               {t("sign_in.password")} <br />
-              {/* <input
-                {...register("password")}
-                type={showPassword ? "text" : "password"}
-                placeholder={t("sign_in.placeholders.password")}
-                className="text-[rgba(34,34,34,0.50)] border-[#00000026] w-full gap-3 border-1 rounded-lg p-[14px]"
-              /> */}
               <div className="relative w-full">
                 <input
                   {...register("password")}

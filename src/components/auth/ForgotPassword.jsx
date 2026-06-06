@@ -51,16 +51,6 @@ function ForgotPassword() {
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
-  // const onSubmit = (data) => {
-
-  //   if (data.emailPhone !== "test@gmail.com") {
-  //     setShowFormError(true);
-  //   } else {
-  //     setShowFormError(false);
-  //     navigate("/change-password");
-  //   }
-  // };
-
   const onSubmit = async (phoneEmailData) => {
     setLoading(true);
     try {
