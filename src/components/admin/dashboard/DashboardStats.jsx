@@ -89,7 +89,6 @@ function DashboardStats() {
 					setStats(formattedStats);
 				}
 			} catch (err) {
-				console.error('Error fetching dashboard stats:', err);
 				setError('Failed to load dashboard statistics');
 			} finally {
 				setLoading(false);

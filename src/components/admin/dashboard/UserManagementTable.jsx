@@ -25,7 +25,6 @@ function UserManagementTable({ onUserClick, onUserUpdate, searchTerm = '', selec
 				limit: perPage, 
 				search: search || searchTerm,
 				start_date: startDate || selectedDate,
-				// end_date: endDate || selectedDate
 			});
 			
 			if (response.status && response.data) {
@@ -55,7 +54,6 @@ function UserManagementTable({ onUserClick, onUserUpdate, searchTerm = '', selec
 				});
 			}
 		} catch (err) {
-			console.error('Error fetching users:', err);
 			setError('Failed to load users');
 		} finally {
 			setLoading(false);

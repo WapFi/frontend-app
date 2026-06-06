@@ -59,7 +59,6 @@ function AddRepayment() {
                 throw new Error(response.message || "Failed to add repayment");
             }
         } catch (err) {
-            console.error("Error adding repayment:", err);
             setError(err.message || "Failed to add repayment");
         } finally {
             setLoading(false);
@@ -144,11 +143,6 @@ function AddRepayment() {
                 <option value="CASH">Cash</option>
                 <option value="RECYCLABLES">Recyclables</option>
                 <option value="BOTH">Both</option>
-                {/* <option value="Plastic">Plastic</option>
-                <option value="Aluminum">Aluminum</option>
-                <option value="Paper">Paper</option>
-                <option value="Carton">Carton</option>
-                <option value="Pure Water Sachet">Pure Water Sachet</option> */}
                 </select>
             </div>
 

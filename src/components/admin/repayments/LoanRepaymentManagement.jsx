@@ -59,7 +59,6 @@ function LoanRepaymentManagement() {
 			});
 		}
 		} catch (err) {
-			console.error('Error fetching repayments:', err);
 			setError('Failed to load repayments');
 		} finally {
 			setLoading(false);

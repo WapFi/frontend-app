@@ -1,29 +1,3 @@
-// import { createContext, useContext, useState, useEffect } from "react";
-// import i18n from "../i18n";
-
-// const LanguageContext = createContext();
-
-// export function LanguageProvider({ children }) {
-//   const storedLang = localStorage.getItem("language");
-//   const [language, setLanguage] = useState(storedLang || "en");
-
-//   useEffect(() => {
-//     if (language) {
-//       localStorage.setItem("language", language);
-//       i18n.changeLanguage(language);
-//     }
-//   }, [language]);
-
-//   return (
-//     <LanguageContext.Provider value={{ language, setLanguage }}>
-//       {children}
-//     </LanguageContext.Provider>
-//   );
-// }
-
-// export function useLanguage() {
-//   return useContext(LanguageContext);
-// }
 
 import { createContext, useContext, useState, useEffect } from "react";
 import i18n from "../i18n";
@@ -34,18 +8,6 @@ const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
   const { userData, refreshUserData } = use_UserData();
-  // const storedLang = localStorage.getItem("language");
-
-  // Initialize state: prefer storedLang, then user data, then default to 'en'
-  // const [language, setLanguageState] = useState(
-  //   storedLang ||
-  //     (userData?.preferences?.language === "ENG"
-  //       ? "en"
-  //       : userData?.preferences?.language === "HAU"
-  //       ? "ha"
-  //       : "en") ||
-  //     "en"
-  // );
 
   const [language, setLanguageState] = useState(() => {
     // 1. Try to get language from backend user data (most authoritative)
@@ -95,7 +57,6 @@ export function LanguageProvider({ children }) {
 
     // Map internal 'en'/'ha' to backend 'ENG'/'HAU'
     const backendLangCode = newLang === "en" ? "ENG" : "HAU";
-    // console.log(backendLangCode);
 
     try {
       const response = await updatePreferences(

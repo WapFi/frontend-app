@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
 import LoadingSpinner from "../LoadingSpinner";
-// import axios from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 import { verifyIdentity } from "../../api/apiData";
 import { use_UserData } from "../../context/UserContext";
@@ -43,7 +42,6 @@ export default function EnterBVN() {
 
     try {
       const response = await verifyIdentity("bvn", data.bvn);
-      console.log("BVN Verification Success: ", response);
 
       // refresh user data to make sure we get the latest data
       await refreshUserData();
@@ -52,7 +50,6 @@ export default function EnterBVN() {
         navigate("/take-a-loan/verify-phone");
       }, 2000);
     } catch (error) {
-      //   console.log("BVN Verification Error: ", error);
       setFormError(true);
     } finally {
       setLoading(false);

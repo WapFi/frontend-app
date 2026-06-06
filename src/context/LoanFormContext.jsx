@@ -45,7 +45,7 @@ export function LoanFormProvider({ children }) {
         });
       }
     } catch (e) {
-      console.error("Failed to restore loan form data:", e);
+      // console.error("Failed to restore loan form data:", e);
       // Clear corrupted data if needed
       localStorage.removeItem("latestLoanApplicationData");
     }
@@ -57,7 +57,6 @@ export function LoanFormProvider({ children }) {
       if (JSON.stringify(prev) !== JSON.stringify(updated)) {
         setHasUnsavedChanges(true);
       }
-      console.log("Updated Loan Form Data:", updated);
       return updated;
     });
   }

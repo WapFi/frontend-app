@@ -20,7 +20,6 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
 			}
 			onClose();
 		} catch (error) {
-			console.error('Error blocking user:', error);
 			toast.error('Failed to block user. Please try again.');
 		} finally {
 			setLoading(false);
@@ -38,7 +37,6 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
 			}
 			onClose();
 		} catch (error) {
-			console.error('Error deactivating user:', error);
 			toast.error('Failed to deactivate user. Please try again.');
 		} finally {
 			setLoading(false);

@@ -38,7 +38,6 @@ export default function LoanRepaymentOverview() {
 
   // This is the single source of truth for display
   const loanDetails = dashboardData?.pending_loan;
-  console.log("loan details: ", loanDetails);
 
   // Local UI states
   const [loading, setLoading] = useState(false);
@@ -104,12 +103,6 @@ export default function LoanRepaymentOverview() {
 
       const loanIdToConfirm = freshDashboardRes?.pending_loan?._id;
 
-      // if (!loanIdToConfirm) {
-      //   setFormError(true);
-      //   setLoading(false);
-      //   return;
-      // }
-
       await confirmLoanApplication(loanIdToConfirm, passwordData.password);
 
       clearLoanFormData();
@@ -127,21 +120,6 @@ export default function LoanRepaymentOverview() {
     navigate("/dashboard");
     refreshDashboardData();
   };
-
-  // If no active loan after loading, show this fallback
-  // if (!loanDetails) {
-  //   return (
-  //     <div className="text-center py-20">
-  //       <p className="text-xl font-semibold">{t("loanRepaymentOverview.noLoanFound")}</p>
-  //       <button
-  //         onClick={() => navigate("/take-a-loan/form/loan-amount-purpose")}
-  //         className="mt-5 text-center rounded-[50px] text-[#FFF] font-medium bg-[#439182] py-3 px-6 cursor-pointer hover:opacity-80 transition-opacity duration-300"
-  //       >
-  //         {t("loanRepaymentOverview.startNewLoan")}
-  //       </button>
-  //     </div>
-  //   );
-  // }
 
   return (
     <>

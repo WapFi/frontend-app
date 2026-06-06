@@ -142,7 +142,7 @@ export default function IdentityVerification() {
         }
       } catch (err) {
         // not critical for user - just log
-        console.warn("Could not refresh user after verification", err);
+        // console.warn("Could not refresh user after verification", err);
       }
     }
 

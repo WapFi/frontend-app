@@ -23,15 +23,12 @@ export function DashboardProvider({ children }) {
       const res = await fetchDashboardData();
       if (res.data) {
         setDashboardData(res.data);
-        // console.log("Dashboard data refreshed:", res.data);
         return res.data;
       } else {
-        console.log("Failed to fetch dashboard data:", res);
         setDashboardData(null);
         return null;
       }
     } catch (err) {
-      console.log("Error in refreshDashboardData:", err);
       setDashboardData(null);
       return null;
     }

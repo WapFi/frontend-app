@@ -72,7 +72,6 @@ function LoanApplications() {
 				});
 			}
 		} catch (err) {
-			console.error('Error fetching loan applications:', err);
 			setError('Failed to load loan applications');
 		} finally {
 			setLoading(false);
@@ -91,7 +90,7 @@ function LoanApplications() {
 				}
 			}
 		} catch (err) {
-			console.error('Error fetching user details:', err);
+			// console.error('Error fetching user details:', err);
 		}
 	};
 
@@ -110,7 +109,6 @@ function LoanApplications() {
 				toast.error('Failed to approve loan application');
 			}
 		} catch (err) {
-			console.error('Error approving loan:', err);
 			toast.error('Failed to approve loan application');
 		}
 	};
@@ -118,7 +116,6 @@ function LoanApplications() {
 	const handleDecline = async (loanId) => {
 		try {
 			let response = await updateLoanApplicationStatus(loanId, 'REJECTED');
-			console.log("response: ", response);
 			if (response.status) {
 				toast.success('Loan application declined successfully');
 				fetchLoanApplications();
@@ -126,7 +123,6 @@ function LoanApplications() {
 				toast.error('Failed to decline loan application');
 			}
 		} catch (err) {
-			console.error('Error declining loan:', err);
 			toast.error('Failed to decline loan application');
 		}
 	};
