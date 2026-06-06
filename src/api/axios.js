@@ -1,16 +1,19 @@
 import axios from "axios";
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
+if (!apiBaseUrl) {
+  throw new Error("VITE_API_BASE_URL is not configured");
+}
+
 const instance = axios.create({
-  baseURL:
-    import.meta.env.VITE_API_BASE_URL ||
-    "https://wapfi-backend-service-staging-718658406507.europe-west1.run.app/api/v1",
-    
+  baseURL: apiBaseUrl,
+
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
-
 
 instance.interceptors.request.use((config) => {
   const token = localStorage.getItem("auth_token");
