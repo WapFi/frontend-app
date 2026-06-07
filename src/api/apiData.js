@@ -157,37 +157,6 @@ export const deleteAttachment = async (type) => {
   throw new Error("Unsupported attachment type.");
 };
 
-// get notifications
-export const getNotifications = async () => {
-  const response = axios.get("/notifications?page=1&limit=10&unread_only=true");
-  return response;
-};
-
-// get unread notifcations count
-export const getUnreadCount = async () => {
-  const response = axios.get("/notifications/unread-count");
-  return response;
-};
-
-// mark single notification as read
-export const markAsRead = async (notification_id) => {
-  const response = axios.patch(`/notifications/${notification_id}/read`);
-  return response;
-};
-
-// mark all notifications as read
-export const markAllAsRead = async () => {
-  const response = axios.patch(`/notifications/mark-all-read`);
-  return response;
-};
-
-// delete a single notification
-export const deleteNotification = async (notification_id) => {
-  const response = axios.delete(`/notifications/${notification_id}`);
-  return response;
-};
-
-
 // get loan by ID
 export const getLoanDetails = async (loanID) => {
   const response = await axios.get(`/loans/${loanID}`);

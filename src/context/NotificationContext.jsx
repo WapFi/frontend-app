@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { getUnreadCount } from "../api/apiData";
+import { getUnreadCount } from "../api/notificationsApi";
 
 const NotificationContext = createContext({});
 
