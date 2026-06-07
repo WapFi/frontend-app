@@ -6,7 +6,7 @@ import calendarIcon from "../../assets/calendar icon.svg";
 import searchIcon from "../../assets/search icon.svg";
 import DisbursedLoansList from "./DisbursedLoansList";
 import LoanDetails from "./LoanDetails";
-import { fetchLoans, getLoanDetails } from "../../api/apiData";
+import { fetchLoans, getLoanDetails } from "../../api/loansApi";
 import { useTranslation } from "react-i18next";
 import { useDisbursedLoans } from "../../context/DisbursedLoansContext";
 import PageLoader from "../PageLoader";

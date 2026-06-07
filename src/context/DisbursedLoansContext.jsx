@@ -1,7 +1,7 @@
 
 
 import { createContext, useState, useContext, useEffect } from "react";
-import { fetchLoans } from "../api/apiData";
+import { fetchLoans } from "../api/loansApi";
 
 const DisbursedLoansContext = createContext();
 

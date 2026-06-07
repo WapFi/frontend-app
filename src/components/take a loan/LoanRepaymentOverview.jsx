@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useLoanForm } from "../../context/LoanFormContext";
-import { confirmLoanApplication } from "../../api/apiData";
+import { confirmLoanApplication } from "../../api/loansApi";
 import { useDashboard } from "../../context/DashboardContext";
 import { use_UserData } from "../../context/UserContext";
 

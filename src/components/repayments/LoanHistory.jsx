@@ -10,7 +10,7 @@ import PendingIcon from "../../assets/pending icon.svg";
 import OverdueIcon from "../../assets/overdue icon.svg";
 import chevronDown from "../../assets/chevron-down.svg";
 import PageLoader from "../PageLoader";
-import { fetchLoans } from "../../api/apiData";
+import { fetchLoans } from "../../api/loansApi";
 import plusIcon from "../../assets/plus icon.svg";
 import { use_UserData } from "../../context/UserContext";
 import { useDashboard } from "../../context/DashboardContext";
