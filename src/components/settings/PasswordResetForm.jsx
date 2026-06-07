@@ -1,10 +1,10 @@
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { useState } from "react";
-import LoadingSpinner from "../LoadingSpinner";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import axios from "../../api/axios";
+import * as yup from "yup";
+import LoadingSpinner from "../LoadingSpinner";
+import { resetPassword } from "../../api/authApi";
 
 export default function PasswordResetForm() {
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ export default function PasswordResetForm() {
       .min(8, t("passwordResetForm.errors.password_min"))
       .oneOf(
         [yup.ref("newPassword"), null],
-        t("passwordResetForm.errors.passwords_do_not_match")
+        t("passwordResetForm.errors.passwords_do_not_match"),
       ),
   });
 
@@ -47,7 +47,7 @@ export default function PasswordResetForm() {
     try {
       // get otp code
       const otp = localStorage.getItem("otpCode");
-      const response = await axios.patch("/auth/reset_password", {
+      const response = await resetPassword({
         code: otp,
         new_password: passwordData.newPassword,
       });

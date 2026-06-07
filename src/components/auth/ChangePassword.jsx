@@ -1,13 +1,13 @@
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useState, useEffect } from "react";
-import WapfiLogo from "../WapfiLogo";
-import LoadingSpinner from "../LoadingSpinner";
-import BackgroundImage from "../BackgroundImage";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import axios from "../../api/axios";
+import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import BackgroundImage from "../BackgroundImage";
+import LoadingSpinner from "../LoadingSpinner";
+import WapfiLogo from "../WapfiLogo";
+import { resetPassword } from "../../api/authApi";
 
 function ChangePassword() {
   const [fadeIn, setFadeIn] = useState(false);
@@ -32,7 +32,7 @@ function ChangePassword() {
       .min(8, t("change_password.errors.password_min"))
       .oneOf(
         [yup.ref("newPassword"), null],
-        t("change_password.errors.passwords_do_not_match")
+        t("change_password.errors.passwords_do_not_match"),
       ),
   });
 
@@ -54,7 +54,7 @@ function ChangePassword() {
       return;
     }
     try {
-      const response = await axios.patch("/auth/reset_password", {
+      const response = await resetPassword({
         code: localStorage.getItem("otpCode"),
         new_password: passwordData.newPassword,
       });

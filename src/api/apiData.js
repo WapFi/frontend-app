@@ -199,9 +199,3 @@ export const getBorrowingLimit = async () => {
   const response = await axios.get("/loans/borrowing-limit");
   return response.data;
 };
-
-// log user out
-export const logOut = async () => {
-  const response = await axios.post("/auth/sign_out");
-  return response;
-};
