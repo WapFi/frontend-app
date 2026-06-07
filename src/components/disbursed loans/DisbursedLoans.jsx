@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import LoanDetails from "../dashboard/LoanDetails";
 import DisbursedLoansList from "../dashboard/DisbursedLoansList";
 import { useState, useEffect } from "react";
-import { fetchLoans, getLoanDetails } from "../../api/apiData";
+import { fetchLoans, getLoanDetails } from "../../api/loansApi";
 import calendarIcon from "../../assets/calendar icon.svg";
 import searchIcon from "../../assets/search icon.svg";
 import { useNavigate, Link } from "react-router-dom";
