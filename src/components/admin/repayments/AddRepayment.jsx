@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { addRepayment } from "../../../api/adminApi";
+import { addRepayment } from "../../../api/repaymentsApi";
 import LoanRepaymentSuccessModal from "../modals/LoanRepaymentSuccessModal";
 
 function AddRepayment() {

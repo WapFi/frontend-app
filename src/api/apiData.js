@@ -12,38 +12,6 @@ export const fetchDashboardData = async () => {
   return response.data;
 };
 
-
-// fetch repayments
-export const fetchRepayments = async (page = 1, limit = 10, filters = {}) => {
-  const { query, startDate, endDate, loanID } = filters;
-  let queryString = `page=${page}&limit=${limit}`;
-
-  if (query) {
-    // This is for general search functionality
-    if (!isNaN(Number(query))) {
-      queryString += `&loan_amount=${query}`;
-    } else {
-      queryString += `&loan_id=${query}`;
-    }
-  }
-
-  // This block is for filtering by a specific loan ID, which is more explicit
-  if (loanID) {
-    queryString += `&loan_id=${loanID}`;
-  }
-
-  if (startDate) {
-    queryString += `&start_date=${startDate}`;
-  }
-
-  if (endDate) {
-    queryString += `&end_date=${endDate}`;
-  }
-
-  const response = await axios.get(`/loans/repayments/history?${queryString}`);
-  return response.data;
-};
-
 // verify identiy, verifies BVN, NIN, Phone
 export const verifyIdentity = async (identity, value) => {
   const response = await axios.patch("/users/verify-identity", {
