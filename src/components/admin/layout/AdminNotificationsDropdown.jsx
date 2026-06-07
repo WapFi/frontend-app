@@ -6,7 +6,7 @@ import {
   markAsRead,
   markAllAsRead,
   deleteNotification,
-} from "../../../api/apiData";
+} from "../../../api/notificationsApi";
 import LoadingSpinner from "../../LoadingSpinner";
 
 // Helper function for formatting time

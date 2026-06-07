@@ -5,7 +5,7 @@ import {
   markAsRead,
   markAllAsRead,
   deleteNotification,
-} from "../../api/apiData";
+} from "../../api/notificationsApi";
 import { useTranslation } from "react-i18next";
 
 function formatTimeAgo(isoString, t) {
