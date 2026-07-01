@@ -3,10 +3,9 @@ import LoadingSpinner from "../LoadingSpinner";
 import { useLoanForm } from "../../context/LoanFormContext";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { applyForLoan } from "../../api/apiData";
+import { applyForLoan, updatePendingLoanDetails } from "../../api/loansApi";
 import { useTranslation } from "react-i18next";
 import { useDashboard } from "../../context/DashboardContext";
-import { updatePendingLoanDetails } from "../../api/apiData";
 
 export default function Step4Summary() {
   const { t } = useTranslation();

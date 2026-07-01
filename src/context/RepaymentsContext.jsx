@@ -1,7 +1,7 @@
 
 
 import { createContext, useState, useContext, useEffect } from "react";
-import { fetchRepayments } from "../api/apiData";
+import { fetchRepayments } from "../api/repaymentsApi";
 
 const RepaymentsContext = createContext();
 

@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLoanForm } from "../../context/LoanFormContext";
 import { useTranslation } from "react-i18next";
-import { getBorrowingLimit } from "../../api/apiData";
+import { getBorrowingLimit } from "../../api/loansApi";
 
 export default function Step1LoanAmount() {
   const { t } = useTranslation();

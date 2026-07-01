@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { fetchRepayments } from "../../api/apiData";
+import { fetchRepayments } from "../../api/repaymentsApi";
 
 import NairaIcon from "../../assets/naira icon.svg";
 import reloadIcon from "../../assets/reload-icon.svg";

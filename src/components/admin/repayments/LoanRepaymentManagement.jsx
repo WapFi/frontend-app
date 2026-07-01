@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import RepaymentDetailsModal from "../modals/RepaymentDetailsModal";
 import UserDetailsModal from "../modals/UserDetailsModal";
 import UserAvatar from "../../common/UserAvatar";
-import { getRepayments } from "../../../api/adminApi";
+import { getRepayments } from "../../../api/repaymentsApi";
 
 function LoanRepaymentManagement() {
   const [repaymentData, setRepaymentData] = useState([]);

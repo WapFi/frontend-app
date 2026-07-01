@@ -1,12 +1,12 @@
-import WapfiLogo from "../WapfiLogo";
-import BackgroundImage from "../BackgroundImage";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import axios from "../../api/axios";
+import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import BackgroundImage from "../BackgroundImage";
+import WapfiLogo from "../WapfiLogo";
+import { requestPasswordReset } from "../../api/authApi";
 import LoadingSpinner from "../LoadingSpinner";
 
 function ForgotPassword() {
@@ -27,7 +27,7 @@ function ForgotPassword() {
         value
           ?.replace(/[\u{1F600}-\u{1F6FF}]/gu, "")
           .trim()
-          .toLowerCase()
+          .toLowerCase(),
       )
       .required(t("forgot_password.errors.email_or_phone_required"))
       .test(
@@ -37,7 +37,7 @@ function ForgotPassword() {
           return (
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{11}$/.test(value)
           );
-        }
+        },
       ),
   });
 
@@ -54,7 +54,7 @@ function ForgotPassword() {
   const onSubmit = async (phoneEmailData) => {
     setLoading(true);
     try {
-      const response = await axios.post("/auth/request_reset", {
+      const response = await requestPasswordReset({
         identifier: phoneEmailData.emailPhone,
       });
 

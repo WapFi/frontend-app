@@ -1,6 +1,6 @@
 import NairaIcon from "../../assets/naira icon.svg";
 import { useTranslation } from "react-i18next";
-import { fetchRepayments } from "../../api/apiData";
+import { fetchRepayments } from "../../api/repaymentsApi";
 import { useState, useEffect } from "react";
 
 function Overview({ totalLoanTaken, amountRepaid, activeLoan, lastLoan }) {

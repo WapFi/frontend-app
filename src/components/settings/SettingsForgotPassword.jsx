@@ -1,10 +1,10 @@
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import axios from "../../api/axios";
+import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { requestPasswordReset } from "../../api/authApi";
 import LoadingSpinner from "../LoadingSpinner";
 
 export default function ForgotPassword() {
@@ -20,7 +20,7 @@ export default function ForgotPassword() {
         value
           ?.replace(/[\u{1F600}-\u{1F6FF}]/gu, "")
           .trim()
-          .toLowerCase()
+          .toLowerCase(),
       )
       .required(t("settingsForgotPassword.errors.email_or_phone_required"))
       .test(
@@ -30,7 +30,7 @@ export default function ForgotPassword() {
           return (
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{11}$/.test(value)
           );
-        }
+        },
       ),
   });
 
@@ -47,7 +47,7 @@ export default function ForgotPassword() {
   const onSubmit = async (phoneEmailData) => {
     setLoading(true);
     try {
-      const response = await axios.post("/auth/request_reset", {
+      const response = await requestPasswordReset({
         identifier: phoneEmailData.emailPhone,
       });
 
