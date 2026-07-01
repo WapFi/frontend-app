@@ -57,25 +57,6 @@ export const updateLoanApplicationStatus = async (loanId, status) => {
   }
 };
 
-// Loan Repayments
-export const getRepayments = async (params = {}) => {
-  try {
-    const response = await axios.get('/admins/repayments', { params });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const addRepayment = async (repaymentData) => {
-  try {
-    const response = await axios.post('/admins/repayments', repaymentData);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
 // Analytics
 export const getAnalyticsData = async (params = {}) => {
   try {

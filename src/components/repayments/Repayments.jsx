@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import LoanDetails from "../dashboard/LoanDetails";
 import RepaymentsList from "../dashboard/RepaymentsList";
 import { useState, useEffect } from "react";
-import { fetchRepayments } from "../../api/apiData";
+import { fetchRepayments } from "../../api/repaymentsApi";
 import { getLoanDetails } from "../../api/loansApi";
 import calendarIcon from "../../assets/calendar icon.svg";
 import searchIcon from "../../assets/search icon.svg";

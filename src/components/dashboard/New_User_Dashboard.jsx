@@ -7,7 +7,7 @@ import NairaIcon from "../../assets/naira icon.svg";
 import CreditScore from "./CreditScore";
 import calendarIcon from "../../assets/calendar icon.svg";
 import searchIcon from "../../assets/search icon.svg";
-import { fetchRepayments } from "../../api/apiData";
+import { fetchRepayments } from "../../api/repaymentsApi";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { use_UserData } from "../../context/UserContext";
