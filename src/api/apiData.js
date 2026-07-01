@@ -134,9 +134,3 @@ export const deleteNotification = async (notification_id) => {
   const response = axios.delete(`/notifications/${notification_id}`);
   return response;
 };
-
-// log user out
-export const logOut = async () => {
-  const response = await axios.post("/auth/sign_out");
-  return response;
-};

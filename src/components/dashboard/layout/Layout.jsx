@@ -2,7 +2,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 import HeaderBar from "./HeaderBar";
 import Sidebar from "./Sidebar";
 import MobileMenu from "./MobileMenu";
-import { fetchUserMe, logOut } from "../../../api/apiData";
+import { fetchUserMe } from "../../../api/apiData";
+import { signOut } from "../../../api/authApi";
 import { useState, useEffect } from "react";
 import PageLoader from "../../PageLoader";
 import { useTranslation } from "react-i18next";
@@ -70,7 +71,7 @@ function Layout() {
     setToastMessage(null);
     setToastType(null);
     try {
-      const response = await logOut();
+      const response = await signOut();
       if (response) {
         setToastMessage(t("sidebar.logoutSuccess"));
         setToastType("success");
