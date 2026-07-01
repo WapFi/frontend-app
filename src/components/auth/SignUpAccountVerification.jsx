@@ -1,16 +1,13 @@
-
-
-import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useState, useEffect } from "react";
-import WapfiLogo from "../WapfiLogo";
-import LoadingSpinner from "../LoadingSpinner";
-import BackgroundImage from "../BackgroundImage";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import axios from "../../api/axios";
+import { Link, useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import BackgroundImage from "../BackgroundImage";
+import LoadingSpinner from "../LoadingSpinner";
+import WapfiLogo from "../WapfiLogo";
+import { signUp } from "../../api/authApi";
 
 function SignUpAccountVerification() {
   const [fadeIn, setFadeIn] = useState(false);
@@ -34,7 +31,7 @@ function SignUpAccountVerification() {
       .string()
       .required(t("sign_up.errors.full_name_required"))
       .transform((value) =>
-        value?.replace(/[\u{1F600}-\u{1F6FF}]/gu, "").trim()
+        value?.replace(/[\u{1F600}-\u{1F6FF}]/gu, "").trim(),
       )
       .test("is-fullName", t("sign_up.errors.full_name_invalid"), (value) => {
         return /^[a-zA-Z]+(?:[' -][a-zA-Z]+)+$/.test(value);
@@ -45,7 +42,7 @@ function SignUpAccountVerification() {
         value
           ?.replace(/[\u{1F600}-\u{1F6FF}]/gu, "")
           .trim()
-          .toLowerCase()
+          .toLowerCase(),
       )
       .required(t("sign_up.errors.email_or_phone_required"))
       .test(
@@ -55,7 +52,7 @@ function SignUpAccountVerification() {
           return (
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{11}$/.test(value)
           );
-        }
+        },
       ),
     password: yup
       .string()
@@ -67,7 +64,7 @@ function SignUpAccountVerification() {
       .min(8, t("sign_up.errors.password_min"))
       .oneOf(
         [yup.ref("password"), null],
-        t("sign_up.errors.passwords_do_not_match")
+        t("sign_up.errors.passwords_do_not_match"),
       ),
   });
 
@@ -79,20 +76,17 @@ function SignUpAccountVerification() {
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
-
   const onSubmit = async (signUpData) => {
     setLoading(true);
 
     try {
-      const response = await axios.post("/auth/sign_up", {
+      const response = await signUp({
         full_name: signUpData.fullName,
         identifier: signUpData.emailPhone,
         password: signUpData.password,
-        // confirmedPassword: signUpData.confirmedPassword,
       });
 
       if (response.status === 200) {
-
         setShowSuccessMessage(response.data?.message);
 
         // reset form

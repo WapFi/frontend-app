@@ -3,11 +3,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useEffect, useState, useRef } from "react";
-
 import LoadingSpinner from "../LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import axios from "../../api/axios";
+import { requestPasswordReset, verifyResetCode } from "../../api/authApi";
 
 export default function SettingsVerifyEmailPhone() {
   const [loading, setLoading] = useState(false);
@@ -102,7 +101,7 @@ export default function SettingsVerifyEmailPhone() {
       otpCode.fourthDigit;
 
     try {
-      const response = await axios.get(`/auth/verify/${code}`);
+      const response = await verifyResetCode(code);
       localStorage.setItem("otpCode", code);
 
       if (response.status === 200) {
@@ -131,9 +130,7 @@ export default function SettingsVerifyEmailPhone() {
     setResending(true);
     try {
       const identifier = localStorage.getItem("userIdentifier");
-      const response = await axios.post("/auth/request_reset", {
-        identifier,
-      });
+      const response = await requestPasswordReset({ identifier });
 
       if (response.status === 200) {
         setShowResendSuccess(response.data?.message);

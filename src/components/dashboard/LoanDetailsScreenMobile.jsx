@@ -6,7 +6,7 @@ import LoanDetails from "./LoanDetails";
 import calendarIcon from "../../assets/calendar icon.svg";
 import searchIcon from "../../assets/search icon.svg";
 import { useTranslation } from "react-i18next";
-import { getLoanDetails, fetchLoans } from "../../api/apiData";
+import { fetchLoans, getLoanDetails } from "../../api/loansApi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import PageLoader from "../PageLoader";
