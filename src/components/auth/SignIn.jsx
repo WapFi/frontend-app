@@ -1,16 +1,13 @@
-
-
-import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { useState, useEffect } from "react";
-import WapfiLogo from "../WapfiLogo";
 import BackgroundImage from "../BackgroundImage";
+import WapfiLogo from "../WapfiLogo";
 import AuthFooter from "./AuthFooter";
-import { useNavigate } from "react-router-dom";
-import axios from "../../api/axios";
 import { useTranslation } from "react-i18next";
+import { signIn } from "../../api/authApi";
 import LoadingSpinner from "../LoadingSpinner";
 
 function SignIn() {
@@ -31,7 +28,7 @@ function SignIn() {
         value
           ?.replace(/[\u{1F600}-\u{1F6FF}]/gu, "")
           .trim()
-          .toLowerCase()
+          .toLowerCase(),
       )
       .required(t("sign_in.errors.email_or_phone_required"))
       .test(
@@ -41,7 +38,7 @@ function SignIn() {
           return (
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{11}$/.test(value)
           );
-        }
+        },
       ),
     password: yup
       .string()
@@ -77,16 +74,11 @@ function SignIn() {
       } else {
         localStorage.removeItem("rememberedEmailPhone");
       }
-
-      const response = await axios.post(
-        "/auth/sign_in",
-        {
-          identifier: loginData.emailPhone,
-          password: loginData.password,
-          remember_me: loginData.rememberMe,
-        }
-        // { withCredentials: true }
-      );
+      const response = await signIn({
+        identifier: loginData.emailPhone,
+        password: loginData.password,
+        remember_me: loginData.rememberMe,
+      });
 
       if (response.status === 200) {
         localStorage.setItem("auth_token", response.data.token);
@@ -110,7 +102,6 @@ function SignIn() {
           }, 3000);
         }
       }
-
     } catch (error) {
       console.error("Login error:", error);
       setShowFormError(error.response?.data?.message);
@@ -154,7 +145,9 @@ function SignIn() {
             )}
 
             {showSuccessMessage && (
-              <p className="text-green-500 mb-3">{showSuccessMessage || t("sign_in.success")}</p>
+              <p className="text-green-500 mb-3">
+                {showSuccessMessage || t("sign_in.success")}
+              </p>
             )}
 
             <label className="text-[#222] gap-2">

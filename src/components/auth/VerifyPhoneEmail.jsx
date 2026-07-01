@@ -8,7 +8,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import BackgroundImage from "../BackgroundImage";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import axios from "../../api/axios";
+import { requestPasswordReset, verifyResetCode } from "../../api/authApi";
 
 function VerifyPhoneEmail() {
   const [fadeIn, setFadeIn] = useState(false);
@@ -97,7 +97,7 @@ function VerifyPhoneEmail() {
       otpCode.fourthDigit;
 
     try {
-      const response = await axios.get(`/auth/verify/${code}`);
+      const response = await verifyResetCode(code);
 
       if (response.status === 200) {
         localStorage.setItem("otpCode", code);
@@ -129,9 +129,7 @@ function VerifyPhoneEmail() {
     setResending(true);
     try {
       const identifier = localStorage.getItem("userIdentifier");
-      const response = await axios.post("/auth/request_reset", {
-        identifier,
-      });
+      const response = await requestPasswordReset({ identifier });
       if (response.status === 200) {
         setShowResendSuccess(response.data?.message);
         setSecondsLeft(60);
