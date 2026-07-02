@@ -1,26 +1,22 @@
-
-
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 import { fetchRepayments } from "../../api/repaymentsApi";
-
-import NairaIcon from "../../assets/naira icon.svg";
-import reloadIcon from "../../assets/reload-icon.svg";
 import alertIcon from "../../assets/alert-icon.svg";
-import VerifiedIcon from "../../assets/verified icon.svg";
-import PendingIcon from "../../assets/pending icon.svg";
-import FailedIcon from "../../assets/failed icon.svg";
-import chevronDown from "../../assets/chevron-down.svg";
 import calendarIcon from "../../assets/calendar icon.svg";
+import chevronDown from "../../assets/chevron-down.svg";
+import FailedIcon from "../../assets/failed icon.svg";
+import NairaIcon from "../../assets/naira icon.svg";
+import PendingIcon from "../../assets/pending icon.svg";
+import reloadIcon from "../../assets/reload-icon.svg";
+import VerifiedIcon from "../../assets/verified icon.svg";
 import PageLoader from "../PageLoader";
 
 export default function MixedRepaymentsTable() {
   const { t } = useTranslation();
-  const { loanID } = useParams();
-
+  const { id: loanID } = useParams();
   const [repayments, setRepayments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
@@ -40,7 +36,7 @@ export default function MixedRepaymentsTable() {
     if (!date) return null;
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
       2,
-      "0"
+      "0",
     )}-${String(date.getDate()).padStart(2, "0")}`;
   };
 
@@ -75,14 +71,14 @@ export default function MixedRepaymentsTable() {
         }
 
         const response = await fetchRepayments(currentPage, perPage, filters);
+        const repaymentItems = response?.data?.repayments;
 
-        if (response?.status) {
-          setRepayments(response.data.repayments);
+        if (response?.status && Array.isArray(repaymentItems)) {
+          setRepayments(repaymentItems);
           setTotalItems(response.data.total_repayments || 0);
         } else {
           setRepayments([]);
           setTotalItems(0);
-          console.error("Error fetching repayments:", response?.message);
         }
       } catch (err) {
         console.error("Error fetching repayments:", err);
@@ -185,8 +181,7 @@ export default function MixedRepaymentsTable() {
 
         {repayments.length === 0 && (
           <div className="text-center text-[#666] py-6">
-            {/* {t("mixedRepaymentsTable.noRepayments")} */}
-            No repayments found.
+            {t("mixedRepaymentsTable.noRepayments")}
           </div>
         )}
 
@@ -266,7 +261,11 @@ export default function MixedRepaymentsTable() {
               <span className="text-[#333] block border-l border-l-[#e5e5e5] pl-2.5 py-0.5">
                 {perPage}
               </span>
-              <img src={chevronDown} alt="dropdown icon" className="ml-1 w-4 block" />
+              <img
+                src={chevronDown}
+                alt="dropdown icon"
+                className="ml-1 w-4 block"
+              />
             </div>
             {perPageOpen && (
               <div className="absolute mt-1 bg-white border rounded shadow z-10">
@@ -297,8 +296,7 @@ export default function MixedRepaymentsTable() {
       <div className="block lg:hidden space-y-4 bg-white rounded-2xl py-6 px-4">
         {repayments.length === 0 && (
           <div className="text-center text-[#666] py-6">
-            {/* {t("mixedRepaymentsTable.noRepayments")} */}
-            No repayments found.
+            {t("mixedRepaymentsTable.noRepayments")}
           </div>
         )}
 
@@ -312,11 +310,14 @@ export default function MixedRepaymentsTable() {
                 {repayment.repayment_method}
               </p>
               <p className="text-[#666] text-[14px]">
-                {new Date(repayment.repayment_date).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                {new Date(repayment.repayment_date).toLocaleDateString(
+                  "en-US",
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  },
+                )}
               </p>
             </div>
             <div className="flex flex-col">
@@ -383,7 +384,11 @@ export default function MixedRepaymentsTable() {
               <span className="text-[#333] block border-l border-l-[#e5e5e5] pl-2.5 py-1">
                 {perPage}
               </span>
-              <img src={chevronDown} alt="dropdown icon" className="ml-1 w-4 block" />
+              <img
+                src={chevronDown}
+                alt="dropdown icon"
+                className="ml-1 w-4 block"
+              />
             </div>
             {perPageOpen && (
               <div className="absolute mt-1 bg-white border rounded shadow z-10">

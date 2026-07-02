@@ -8,7 +8,6 @@ import AdminRoute from "./AdminRoute";
 import Layout from "../components/dashboard/layout/Layout";
 import AdminLayout from "../components/admin/layout/AdminLayout";
 import { LoanFormProvider } from "../context/LoanFormContext";
-import { RepaymentsProvider } from "../context/RepaymentsContext";
 import { DisbursedLoansProvider } from "../context/DisbursedLoansContext";
 import { UserContextProvider } from "../context/UserContext";
 import { NotificationProvider } from "../context/NotificationContext";
@@ -136,11 +135,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/loans/repayments/repayment-history/:id",
-        element: (
-          <RepaymentsProvider>
-            <S><RepaymentsHistoryWrapper /></S>
-          </RepaymentsProvider>
-        ),
+        element: <S><RepaymentsHistoryWrapper /></S>
       },
       {
         path: "/loans/history",
