@@ -1,10 +1,21 @@
 import { useCallback, useEffect, useState } from "react";
 import { Outlet, useBlocker } from "react-router-dom";
+import { useDashboard } from "../../context/DashboardContext";
 import { useLoanForm } from "../../context/LoanFormContext";
 import CancelApplicationModal from "./CancelApplicationModal";
 import LoanFlowStepper from "./LoanFlowStepper";
+import { cancelPendingLoan } from "../../api/loansApi";
+import { useTranslation } from "react-i18next";
 
 export default function LoanFlowWrapper() {
+  const { t } = useTranslation();
+
+  const { dashboardData, refreshDashboardData } = useDashboard();
+
+  const [cancellationLoading, setCancellationLoading] = useState(false);
+  const [cancellationError, setCancellationError] = useState("");
+  const [cancellationSuccess, setCancellationSuccess] = useState("");
+
   const { clearLoanFormData, hasLoanFormData, hasUnsavedChanges } =
     useLoanForm();
 
@@ -58,16 +69,62 @@ export default function LoanFlowWrapper() {
     };
   }, [shouldWarnBeforeLeaving]);
 
-  const confirmLeave = () => {
+  const completeCancellation = () => {
+    clearLoanFormData();
     setShowModal(false);
-    clearLoanFormData(); // cancel application
+
     if (blocker.state === "blocked") {
       blocker.proceed();
     }
   };
 
+  const confirmLeave = async () => {
+    const pendingLoanID = dashboardData?.pending_loan?._id;
+
+    setCancellationError("");
+    setCancellationSuccess("");
+
+    // Nothing exists on the backend yet.
+    if (!pendingLoanID) {
+      completeCancellation();
+      return;
+    }
+
+    setCancellationLoading(true);
+
+    try {
+      const response = await cancelPendingLoan(pendingLoanID);
+
+      if (response.status === 200 && response.data?.status) {
+        await refreshDashboardData();
+
+        setCancellationSuccess(
+          response.data?.message || t("cancelApplicationModal.cancelSuccess")
+        );
+
+        setTimeout(() => {
+          completeCancellation();
+        }, 1500);
+      } else {
+        setCancellationError(
+          response.data?.message || t("cancelApplicationModal.cancelError"),
+        );
+      }
+    } catch (error) {
+      setCancellationError(
+        error.response?.data?.message ||
+          t("cancelApplicationModal.cancelError"),
+      );
+    } finally {
+      setCancellationLoading(false);
+    }
+  };
+
   const cancelLeave = () => {
     setShowModal(false);
+    setCancellationError("");
+    setCancellationSuccess("");
+
     if (blocker.state === "blocked") {
       blocker.reset();
     }
@@ -82,6 +139,9 @@ export default function LoanFlowWrapper() {
           <CancelApplicationModal
             onConfirm={confirmLeave}
             onCancel={cancelLeave}
+            loading={cancellationLoading}
+            error={cancellationError}
+            success={cancellationSuccess}
           />
         </div>
       )}
