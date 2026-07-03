@@ -1,16 +1,14 @@
-
-
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { getBorrowingLimit } from "../../api/loansApi";
 import chevronDown from "../../assets/chevron-down.svg";
 import chevronUp from "../../assets/chevron-up.svg";
-import LoadingSpinner from "../LoadingSpinner";
-import { useState, useEffect } from "react";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import { useNavigate, useLocation } from "react-router-dom";
 import { useLoanForm } from "../../context/LoanFormContext";
-import { useTranslation } from "react-i18next";
-import { getBorrowingLimit } from "../../api/loansApi";
+import LoadingSpinner from "../LoadingSpinner";
 
 export default function Step1LoanAmount() {
   const { t } = useTranslation();
@@ -47,7 +45,7 @@ export default function Step1LoanAmount() {
       .min(1000, t("loanStep1.errors.loanAmountMin"))
       .max(
         borrowingLimit,
-        t("loanStep1.errors.loanAmountMax", { limit: borrowingLimit })
+        t("loanStep1.errors.loanAmountMax", { limit: borrowingLimit }),
       ),
     loanPurpose: yup
       .string()
@@ -67,6 +65,7 @@ export default function Step1LoanAmount() {
     register,
     handleSubmit,
     setValue,
+    reset,
     watch,
     formState: { errors, isDirty },
   } = useForm({
@@ -76,9 +75,28 @@ export default function Step1LoanAmount() {
       loanAmount: loanFormData.loan_amount,
       loanPurpose: loanFormData.loan_purpose,
       otherPurpose: loanFormData.other_purpose,
-      wapanMembership: loanFormData.wapan_member,
+      wapanMembership:
+        loanFormData.wapan_member === true
+          ? "Yes"
+          : loanFormData.wapan_member === false
+            ? "No"
+            : "",
     },
   });
+
+  useEffect(() => {
+    reset({
+      loanAmount: loanFormData.loan_amount,
+      loanPurpose: loanFormData.loan_purpose,
+      otherPurpose: loanFormData.other_purpose,
+      wapanMembership:
+        loanFormData.wapan_member === true
+          ? "Yes"
+          : loanFormData.wapan_member === false
+            ? "No"
+            : "",
+    });
+  }, [loanFormData, reset]);
 
   const loanPurpose = watch("loanPurpose");
   const wapanMembership = watch("wapanMembership");
@@ -241,8 +259,8 @@ export default function Step1LoanAmount() {
               {wapanMembership === "Yes"
                 ? t("loanStep1.options.yes")
                 : wapanMembership === "No"
-                ? t("loanStep1.options.no")
-                : t("loanStep1.membershipPlaceholder")}
+                  ? t("loanStep1.options.no")
+                  : t("loanStep1.membershipPlaceholder")}
             </p>
             <img
               src={displayMembershipForm ? chevronUp : chevronDown}
@@ -260,7 +278,7 @@ export default function Step1LoanAmount() {
                     setValue(
                       "wapanMembership",
                       value === "true" ? "Yes" : "No",
-                      { shouldValidate: true }
+                      { shouldValidate: true },
                     );
                     setDisplayMembershipForm(false);
                   }}

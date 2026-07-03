@@ -1,11 +1,14 @@
+import { useCallback, useEffect, useState } from "react";
 import { Outlet, useBlocker } from "react-router-dom";
 import { useLoanForm } from "../../context/LoanFormContext";
-import LoanFlowStepper from "./LoanFlowStepper";
-import { useEffect, useState, useCallback } from "react";
 import CancelApplicationModal from "./CancelApplicationModal";
+import LoanFlowStepper from "./LoanFlowStepper";
 
 export default function LoanFlowWrapper() {
-  const { clearLoanFormData } = useLoanForm();
+  const { clearLoanFormData, hasLoanFormData, hasUnsavedChanges } =
+    useLoanForm();
+
+  const shouldWarnBeforeLeaving = hasLoanFormData || hasUnsavedChanges;
   const [showModal, setShowModal] = useState(false);
 
   // Paths that are considered "inside" the loan application experience.
@@ -16,12 +19,16 @@ export default function LoanFlowWrapper() {
 
   // Block ANY navigation that goes outside allowed prefixes.
   const blocker = useBlocker(
-    useCallback(({ nextLocation }) => {
-      const isStillInFlow = ALLOWED_PREFIXES.some((p) =>
-        nextLocation.pathname.startsWith(p)
-      );
-      return !isStillInFlow; // true = block
-    }, [])
+    useCallback(
+      ({ nextLocation }) => {
+        const isStillInFlow = ALLOWED_PREFIXES.some((prefix) =>
+          nextLocation.pathname.startsWith(prefix),
+        );
+
+        return shouldWarnBeforeLeaving && !isStillInFlow;
+      },
+      [shouldWarnBeforeLeaving],
+    ),
   );
 
   // Show / hide modal in response to blocker state
@@ -35,15 +42,21 @@ export default function LoanFlowWrapper() {
 
   // Warn on tab close / reload while in flow
   useEffect(() => {
-    const handleBeforeUnload = (e) => {
-      // Because wrapper only mounts while in-flow, *always* warn.
-      e.preventDefault();
-      e.returnValue = "";
+    if (!shouldWarnBeforeLeaving) {
+      return undefined;
+    }
+
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = "";
     };
+
     window.addEventListener("beforeunload", handleBeforeUnload);
-    return () =>
+
+    return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, []);
+    };
+  }, [shouldWarnBeforeLeaving]);
 
   const confirmLeave = () => {
     setShowModal(false);
@@ -75,4 +88,3 @@ export default function LoanFlowWrapper() {
     </div>
   );
 }
-
