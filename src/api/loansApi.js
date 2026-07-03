@@ -10,6 +10,11 @@ export const updatePendingLoanDetails = async (loanFormData, loanID) => {
   return response;
 };
 
+export const cancelPendingLoan = async (loanID) => {
+  const response = await axios.patch(`/loans/${loanID}/cancel`);
+  return response;
+};
+
 export const confirmLoanApplication = async (loan_id, password) => {
   const response = await axios.post("/loans/confirm", {
     loan_id,

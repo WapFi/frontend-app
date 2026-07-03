@@ -453,7 +453,9 @@
     "title": "Soke Aikace-aikacen?",
     "body": "Ka tabbata kana son sokewa? Duk bayanan da ka shigar za su bace.",
     "noButton": "A'a, koma baya",
-    "yesButton": "Eh, soke"
+    "yesButton": "Eh, soke",
+    "cancelSuccess": "An soke aikace-aikacen rancen cikin nasara.",
+    "cancelError": "Ba a iya soke aikace-aikacen rancen ba. Don Allah a sake gwadawa."
   },
   "repaymentsHistoryWrapper": {
     "noRepaymentData": "Ba a sami bayanan biyan bashin wannan aron ba."
