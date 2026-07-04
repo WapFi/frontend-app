@@ -324,6 +324,7 @@
     "title": "How much would you like to borrow?",
     "placeholder": "Enter the amount you want to borrow",
     "limitNote": "Your borrowing limit is ₦{{limit}}",
+    "borrowingLimitLoading": "Loading your borrowing limit...",
     "purposeLabel": "What do you need the loan for?",
     "purposePlaceholder": "Select loan purpose",
     "otherPurposeLabel": "Others",
@@ -348,7 +349,8 @@
       "loanAmountMax": "Maximum loan amount is ₦{{limit}}",
       "loanPurposeRequired": "Please select a purpose for the loan.",
       "membershipRequired": "Please indicate your membership status.",
-      "otherPurposeRequired": "Please enter a reason for selecting 'Other'."
+      "otherPurposeRequired": "Please enter a reason for selecting 'Other'.",
+      "borrowingLimitFetch": "Unable to load your borrowing limit. Please try again."
     }
   },
   "loanStep2": {

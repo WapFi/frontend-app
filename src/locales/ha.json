@@ -324,6 +324,7 @@
     "title": "Nawa kake son aro?",
     "placeholder": "Shigar da adadin da kake son aro",
     "limitNote": "Iyakar adadin da zaka iya aro shine ₦{{limit}}",
+    "borrowingLimitLoading": "Ana loda iyakar rancenku...",
     "purposeLabel": "Me zaka yi da rancen?",
     "purposePlaceholder": "Zaɓi dalilin rance",
     "otherPurposeLabel": "Sauran",
@@ -348,7 +349,8 @@
       "loanAmountMax": "Mafi girman adadin rance shine ₦{{limit}}",
       "loanPurposeRequired": "Da fatan za a zaɓi dalilin rance.",
       "membershipRequired": "Da fatan za a nuna matsayin membobinku.",
-      "otherPurposeRequired": "Da fatan za a shigar da dalilin da ya sa ka zabi 'Sauran'."
+      "otherPurposeRequired": "Da fatan za a shigar da dalilin da ya sa ka zabi 'Sauran'.",
+      "borrowingLimitFetch": "Ba a iya loda iyakar rancenku ba. Don Allah a sake gwadawa."
     }
   },
   "loanStep2": {
