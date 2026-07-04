@@ -14,6 +14,7 @@
     "agree_terms": "By signing in, you agree to our",
     "terms_conditions": "Terms & Conditions",
     "privacy_policy": "Privacy Policy",
+    "session_expired": "Your session has expired. Please sign in again.",
 
     "placeholders": {
       "email_phone": "Enter your email address or phone number",

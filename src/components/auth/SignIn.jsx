@@ -1,18 +1,36 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import { signIn } from "../../api/authApi";
 import BackgroundImage from "../BackgroundImage";
+import LoadingSpinner from "../LoadingSpinner";
 import WapfiLogo from "../WapfiLogo";
 import AuthFooter from "./AuthFooter";
-import { useTranslation } from "react-i18next";
-import { signIn } from "../../api/authApi";
-import LoadingSpinner from "../LoadingSpinner";
 
 function SignIn() {
+  const [sessionExpired, setSessionExpired] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const expired = sessionStorage.getItem("sessionExpired");
+
+    if (expired !== "true") {
+      return undefined;
+    }
+
+    setSessionExpired(true);
+
+    const timer = setTimeout(() => {
+      setSessionExpired(false);
+      sessionStorage.removeItem("sessionExpired");
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     setFadeIn(true);
@@ -66,6 +84,8 @@ function SignIn() {
   }, [setValue]);
 
   const onSubmit = async (loginData) => {
+    setSessionExpired(false);
+    sessionStorage.removeItem("sessionExpired");
     setLoading(true);
 
     try {
@@ -137,6 +157,14 @@ function SignIn() {
                 {t("sign_in.login_prompt")}
               </p>
             </div>
+            {sessionExpired && (
+              <p
+                className="text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3"
+                role="alert"
+              >
+                {t("sign_in.session_expired")}
+              </p>
+            )}
 
             {showFormError && (
               <p className="text-red-500 mb-3">
