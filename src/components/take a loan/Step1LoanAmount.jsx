@@ -23,7 +23,9 @@ export default function Step1LoanAmount() {
   const [displayLoanPurposeForm, setDisplayLoanPurposeForm] = useState(false);
   const [displayMembershipForm, setDisplayMembershipForm] = useState(false);
   const [formError, setFormError] = useState(false);
-  const [borrowingLimit, setBorrowingLimit] = useState(0);
+  const [borrowingLimit, setBorrowingLimit] = useState(null);
+  const [borrowingLimitLoading, setBorrowingLimitLoading] = useState(true);
+  const [borrowingLimitError, setBorrowingLimitError] = useState("");
 
   useEffect(() => {
     setFadeIn(true);
@@ -31,22 +33,47 @@ export default function Step1LoanAmount() {
 
   useEffect(() => {
     const fetchBorrowingLimit = async () => {
-      const response = await getBorrowingLimit();
-      setBorrowingLimit(response.data.borrowing_limit);
+      setBorrowingLimitLoading(true);
+      setBorrowingLimitError("");
+
+      try {
+        const response = await getBorrowingLimit();
+        const limit = Number(response?.data?.borrowing_limit);
+
+        if (!Number.isFinite(limit) || limit <= 0) {
+          throw new Error("Invalid borrowing limit");
+        }
+
+        setBorrowingLimit(limit);
+      } catch (error) {
+        setBorrowingLimit(null);
+        setBorrowingLimitError(
+          error.response?.data?.message ||
+            t("loanStep1.errors.borrowingLimitFetch"),
+        );
+      } finally {
+        setBorrowingLimitLoading(false);
+      }
     };
+
     fetchBorrowingLimit();
-  }, []);
+  }, [t]);
+
+  let loanAmountSchema = yup
+    .number()
+    .typeError(t("loanStep1.errors.loanAmountType"))
+    .required(t("loanStep1.errors.loanAmountRequired"))
+    .min(1000, t("loanStep1.errors.loanAmountMin"));
+
+  if (borrowingLimit !== null) {
+    loanAmountSchema = loanAmountSchema.max(
+      borrowingLimit,
+      t("loanStep1.errors.loanAmountMax", { limit: borrowingLimit }),
+    );
+  }
 
   const schema = yup.object({
-    loanAmount: yup
-      .number()
-      .typeError(t("loanStep1.errors.loanAmountType"))
-      .required(t("loanStep1.errors.loanAmountRequired"))
-      .min(1000, t("loanStep1.errors.loanAmountMin"))
-      .max(
-        borrowingLimit,
-        t("loanStep1.errors.loanAmountMax", { limit: borrowingLimit }),
-      ),
+    loanAmount: loanAmountSchema,
     loanPurpose: yup
       .string()
       .required(t("loanStep1.errors.loanPurposeRequired")),
@@ -166,11 +193,21 @@ export default function Step1LoanAmount() {
               {errors.loanAmount.message}
             </p>
           )}
-          <p className="text-sm text-[#999] mt-1">
-            {t("loanStep1.limitNote", {
-              limit: new Intl.NumberFormat("en-NG").format(borrowingLimit),
-            })}
-          </p>
+          {borrowingLimitLoading ? (
+            <p className="text-sm text-[#999] mt-1">
+              {t("loanStep1.borrowingLimitLoading")}
+            </p>
+          ) : borrowingLimitError ? (
+            <p className="text-sm text-red-600 mt-1" role="alert">
+              {borrowingLimitError}
+            </p>
+          ) : (
+            <p className="text-sm text-[#999] mt-1">
+              {t("loanStep1.limitNote", {
+                limit: new Intl.NumberFormat("en-NG").format(borrowingLimit),
+              })}
+            </p>
+          )}
         </div>
 
         <br />
@@ -301,13 +338,19 @@ export default function Step1LoanAmount() {
         <br />
 
         <button
-          disabled={loading}
+          disabled={loading || borrowingLimitLoading || borrowingLimit === null}
           type="submit"
           className={`text-center w-full rounded-[50px] text-[#FFF] font-medium bg-[#439182] py-3 px-3 cursor-pointer hover:opacity-80 transition-opacity duration-300 ${
-            loading ? "duration-300 cursor-not-allowed" : "cursor-pointer"
+            loading || borrowingLimitLoading || borrowingLimit === null
+              ? "duration-300 cursor-not-allowed opacity-60"
+              : "cursor-pointer"
           }`}
         >
-          {loading ? <LoadingSpinner /> : t("loanStep1.button")}
+          {loading || borrowingLimitLoading ? (
+            <LoadingSpinner />
+          ) : (
+            t("loanStep1.button")
+          )}
         </button>
       </form>
     </div>
