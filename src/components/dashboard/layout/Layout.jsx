@@ -1,17 +1,15 @@
-import { Outlet, useNavigate } from "react-router-dom";
-import HeaderBar from "./HeaderBar";
-import Sidebar from "./Sidebar";
-import MobileMenu from "./MobileMenu";
-import { fetchUserMe } from "../../../api/apiData";
-import { signOut } from "../../../api/authApi";
-import { useState, useEffect } from "react";
-import PageLoader from "../../PageLoader";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { use_UserData } from "../../../context/UserContext";
-import Toast from "./Toast";
-import UserProfilePage from "../../profile/UserProfilePage";
-import ProfileNotifications from "../../profile/ProfileNotifications";
+import { Outlet, useNavigate } from "react-router-dom";
+import { fetchUserMe } from "../../../api/apiData";
 import { useNotifications } from "../../../context/NotificationContext";
+import { use_UserData } from "../../../context/UserContext";
+import PageLoader from "../../PageLoader";
+import ProfileNotifications from "../../profile/ProfileNotifications";
+import UserProfilePage from "../../profile/UserProfilePage";
+import HeaderBar from "./HeaderBar";
+import MobileMenu from "./MobileMenu";
+import Sidebar from "./Sidebar";
 // import RepaymentsSection from "../RepaymentsSection";
 // import Repayments from "../../repayments/Repayments";
 
@@ -24,8 +22,6 @@ function Layout() {
   const { userData, setUserData } = use_UserData();
   // const [newUserRepayments, setNewUserRepayments] = false;
   const [error, setError] = useState(null);
-  const [toastMessage, setToastMessage] = useState(null);
-  const [toastType, setToastType] = useState(null);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [showUserNotificationsModal, setShowUserNotificationsModal] =
     useState(false);
@@ -47,7 +43,7 @@ function Layout() {
         }
       } catch (error) {
         setError(
-          "Unable to fetch your personal information. Please try again."
+          "Unable to fetch your personal information. Please try again.",
         );
       }
     };
@@ -55,47 +51,9 @@ function Layout() {
     loadData();
   }, []);
 
-  // useEffect to clear toast message after a few seconds
-  useEffect(() => {
-    if (toastMessage) {
-      const timer = setTimeout(() => {
-        setToastMessage(null);
-        setToastType(null);
-      }, 3000);
-      return () => clearTimeout(timer); // Cleanup on unmount or message change
-    }
-  }, [toastMessage]);
 
-  // handleLogOut
-  const handleLogOut = async () => {
-    setToastMessage(null);
-    setToastType(null);
-    try {
-      const response = await signOut();
-      if (response) {
-        setToastMessage(t("sidebar.logoutSuccess"));
-        setToastType("success");
-
-        // clear data
-        localStorage.removeItem("auth_token");
-        localStorage.removeItem("dashboardData");
-        localStorage.removeItem("loanConfirmationData");
-        localStorage.removeItem("repaymentsData");
-        localStorage.removeItem("disbursedLoansData");
-        localStorage.removeItem("userData");
-
-        setTimeout(() => {
-          navigate("/sign-in");
-        }, 3000);
-      } else {
-        setToastMessage(t("sidebar.logoutError"));
-        setToastType("error");
-      }
-    } catch (err) {
-      console.error("Logout error:", err);
-      setToastMessage(t("sidebar.logoutError"));
-      setToastType("error");
-    }
+  const handleLogOut = () => {
+    navigate("/sign-out");
   };
 
   // Functions to open/close the UserProfilePage modal
@@ -117,8 +75,6 @@ function Layout() {
 
   return (
     <div className="flex gap-3.5 min-h-screen relative">
-      <Toast message={toastMessage} type={toastType} />
-
       {/* Sidebar for desktop */}
       <aside className="hidden lg:block lg:w-[20%]">
         <Sidebar

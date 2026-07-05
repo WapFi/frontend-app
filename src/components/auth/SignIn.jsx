@@ -14,6 +14,7 @@ function SignIn() {
   const [sessionExpired, setSessionExpired] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [logoutResult, setLogoutResult] = useState(null);
 
   useEffect(() => {
     const expired = sessionStorage.getItem("sessionExpired");
@@ -27,6 +28,28 @@ function SignIn() {
     const timer = setTimeout(() => {
       setSessionExpired(false);
       sessionStorage.removeItem("sessionExpired");
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const storedResult = sessionStorage.getItem("logoutResult");
+
+    if (!storedResult) {
+      return undefined;
+    }
+
+    try {
+      setLogoutResult(JSON.parse(storedResult));
+    } catch {
+      sessionStorage.removeItem("logoutResult");
+      return undefined;
+    }
+
+    const timer = setTimeout(() => {
+      setLogoutResult(null);
+      sessionStorage.removeItem("logoutResult");
     }, 4000);
 
     return () => clearTimeout(timer);
@@ -84,6 +107,8 @@ function SignIn() {
   }, [setValue]);
 
   const onSubmit = async (loginData) => {
+    setLogoutResult(null);
+    sessionStorage.removeItem("logoutResult");
     setSessionExpired(false);
     sessionStorage.removeItem("sessionExpired");
     setLoading(true);
@@ -164,6 +189,30 @@ function SignIn() {
               >
                 {t("sign_in.session_expired")}
               </p>
+            )}
+
+            {logoutResult && (
+              <div className="mb-3">
+                <p
+                  className={
+                    logoutResult.type === "success"
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }
+                  role={logoutResult.type === "success" ? "status" : "alert"}
+                >
+                  {logoutResult.serverMessage ||
+                    (logoutResult.type === "success"
+                      ? t("sidebar.logoutSuccess")
+                      : t("sidebar.logoutError"))}
+                </p>
+
+                {logoutResult.type === "warning" && (
+                  <p className="text-sm text-amber-700 mt-1">
+                    {t("sidebar.logoutPartial")}
+                  </p>
+                )}
+              </div>
             )}
 
             {showFormError && (
