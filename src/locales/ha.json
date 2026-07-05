@@ -119,7 +119,8 @@
     "settings": "Saituna",
     "logout": "Fita",
     "logoutError": "Fita bai yi nasara ba. Don Allah a sake gwadawa.",
-    "logoutSuccess": "An yi nasarar fita!"
+    "logoutSuccess": "An yi nasarar fita!",
+    "logoutPartial": "An fitar da ku daga wannan na'ura, amma ba a iya rufe zaman uwar garken ba."
   },
   "mobile_menu": {
     "dashboard": "Allon Kulawa",

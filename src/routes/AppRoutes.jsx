@@ -17,6 +17,7 @@ const SplashScreen = lazy(() => import("../components/SplashScreen"));
 const SiteLanguage = lazy(() => import("../components/SiteLanguage"));
 const SignUpAccountVerification = lazy(() => import("../components/auth/SignUpAccountVerification"));
 const SignIn = lazy(() => import("../components/auth/SignIn"));
+const SignOut = lazy(() => import("../components/auth/SignOut"));
 const ForgotPassword = lazy(() => import("../components/auth/ForgotPassword"));
 const VerifyPhoneEmail = lazy(() => import("../components/auth/VerifyPhoneEmail"));
 const ChangePassword = lazy(() => import("../components/auth/ChangePassword"));
@@ -86,6 +87,10 @@ const router = createBrowserRouter([
   {
     path: "/sign-in",
     element: <S><SignIn /></S>,
+  },
+  {
+  path: "/sign-out",
+  element: <S><SignOut /></S>,
   },
   {
     path: "/forgot-password",

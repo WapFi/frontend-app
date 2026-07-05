@@ -119,7 +119,8 @@
     "settings": "Settings",
     "logout": "Log Out",
     "logoutError": "Logout failed. Please try again.",
-    "logoutSuccess": "Logout successful!"
+    "logoutSuccess": "Logout successful!",
+    "logoutPartial": "You have been signed out on this device, but we could not end the server session."
   },
   "mobile_menu": {
     "dashboard": "Dashboard",
