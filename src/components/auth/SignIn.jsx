@@ -161,14 +161,14 @@ function SignIn() {
 
   return (
     <div
-      className={`w-full max-w-screen flex flex-col lg:flex-row justify-between lg:flex lg:justify-center lg:my-10 2xl:gap-10 transition-opacity duration-[2500ms] ease-in-out ${
+      className={`w-full max-w-[1440px] mx-auto flex flex-col lg:flex-row lg:items-stretch lg:justify-center lg:gap-6 lg:px-6 lg:my-10 xl:gap-10 transition-opacity duration-[2500ms] ease-in-out ${
         fadeIn ? "opacity-100" : "opacity-0"
       }`}
     >
       {/* <WapfiLogo /> */}
-      <div className="px-3">
+      <div className="px-3 lg:px-0 lg:w-[48%] lg:min-w-0 lg:max-w-[600px]">
         <WapfiLogo />
-        <div className="mx-auto flex flex-col items-center gap-[40px] w-full mb-12 max-w-[95%] md:text-[18px] md:max-w-[75%] lg:max-w-[511px] lg:gap-[40px] lg:self-center lg:mx-12 xl:mx-14 2xl:ml-32">
+        <div className="mx-auto flex flex-col items-center gap-[40px] w-full mb-12 max-w-[95%] md:text-[18px] md:max-w-[75%] lg:max-w-[511px] lg:w-full lg:px-4 lg:mx-auto lg:gap-[40px]">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="w-full flex flex-col gap-1 self-stretch md:text-[18px]"
