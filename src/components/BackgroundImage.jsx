@@ -13,7 +13,7 @@ function BackgroundImage() {
         className="w-[82%] p-6 mx-auto mb-12 self-end rounded-[12px] border border-[rgba(255,255,255,0.66)] bg-[rgba(255,255,255,0.45)] backdrop-blur-[18.25px] xl:w-[75%] xl:py-[54px] xl:px-[30px]"
       >
         <p className="font-raleway font-bold text-xl xl:text-[28px]">
-           {t("background.headline")}
+          {t("background.headline")}
         </p>
         <p className="text-base font-heebo font-normal xl:text-[22px]">
           {t("background.subtext")}
