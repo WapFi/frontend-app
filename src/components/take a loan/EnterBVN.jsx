@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { useTranslation } from "react-i18next";
-import LoadingSpinner from "../LoadingSpinner";
 import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
 import { verifyIdentity } from "../../api/apiData";
-import { use_UserData } from "../../context/UserContext";
 import { useNotifications } from "../../context/NotificationContext";
+import { use_UserData } from "../../context/UserContext";
+import LoadingSpinner from "../LoadingSpinner";
 
 export default function EnterBVN() {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export default function EnterBVN() {
         // refresh user data to make sure we get the latest data
         await refreshUserData();
         setShowSuccessMessage(response.data?.message);
-
+        setLoading(false);
         await refreshNotificationsCount();
 
         setTimeout(() => {
@@ -101,9 +101,11 @@ export default function EnterBVN() {
           )}
 
           <button
-            disabled={loading}
+            disabled={loading || Boolean(showSuccessMessage)}
             className={`text-center w-full py-3 px-2.5 gap-2.5 rounded-[50px] text-[#FFF] font-medium bg-[#439182] mt-10 hover:opacity-80 transition-opacity duration-300 ${
-              loading ? "duration-300 cursor-not-allowed" : "cursor-pointer"
+              loading || showSuccessMessage
+                ? "duration-300 cursor-not-allowed"
+                : "cursor-pointer"
             }`}
           >
             {loading ? <LoadingSpinner /> : t("bvn.cta")}
