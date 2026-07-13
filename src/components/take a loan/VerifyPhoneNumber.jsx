@@ -1,23 +1,20 @@
-
-
-import arrowTimer from "../../assets/arrow-timer.svg";
-import { useState, useEffect, useRef } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { useTranslation } from "react-i18next";
-import LoadingSpinner from "../LoadingSpinner";
 import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
 import { verifyIdentity } from "../../api/apiData";
-import { use_UserData } from "../../context/UserContext";
+import arrowTimer from "../../assets/arrow-timer.svg";
 import { useNotifications } from "../../context/NotificationContext";
+import { use_UserData } from "../../context/UserContext";
+import LoadingSpinner from "../LoadingSpinner";
 
 export default function VerifyPhoneNumber() {
   const [fadeIn, setFadeIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const { userData, refreshUserData } = use_UserData();
   const { refreshNotificationsCount } = useNotifications();
-
 
   // Refs for inputs
   const firstRef = useRef(null);
@@ -100,8 +97,9 @@ export default function VerifyPhoneNumber() {
 
       if (response.status) {
         setShowVerificationSuccess(response.data?.message);
+        setLoading(false);
         await refreshNotificationsCount();
-        
+
         // refresh user data to make sure we get the latest data
         const updatedUserData = await refreshUserData();
 
@@ -180,7 +178,9 @@ export default function VerifyPhoneNumber() {
           )}
 
           {showVerificationSuccess && (
-            <p className="text-green-500 mb-3">{showVerificationSuccess || t("verifyPhone.success")}</p>
+            <p className="text-green-500 mb-3">
+              {showVerificationSuccess || t("verifyPhone.success")}
+            </p>
           )}
 
           {showResendSuccess && (
@@ -237,10 +237,12 @@ export default function VerifyPhoneNumber() {
           />
         </div>
         <button
-          disabled={loading}
+          disabled={loading || Boolean(showSuccessMessage)}
           type="submit"
           className={`text-center w-full my-6 rounded-[50px] text-[#FFF] font-medium bg-[#439182] py-3 px-3 hover:opacity-80 transition-opacity duration-300 ${
-            loading ? "duration-300 cursor-not-allowed" : "cursor-pointer"
+            loading || showVerificationSuccess
+              ? "duration-300 cursor-not-allowed"
+              : "cursor-pointer"
           }`}
         >
           {loading ? <LoadingSpinner /> : t("verifyPhone.continue")}
