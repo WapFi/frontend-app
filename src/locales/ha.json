@@ -445,7 +445,15 @@
     "passwordPlaceholder": "Shigar da kalmar sirri",
     "passwordRequired": "Don Allah a shigar da kalmar sirri.",
     "passwordMin": "Kalmar sirri dole ta kasance aƙalla haruffa 8.",
-    "button": "Tabbatar kuma Karɓi Lamuni"
+    "button": "Tabbatar kuma Karɓi Lamuni",
+    "cancelButton": "Soke Aikace-aikacen Lamuni",
+    "cancelModalTitle": "Soke Aikace-aikacen Lamuni?",
+    "cancelModalBody": "Kana da tabbacin kana son soke wannan aikace-aikacen lamuni? Wannan zai soke aikace-aikacen da ke jiran amincewa.",
+    "cancelModalNo": "Bar aikace-aikacen",
+    "cancelModalYes": "Soke aikace-aikacen",
+    "cancelSuccess": "An soke aikace-aikacen lamuni cikin nasara.",
+    "cancelError": "Ba a iya soke aikace-aikacen lamuni ba. Don Allah a sake gwadawa.",
+    "cancelMissingLoan": "Ba a sami aikace-aikacen lamuni da ke jiran amincewa ba."
   },
   "loanApprovalModal": {
     "title": "An Amince da Lamuni Kuma An Tura Shi!",
@@ -457,7 +465,7 @@
     "title": "Soke Aikace-aikacen?",
     "body": "Ka tabbata kana son sokewa? Duk bayanan da ka shigar za su bace.",
     "noButton": "A'a, koma baya",
-    "yesButton": "Eh, soke",
+    "yesButton": "Eh, share fom",
     "cancelSuccess": "An soke aikace-aikacen rancen cikin nasara.",
     "cancelError": "Ba a iya soke aikace-aikacen rancen ba. Don Allah a sake gwadawa."
   },

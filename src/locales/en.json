@@ -445,7 +445,15 @@
     "passwordPlaceholder": "Enter your password",
     "passwordRequired": "Please enter your password",
     "passwordMin": "Password must be at least 8 characters",
-    "button": "Confirm and Receive Loan"
+    "button": "Confirm and Receive Loan",
+    "cancelButton": "Cancel Loan Application",
+    "cancelModalTitle": "Cancel Loan Application?",
+    "cancelModalBody": "Are you sure you want to cancel this loan application? This will cancel the pending application.",
+    "cancelModalNo": "Keep application",
+    "cancelModalYes": "Cancel application",
+    "cancelSuccess": "Loan application cancelled successfully.",
+    "cancelError": "Unable to cancel the loan application. Please try again.",
+    "cancelMissingLoan": "No pending loan application was found."
   },
   "loanApprovalModal": {
     "title": "Loan Approved & Sent!",
@@ -457,7 +465,7 @@
     "title": "Cancel Application?",
     "body": "Are you sure you want to cancel? Any information you've entered so far will be lost.",
     "noButton": "No, go back",
-    "yesButton": "Yes, cancel",
+    "yesButton": "Yes, clear form",
     "cancelSuccess": "Loan application cancelled successfully.",
     "cancelError": "Unable to cancel the loan application. Please try again."
   },

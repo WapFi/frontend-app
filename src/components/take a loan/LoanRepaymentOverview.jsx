@@ -1,16 +1,16 @@
-import BackArrow from "../../assets/back arrow.svg";
-import LoanApprovalModal from "./LoanApprovalModal";
-import { useTranslation } from "react-i18next";
-import LoadingSpinner from "../LoadingSpinner";
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { useLoanForm } from "../../context/LoanFormContext";
-import { confirmLoanApplication } from "../../api/loansApi";
+import { cancelPendingLoan, confirmLoanApplication } from "../../api/loansApi";
+import BackArrow from "../../assets/back arrow.svg";
 import { useDashboard } from "../../context/DashboardContext";
+import { useLoanForm } from "../../context/LoanFormContext";
 import { use_UserData } from "../../context/UserContext";
+import LoadingSpinner from "../LoadingSpinner";
+import LoanApprovalModal from "./LoanApprovalModal";
 
 export default function LoanRepaymentOverview() {
   const { t } = useTranslation();
@@ -45,6 +45,12 @@ export default function LoanRepaymentOverview() {
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [cancelError, setCancelError] = useState("");
+  const [cancelSuccess, setCancelSuccess] = useState("");
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [loanCancelled, setLoanCancelled] = useState(false);
+
   // Form validation schema
   const schema = yup.object({
     password: yup
@@ -61,8 +67,10 @@ export default function LoanRepaymentOverview() {
 
   // Reconstruct loanFormData from pending loan and userData if empty
   useEffect(() => {
-    // Check a key which determines if loanFormData is empty or invalid
-    if (!loanFormData.loan_amount || loanFormData.loan_amount === "") {
+    if (
+      !loanCancelled &&
+      (!loanFormData.loan_amount || loanFormData.loan_amount === "")
+    ) {
       if (loanDetails) {
         const updatedFields = {
           loan_amount: loanDetails.loan_amount ?? "",
@@ -88,7 +96,7 @@ export default function LoanRepaymentOverview() {
         updateLoanFormData(updatedFields);
       }
     }
-  }, [loanDetails, loanFormData.loan_amount, updateLoanFormData, userData]);
+  }, [loanCancelled, loanDetails, loanFormData.loan_amount, updateLoanFormData, userData]);
 
   // Guard rendering until form data is ready
   if (!loanDetails || !isDataReady) {
@@ -112,7 +120,7 @@ export default function LoanRepaymentOverview() {
 
       const response = await confirmLoanApplication(
         loanIdToConfirm,
-        passwordData.password
+        passwordData.password,
       );
 
       if (response.status === 200) {
@@ -136,6 +144,47 @@ export default function LoanRepaymentOverview() {
     }
   };
 
+  const handleCancelPendingLoan = async () => {
+    const loanIdToCancel = loanDetails?._id;
+
+    if (!loanIdToCancel) {
+      setCancelError(t("loanRepaymentOverview.cancelMissingLoan"));
+      return;
+    }
+
+    setCancelLoading(true);
+    setCancelError("");
+    setCancelSuccess("");
+
+    try {
+      const response = await cancelPendingLoan(loanIdToCancel);
+
+      if (response.status === 200) {
+        setLoanCancelled(true);
+        clearLoanFormData();
+        localStorage.removeItem("pendingLoanID");
+        setShowCancelConfirm(false);
+        setCancelSuccess(
+          response.data?.message || t("loanRepaymentOverview.cancelSuccess"),
+        );
+
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 4000);
+      } else {
+        setCancelError(
+          response.data?.message || t("loanRepaymentOverview.cancelError"),
+        );
+      }
+    } catch (error) {
+      setCancelError(
+        error.response?.data?.message || t("loanRepaymentOverview.cancelError"),
+      );
+    } finally {
+      setCancelLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="w-[95%] mx-auto md:w-[80%] flex flex-col gap-3 pb-12 lg:bg-white lg:mr-34 rounded-[12px] lg:p-6 lg:my-16 border-[rgba(0,0,0,0.08)]">
@@ -152,6 +201,18 @@ export default function LoanRepaymentOverview() {
               {t("loanRepaymentOverview.title")}
             </p>
           </div>
+
+          {cancelError && (
+            <p className="text-red-500 mb-3 text-center" role="alert">
+              {cancelError}
+            </p>
+          )}
+
+          {cancelSuccess && (
+            <p className="text-green-500 mb-3 text-center" role="status">
+              {cancelSuccess}
+            </p>
+          )}
 
           {formError && (
             <p className="text-red-500 mb-3 text-center">
@@ -308,6 +369,19 @@ export default function LoanRepaymentOverview() {
             >
               {loading ? <LoadingSpinner /> : t("loanRepaymentOverview.button")}
             </button>
+
+            <button
+              type="button"
+              disabled={loading || cancelLoading}
+              onClick={() => setShowCancelConfirm(true)}
+              className={`text-center w-full rounded-[50px] border border-red-500 text-red-500 my-2 font-medium py-3 px-3 hover:bg-red-50 transition-colors duration-300 ${
+                loading || cancelLoading
+                  ? "cursor-not-allowed opacity-60"
+                  : "cursor-pointer"
+              }`}
+            >
+              {t("loanRepaymentOverview.cancelButton")}
+            </button>
           </form>
         </div>
       </div>
@@ -315,6 +389,48 @@ export default function LoanRepaymentOverview() {
         <LoanApprovalModal
           data={loanDetails} // Pass loanDetails to the modal
         />
+      )}
+
+      {showCancelConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-[12px] bg-white p-6 shadow-lg">
+            <p className="text-xl font-raleway font-bold text-[#10172E]">
+              {t("loanRepaymentOverview.cancelModalTitle")}
+            </p>
+
+            <p className="mt-3 text-[#656565]">
+              {t("loanRepaymentOverview.cancelModalBody")}
+            </p>
+
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                type="button"
+                disabled={cancelLoading}
+                onClick={() => setShowCancelConfirm(false)}
+                className="w-full rounded-[50px] border border-[#439182] px-4 py-3 text-sm font-medium text-[#439182] hover:bg-[#439182]/10 sm:w-auto sm:min-w-[150px]"
+              >
+                {t("loanRepaymentOverview.cancelModalNo")}
+              </button>
+
+              <button
+                type="button"
+                disabled={cancelLoading}
+                onClick={handleCancelPendingLoan}
+                className={`w-full rounded-[50px] bg-red-500 px-4 py-3 text-sm font-medium text-white hover:opacity-80 sm:w-auto sm:min-w-[160px] ${
+                  cancelLoading
+                    ? "cursor-not-allowed opacity-60"
+                    : "cursor-pointer"
+                }`}
+              >
+                {cancelLoading ? (
+                  <LoadingSpinner />
+                ) : (
+                  t("loanRepaymentOverview.cancelModalYes")
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

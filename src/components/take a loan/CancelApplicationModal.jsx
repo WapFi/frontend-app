@@ -1,13 +1,6 @@
 import { useTranslation } from "react-i18next";
-import LoadingSpinner from "../LoadingSpinner";
 
-export default function CancelApplicationModal({
-  onConfirm,
-  onCancel,
-  loading,
-  error,
-  success,
-}) {
+export default function CancelApplicationModal({ onConfirm, onCancel }) {
   const { t } = useTranslation();
 
   return (
@@ -18,39 +11,19 @@ export default function CancelApplicationModal({
       <p className="text-[rgba(68,68,68,0.80)]">
         {t("cancelApplicationModal.body")}
       </p>
-      {error && (
-        <p className="text-red-500 text-sm" role="alert">
-          {error}
-        </p>
-      )}
 
-      {success && (
-        <p className="text-green-600 text-sm" role="status">
-          {success}
-        </p>
-      )}
       <div className="flex items-center justify-center gap-6">
         <button
-          disabled={loading || Boolean(success)}
           onClick={onCancel}
-          className={`border border-[rgba(0,0,0,0.08)] font-medium rounded-[40px] bg-white py-2.5 px-6 hover:opacity-60 transition-opacity duration-300 ${
-            loading || success
-              ? "cursor-not-allowed opacity-60"
-              : "cursor-pointer"
-          }`}
+          className="border border-[rgba(0,0,0,0.08)] font-medium rounded-[40px] bg-white py-2.5 px-6 hover:opacity-60 transition-opacity duration-300 cursor-pointer"
         >
           {t("cancelApplicationModal.noButton")}
         </button>
         <button
-          disabled={loading || Boolean(success)}
           onClick={onConfirm}
-          className={`text-white bg-[#439182] font-medium border border-[rgba(0,0,0,0.08)] rounded-[40px] py-2.5 px-6 hover:opacity-80 transition-opacity duration-300 ${
-            loading || success
-              ? "cursor-not-allowed opacity-60"
-              : "cursor-pointer"
-          }`}
+          className="text-white bg-[#439182] font-medium border border-[rgba(0,0,0,0.08)] rounded-[40px] py-2.5 px-6 hover:opacity-80 transition-opacity duration-300 cursor-pointer"
         >
-          {loading ? <LoadingSpinner /> : t("cancelApplicationModal.yesButton")}
+          {t("cancelApplicationModal.yesButton")}
         </button>
       </div>
     </div>
