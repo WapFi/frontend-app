@@ -237,7 +237,7 @@ export default function VerifyPhoneNumber() {
           />
         </div>
         <button
-          disabled={loading || Boolean(showSuccessMessage)}
+          disabled={loading || Boolean(showVerificationSuccess)}
           type="submit"
           className={`text-center w-full my-6 rounded-[50px] text-[#FFF] font-medium bg-[#439182] py-3 px-3 hover:opacity-80 transition-opacity duration-300 ${
             loading || showVerificationSuccess
