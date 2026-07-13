@@ -4,10 +4,10 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import { signUp } from "../../api/authApi";
 import BackgroundImage from "../BackgroundImage";
 import LoadingSpinner from "../LoadingSpinner";
 import WapfiLogo from "../WapfiLogo";
-import { signUp } from "../../api/authApi";
 
 function SignUpAccountVerification() {
   const [fadeIn, setFadeIn] = useState(false);
@@ -72,9 +72,20 @@ function SignUpAccountVerification() {
     register,
     handleSubmit,
     reset,
+    watch,
+    trigger,
     // setValue,
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
+
+  const password = watch("password");
+  const confirmedPassword = watch("confirmedPassword");
+
+  useEffect(() => {
+    if (confirmedPassword) {
+      trigger("confirmedPassword");
+    }
+  }, [password, confirmedPassword, trigger]);
 
   const onSubmit = async (signUpData) => {
     setLoading(true);
