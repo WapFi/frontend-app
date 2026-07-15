@@ -1,87 +1,126 @@
-
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 import { addRepayment } from "../../../api/repaymentsApi";
 import LoanRepaymentSuccessModal from "../modals/LoanRepaymentSuccessModal";
 
 function AddRepayment() {
-  const [formData, setFormData] = useState({
-    borrowerIdentifier: "",
-    // loanId: "",
-    repaymentMethod: "",
-    // repaymentDate: ""
-  });
-  // NEW: Separate states for cash amount and recyclable quantity
-  const [cashAmount, setCashAmount] = useState("");
-  const [recyclableQuantity, setRecyclableQuantity] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [repaymentEquivalent, setRepaymentEquivalent] = useState(0);
   const [successMessage, setSuccessMessage] = useState("");
 
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const schema = yup.object({
+    borrowerIdentifier: yup
+      .string()
+      .trim()
+      .required("Borrower email or phone number is required")
+      .test(
+        "is-email-or-phone",
+        "Enter a valid borrower email address or 11-digit phone number",
+        (value) =>
+          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value || "") ||
+          /^\d{11}$/.test(value || ""),
+      ),
+
+    repaymentMethod: yup
+      .string()
+      .required("Repayment method is required")
+      .oneOf(
+        ["CASH", "RECYCLABLES", "BOTH"],
+        "Select a valid repayment method",
+      ),
+
+    cashAmount: yup
+      .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value,
+      )
+      .when("repaymentMethod", {
+        is: (method) => method === "CASH" || method === "BOTH",
+        then: (schema) =>
+          schema
+            .typeError("Cash amount must be a number")
+            .required("Cash amount is required")
+            .positive("Cash amount must be greater than 0"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+
+    recyclableQuantity: yup
+      .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value,
+      )
+      .when("repaymentMethod", {
+        is: (method) => method === "RECYCLABLES" || method === "BOTH",
+        then: (schema) =>
+          schema
+            .typeError("Recyclable quantity must be a number")
+            .required("Recyclable quantity is required")
+            .positive("Recyclable quantity must be greater than 0"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    mode: "onChange",
+    resolver: yupResolver(schema),
+    defaultValues: {
+      borrowerIdentifier: "",
+      repaymentMethod: "",
+      cashAmount: "",
+      recyclableQuantity: "",
+    },
+  });
+
+  const repaymentMethod = watch("repaymentMethod");
+  const cashAmount = watch("cashAmount");
+  const recyclableQuantity = watch("recyclableQuantity");
+
+  const handleMethodChange = (event) => {
+    const selectedMethod = event.target.value;
+
+    setValue("repaymentMethod", selectedMethod, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+
+    setValue("cashAmount", "", { shouldValidate: false });
+    setValue("recyclableQuantity", "", { shouldValidate: false });
   };
 
-  const handleMethodChange = (value) => {
-    setFormData((prev) => ({ ...prev, repaymentMethod: value }));
-    // Reset cash and quantity inputs when method changes
-    setCashAmount("");
-    setRecyclableQuantity("");
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     setLoading(true);
     setError("");
 
     try {
-
-      if (!formData.repaymentMethod) {
-        throw new Error("Repayment method is required");
-      }
-
-      if (formData.repaymentMethod === "CASH" && !cashAmount) {
-        throw new Error("Cash amount is required");
-      }
-      if (formData.repaymentMethod === "RECYCLABLES" && !recyclableQuantity) {
-        throw new Error("Recyclable quantity is required");
-      }
-      if (
-        formData.repaymentMethod === "BOTH" &&
-        (!cashAmount || !recyclableQuantity)
-      ) {
-        throw new Error(
-          "Both cash amount and recyclable quantity are required"
-        );
-      }
-
-      // Prepare repayment data based on selected method
       const repaymentData = {
-        // loan_id: formData.loanId,
-        identifier: formData.borrowerIdentifier,
-        repayment_method: formData.repaymentMethod.toUpperCase(),
-        // repayment_date: formData.repaymentDate ? new Date(formData.repaymentDate) : new Date(),
+        identifier: data.borrowerIdentifier.trim(),
+        repayment_method: data.repaymentMethod,
         plastic_weight_kg: 0,
         cash_amount: 0,
       };
 
-      if (formData.repaymentMethod === "RECYCLABLES") {
-        repaymentData.plastic_weight_kg = parseFloat(recyclableQuantity);
-      } else if (formData.repaymentMethod === "CASH") {
-        repaymentData.cash_amount = parseFloat(cashAmount);
-      } else if (formData.repaymentMethod === "BOTH") {
-        repaymentData.plastic_weight_kg = parseFloat(recyclableQuantity);
-        repaymentData.cash_amount = parseFloat(cashAmount);
+      if (data.repaymentMethod === "RECYCLABLES") {
+        repaymentData.plastic_weight_kg = data.recyclableQuantity;
+      } else if (data.repaymentMethod === "CASH") {
+        repaymentData.cash_amount = data.cashAmount;
+      } else if (data.repaymentMethod === "BOTH") {
+        repaymentData.plastic_weight_kg = data.recyclableQuantity;
+        repaymentData.cash_amount = data.cashAmount;
       }
 
       const response = await addRepayment(repaymentData);
 
-      // Get the calculated equivalent from the API response
       const plasticValue = response.data?.plastic_value_naira || 0;
       const cashPaid = response.data?.cash_amount || 0;
       const totalRepayment = plasticValue + cashPaid;
@@ -94,8 +133,9 @@ function AddRepayment() {
         throw new Error(response.message || "Failed to add repayment");
       }
     } catch (err) {
-      console.error("Error adding repayment:", err);
-      setError(err.response?.data?.message || "Failed to add repayment");
+      setError(
+        err.response?.data?.message || err.message || "Failed to add repayment",
+      );
     } finally {
       setLoading(false);
     }
@@ -106,14 +146,12 @@ function AddRepayment() {
     setSuccessMessage("");
     // Reset form
     setError("");
-    setFormData({
+    reset({
       borrowerIdentifier: "",
-      // loanId: "",
       repaymentMethod: "",
-      // repaymentDate: ""
+      cashAmount: "",
+      recyclableQuantity: "",
     });
-    setCashAmount("");
-    setRecyclableQuantity("");
   };
 
   return (
@@ -125,7 +163,7 @@ function AddRepayment() {
           </h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
               {error}
@@ -140,13 +178,14 @@ function AddRepayment() {
             <input
               type="text"
               placeholder="Enter borrower email or phone number"
-              value={formData.borrowerIdentifier}
-              onChange={(e) =>
-                handleInputChange("borrowerIdentifier", e.target.value)
-              }
+              {...register("borrowerIdentifier")}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
-              required
             />
+            {errors.borrowerIdentifier && (
+              <p className="text-red-600 text-sm mt-1">
+                {errors.borrowerIdentifier.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -154,22 +193,25 @@ function AddRepayment() {
               Repayment Method
             </label>
             <select
-              name="repaymentMethod"
-              value={formData.repaymentMethod}
-              onChange={(e) => handleMethodChange(e.target.value)}
+              {...register("repaymentMethod")}
+              onChange={handleMethodChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
-              required
             >
               <option value="">Select repayment method</option>
               <option value="CASH">Cash</option>
               <option value="RECYCLABLES">Recyclables</option>
               <option value="BOTH">Both</option>
             </select>
+            {errors.repaymentMethod && (
+              <p className="text-red-600 text-sm mt-1">
+                {errors.repaymentMethod.message}
+              </p>
+            )}
           </div>
 
           {/* Conditional Inputs */}
-          {(formData.repaymentMethod === "RECYCLABLES" ||
-            formData.repaymentMethod === "BOTH") && (
+          {(repaymentMethod === "RECYCLABLES" ||
+            repaymentMethod === "BOTH") && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Recyclables Quantity (kg)
@@ -177,17 +219,20 @@ function AddRepayment() {
               <input
                 type="number"
                 placeholder="Enter quantity in kg"
-                value={recyclableQuantity}
-                onChange={(e) => setRecyclableQuantity(e.target.value)}
+                {...register("recyclableQuantity")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
-                required
-                min="0"
+                min="0.01"
+                step="0.01"
               />
+              {errors.recyclableQuantity && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.recyclableQuantity.message}
+                </p>
+              )}
             </div>
           )}
 
-          {(formData.repaymentMethod === "CASH" ||
-            formData.repaymentMethod === "BOTH") && (
+          {(repaymentMethod === "CASH" || repaymentMethod === "BOTH") && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Cash Amount (₦)
@@ -195,12 +240,16 @@ function AddRepayment() {
               <input
                 type="number"
                 placeholder="Enter cash amount"
-                value={cashAmount}
-                onChange={(e) => setCashAmount(e.target.value)}
+                {...register("cashAmount")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
-                required
-                min="0"
+                min="0.01"
+                step="0.01"
               />
+              {errors.cashAmount && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.cashAmount.message}
+                </p>
+              )}
             </div>
           )}
 
@@ -222,11 +271,11 @@ function AddRepayment() {
           repaymentData={{
             cashAmount, // Pass cash amount
             recyclableQuantity, // Pass quantity
-            repaymentMethod: formData.repaymentMethod, // Pass method
+            repaymentMethod,
+            borrowerIdentifier: watch("borrowerIdentifier"),
             totalAmount: repaymentEquivalent, // Total amount from API
-            borrowerIdentifier: formData.borrowerIdentifier,
           }}
-         responseMessage={successMessage}
+          responseMessage={successMessage}
         />
       )}
     </div>
