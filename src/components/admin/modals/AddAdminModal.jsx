@@ -1,81 +1,77 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
-import { addAdmin } from "../../../api/adminApi";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import * as yup from "yup";
+import { addAdmin } from "../../../api/adminApi";
 
 function AddAdminModal({ onClose, onAdminAdded }) {
-  const [formData, setFormData] = useState({
-    identifier: "",
-    fullname: "",
-    password: ""
-  });
-  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ""
-      }));
-    }
-  };
+  const schema = yup.object({
+    identifier: yup
+      .string()
+      .trim()
+      .required("Email address is required")
+      .email("Enter a valid email address"),
+    fullname: yup
+      .string()
+      .trim()
+      .required("Full name is required")
+      .min(2, "Full name must be at least 2 characters"),
+    password: yup
+      .string()
+      .required("Password is required")
+      .min(8, "Password must be at least 8 characters"),
+  });
 
-  const validateForm = () => {
-    const newErrors = {};
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { errors },
+  } = useForm({
+    mode: "onChange",
+    resolver: yupResolver(schema),
+    defaultValues: {
+      identifier: "",
+      fullname: "",
+      password: "",
+    },
+  });
 
-    if (!formData.identifier.trim()) {
-      newErrors.identifier = "Identifier is required";
-    } else if (!formData.identifier.includes("@")) {
-      newErrors.identifier = "Please enter a valid email address";
-    }
-
-    if (!formData.fullname.trim()) {
-      newErrors.fullname = "Full name is required";
-    } else if (formData.fullname.trim().length < 2) {
-      newErrors.fullname = "Full name must be at least 2 characters";
-    }
-
-    if (!formData.password.trim()) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
+  const onSubmit = async (data) => {
     setLoading(true);
-    setErrors({});
+
     try {
       const payload = {
-        identifier: formData.identifier,
-        full_name: formData.fullname,
-        password: formData.password
+        identifier: data.identifier.trim().toLowerCase(),
+        full_name: data.fullname.trim(),
+        password: data.password,
       };
+
       const response = await addAdmin(payload);
+
       if (response.status) {
-        toast.success("Admin added successfully");
-        if (onAdminAdded) onAdminAdded();
-        setFormData({ identifier: "", fullname: "", password: "" });
+        toast.success(response.message || "Admin added successfully");
+        reset();
+
+        if (onAdminAdded) {
+          onAdminAdded();
+        }
       } else {
-        setErrors({ submit: response.message || "Failed to add admin." });
-        toast.error(response.message || "Failed to add admin.");
+        const message = response.message || "Failed to add admin.";
+        setError("root", { message });
+        toast.error(message);
       }
     } catch (error) {
-      setErrors({ submit: "Failed to add admin. Please try again." });
-      toast.error("Failed to add admin. Please try again.");
+      const message =
+        error.response?.data?.message ||
+        "Failed to add admin. Please try again.";
+
+      setError("root", { message });
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -86,92 +82,113 @@ function AddAdminModal({ onClose, onAdminAdded }) {
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-gray-900">Add New Administrator</h2>
+          <h2 className="text-xl font-bold text-gray-900">
+            Add New Administrator
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Identifier */}
           <div>
-            <label htmlFor="identifier" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="identifier"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Identifier (Email)
             </label>
             <input
               type="email"
               id="identifier"
-              name="identifier"
-              value={formData.identifier}
-              onChange={handleInputChange}
+              {...register("identifier")}
               className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-1 transition-colors ${
-                errors.identifier 
+                errors.identifier
                   ? "border-red-300 focus:ring-red-500 focus:border-red-500"
                   : "border-gray-300 focus:ring-yellow-500 focus:border-yellow-500"
               }`}
               placeholder="Enter email address"
             />
             {errors.identifier && (
-              <p className="mt-1 text-sm text-red-600">{errors.identifier}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {errors.identifier.message}
+              </p>
             )}
           </div>
 
           {/* Full Name */}
           <div>
-            <label htmlFor="fullname" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="fullname"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Full Name
             </label>
             <input
               type="text"
               id="fullname"
-              name="fullname"
-              value={formData.fullname}
-              onChange={handleInputChange}
+              {...register("fullname")}
               className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-1 transition-colors ${
-                errors.fullname 
+                errors.fullname
                   ? "border-red-300 focus:ring-red-500 focus:border-red-500"
                   : "border-gray-300 focus:ring-yellow-500 focus:border-yellow-500"
               }`}
               placeholder="Enter full name"
             />
             {errors.fullname && (
-              <p className="mt-1 text-sm text-red-600">{errors.fullname}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {errors.fullname.message}
+              </p>
             )}
           </div>
 
           {/* Password */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Password
             </label>
             <input
               type="password"
               id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
+              {...register("password")}
               className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-1 transition-colors ${
-                errors.password 
+                errors.password
                   ? "border-red-300 focus:ring-red-500 focus:border-red-500"
                   : "border-gray-300 focus:ring-yellow-500 focus:border-yellow-500"
               }`}
-              placeholder="Enter password (min. 6 characters)"
+              placeholder="Enter password (min. 8 characters)"
             />
             {errors.password && (
-              <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {errors.password.message}
+              </p>
             )}
           </div>
 
           {/* Submit Error */}
-          {errors.submit && (
+          {errors.root && (
             <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-              {errors.submit}
+              {errors.root.message}
             </div>
           )}
 
