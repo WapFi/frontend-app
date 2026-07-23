@@ -62,7 +62,7 @@
   },
   "change_password": {
     "title": "Canza Kalmar Sirri",
-    "subtext": "Shigar da kalmar sirri ta yanzu kuma saita sabuwa don kiyaye asusunka lafiya",
+    "subtext": "Saita sabuwar kalmar sirri domin sake samun damar shiga asusunka.",
     "success": "An canza kalmar sirri cikin nasara!",
     "general_error": "Da fatan a cika duka filayen daidai don sabunta kalmar sirri.",
     "new": "Sabuwar Kalmar Sirri",
@@ -79,7 +79,7 @@
   },
   "forgot_password": {
     "title": "Ka manta kalmar sirri?",
-    "subtext": "Za mu aiko maka da lamba guda huɗu zuwa imel ko lambar wayarka domin tantance kai da kuma taimaka maka ka saita sabuwar kalmar sirri.",
+    "subtext": "Za mu aiko maka da lamba mai lambobi shida zuwa imel ko lambar wayarka domin tantance kai da taimaka maka saita sabuwar kalmar sirri.",
     "error": "Ba za mu iya aika lamban ba. Da fatan a tabbatar da cewa imel ko lambar waya ya dace.",
     "success": "An aika da lambobin tabbatarwa cikin nasara!",
     "email_or_phone": "Imel ko Lambar waya",
@@ -94,7 +94,7 @@
   },
   "verify": {
     "title": "Tabbatar da Imel ko Lambar Waya",
-    "subtext": "Da fatan za a shigar da lambobi huɗu da aka aiko zuwa imel ko lambar wayarka.",
+    "subtext": "Da fatan za a shigar da lamba mai lambobi shida da aka aika zuwa imel ko lambar wayarka.",
     "error": "Lambobin da ka shigar ba daidai bane. Da fatan a sake gwadawa.",
     "success": "An tabbatar da lambar cikin nasara!",
     "continue": "Ci gaba",
@@ -608,7 +608,7 @@
 
   "settingsVerify": {
     "title": "Tabbatar da Imel ko Lambar Wayarka",
-    "subtext": "Mun aiko lambar lambobi 4 zuwa imel ko wayarka. Da fatan za a shigar da ita don tabbatar da asusunka.",
+    "subtext": "Mun aika maka da lamba mai lambobi shida zuwa imel ko lambar wayarka. Da fatan za a shigar da ita a ƙasa domin tabbatar da asusunka.",
     "continue": "Ci gaba",
     "resend": "Aiko lamba karo na biyu",
     "resend_in": "Aiko lamba a cikin",

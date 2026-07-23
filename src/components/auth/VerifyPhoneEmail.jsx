@@ -1,14 +1,14 @@
-import arrowTimer from "../../assets/arrow-timer.svg";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useEffect, useState, useRef } from "react";
-import WapfiLogo from "../WapfiLogo";
-import LoadingSpinner from "../LoadingSpinner";
-import BackgroundImage from "../BackgroundImage";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
 import { requestPasswordReset, verifyResetCode } from "../../api/authApi";
+import arrowTimer from "../../assets/arrow-timer.svg";
+import BackgroundImage from "../BackgroundImage";
+import LoadingSpinner from "../LoadingSpinner";
+import WapfiLogo from "../WapfiLogo";
 
 function VerifyPhoneEmail() {
   const [fadeIn, setFadeIn] = useState(false);
@@ -19,6 +19,8 @@ function VerifyPhoneEmail() {
   const secondRef = useRef(null);
   const thirdRef = useRef(null);
   const fourthRef = useRef(null);
+  const fifthRef = useRef(null);
+  const sixthRef = useRef(null);
 
   useEffect(() => {
     setFadeIn(true);
@@ -59,6 +61,20 @@ function VerifyPhoneEmail() {
       .test("is-digit", t("verify.errors.invalid_digit"), (value) => {
         return /^\d{1}$/.test(value);
       }),
+
+    fifthDigit: yup
+      .string()
+      .required(t("verify.errors.digit_required"))
+      .test("is-digit", t("verify.errors.invalid_digit"), (value) => {
+        return /^\d{1}$/.test(value);
+      }),
+
+    sixthDigit: yup
+      .string()
+      .required(t("verify.errors.digit_required"))
+      .test("is-digit", t("verify.errors.invalid_digit"), (value) => {
+        return /^\d{1}$/.test(value);
+      }),
   });
 
   const [showFormError, setShowFormError] = useState("");
@@ -94,7 +110,9 @@ function VerifyPhoneEmail() {
       otpCode.firstDigit +
       otpCode.secondDigit +
       otpCode.thirdDigit +
-      otpCode.fourthDigit;
+      otpCode.fourthDigit +
+      otpCode.fifthDigit +
+      otpCode.sixthDigit;
 
     try {
       const response = await verifyResetCode(code);
@@ -103,8 +121,6 @@ function VerifyPhoneEmail() {
         localStorage.setItem("otpCode", code);
 
         setShowVerificationSuccess(response.data?.message);
-
-        localStorage.removeItem("userIdentifier");
 
         setTimeout(() => {
           navigate("/change-password");
@@ -216,7 +232,7 @@ function VerifyPhoneEmail() {
               </button>
             </div>
 
-            <div className="w-[263px] flex justify-center items-center gap-3 mx-auto -mt-2.5 text-[rgba(34,34,34,0.50)]">
+            <div className="w-full flex justify-center items-center gap-2 mx-auto -mt-2.5 text-[rgba(34,34,34,0.50)] sm:gap-3">
               <input
                 type="text"
                 maxLength={1}
@@ -252,8 +268,28 @@ function VerifyPhoneEmail() {
                 maxLength={1}
                 {...register("fourthDigit")}
                 ref={mergeRefs(register("fourthDigit").ref, fourthRef)}
-                onChange={(e) => handleInput(e, null, thirdRef)}
-                onKeyDown={(e) => handleInput(e, null, thirdRef)}
+                onChange={(e) => handleInput(e, fifthRef, thirdRef)}
+                onKeyDown={(e) => handleInput(e, fifthRef, thirdRef)}
+                className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
+              />
+
+              <input
+                type="text"
+                maxLength={1}
+                {...register("fifthDigit")}
+                ref={mergeRefs(register("fifthDigit").ref, fifthRef)}
+                onChange={(e) => handleInput(e, sixthRef, fourthRef)}
+                onKeyDown={(e) => handleInput(e, sixthRef, fourthRef)}
+                className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
+              />
+
+              <input
+                type="text"
+                maxLength={1}
+                {...register("sixthDigit")}
+                ref={mergeRefs(register("sixthDigit").ref, sixthRef)}
+                onChange={(e) => handleInput(e, null, fifthRef)}
+                onKeyDown={(e) => handleInput(e, null, fifthRef)}
                 className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
               />
             </div>

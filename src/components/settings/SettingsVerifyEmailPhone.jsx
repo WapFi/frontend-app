@@ -1,12 +1,12 @@
-import arrowTimer from "../../assets/arrow-timer.svg";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useEffect, useState, useRef } from "react";
-import LoadingSpinner from "../LoadingSpinner";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
 import { requestPasswordReset, verifyResetCode } from "../../api/authApi";
+import arrowTimer from "../../assets/arrow-timer.svg";
+import LoadingSpinner from "../LoadingSpinner";
 
 export default function SettingsVerifyEmailPhone() {
   const [loading, setLoading] = useState(false);
@@ -16,6 +16,8 @@ export default function SettingsVerifyEmailPhone() {
   const secondRef = useRef(null);
   const thirdRef = useRef(null);
   const fourthRef = useRef(null);
+  const fifthRef = useRef(null);
+  const sixthRef = useRef(null);
 
   useEffect(() => {
     // Focus the first input on mount
@@ -50,6 +52,20 @@ export default function SettingsVerifyEmailPhone() {
       }),
 
     fourthDigit: yup
+      .string()
+      .required(t("settingsVerify.errors.digit_required"))
+      .test("is-digit", t("settingsVerify.errors.invalid_digit"), (value) => {
+        return /^\d{1}$/.test(value);
+      }),
+
+    fifthDigit: yup
+      .string()
+      .required(t("settingsVerify.errors.digit_required"))
+      .test("is-digit", t("settingsVerify.errors.invalid_digit"), (value) => {
+        return /^\d{1}$/.test(value);
+      }),
+
+    sixthDigit: yup
       .string()
       .required(t("settingsVerify.errors.digit_required"))
       .test("is-digit", t("settingsVerify.errors.invalid_digit"), (value) => {
@@ -98,7 +114,9 @@ export default function SettingsVerifyEmailPhone() {
       otpCode.firstDigit +
       otpCode.secondDigit +
       otpCode.thirdDigit +
-      otpCode.fourthDigit;
+      otpCode.fourthDigit +
+      otpCode.fifthDigit +
+      otpCode.sixthDigit;
 
     try {
       const response = await verifyResetCode(code);
@@ -113,8 +131,6 @@ export default function SettingsVerifyEmailPhone() {
       } else {
         setShowFormError(response.data?.message);
       }
-
-      localStorage.removeItem("userIdentifier");
     } catch (error) {
       setShowFormError(error.response?.data?.message);
     } finally {
@@ -246,8 +262,28 @@ export default function SettingsVerifyEmailPhone() {
             maxLength={1}
             {...register("fourthDigit")}
             ref={mergeRefs(register("fourthDigit").ref, fourthRef)}
-            onChange={(e) => handleInput(e, null, thirdRef)}
-            onKeyDown={(e) => handleInput(e, null, thirdRef)}
+            onChange={(e) => handleInput(e, fifthRef, thirdRef)}
+            onKeyDown={(e) => handleInput(e, fifthRef, thirdRef)}
+            className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
+          />
+
+          <input
+            type="text"
+            maxLength={1}
+            {...register("fifthDigit")}
+            ref={mergeRefs(register("fifthDigit").ref, fifthRef)}
+            onChange={(e) => handleInput(e, sixthRef, fourthRef)}
+            onKeyDown={(e) => handleInput(e, sixthRef, fourthRef)}
+            className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
+          />
+
+          <input
+            type="text"
+            maxLength={1}
+            {...register("sixthDigit")}
+            ref={mergeRefs(register("sixthDigit").ref, sixthRef)}
+            onChange={(e) => handleInput(e, null, fifthRef)}
+            onKeyDown={(e) => handleInput(e, null, fifthRef)}
             className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
           />
         </div>

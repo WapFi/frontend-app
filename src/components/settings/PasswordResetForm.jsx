@@ -1,10 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
-import LoadingSpinner from "../LoadingSpinner";
 import { resetPassword } from "../../api/authApi";
+import LoadingSpinner from "../LoadingSpinner";
 
 export default function PasswordResetForm() {
   const [loading, setLoading] = useState(false);
@@ -33,8 +33,19 @@ export default function PasswordResetForm() {
     register,
     handleSubmit,
     reset,
+    watch,
+    trigger,
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
+
+  const newPassword = watch("newPassword");
+  const confirmedPassword = watch("confirmedPassword");
+
+  useEffect(() => {
+    if (confirmedPassword) {
+      trigger("confirmedPassword");
+    }
+  }, [newPassword, confirmedPassword, trigger]);
 
   const onSubmit = async (passwordData) => {
     setLoading(true);
@@ -48,6 +59,7 @@ export default function PasswordResetForm() {
       // get otp code
       const otp = localStorage.getItem("otpCode");
       const response = await resetPassword({
+        identifier: localStorage.getItem("userIdentifier"),
         code: otp,
         new_password: passwordData.newPassword,
       });
@@ -57,6 +69,7 @@ export default function PasswordResetForm() {
 
         // now remove otp code
         localStorage.removeItem("otpCode");
+        localStorage.removeItem("userIdentifier");
         reset();
       } else {
         setShowFormError(response.data?.message);
