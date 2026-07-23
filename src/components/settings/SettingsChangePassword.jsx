@@ -1,11 +1,11 @@
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { useState } from "react";
-import LoadingSpinner from "../LoadingSpinner";
-import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
+import * as yup from "yup";
 import axios from "../../api/axios";
+import LoadingSpinner from "../LoadingSpinner";
 
 export default function SettingsChangePassword() {
   const [loading, setLoading] = useState(false);
@@ -32,7 +32,7 @@ export default function SettingsChangePassword() {
       .min(8, t("settingsChangePassword.errors.password_min"))
       .oneOf(
         [yup.ref("newPassword"), null],
-        t("settingsChangePassword.errors.passwords_do_not_match")
+        t("settingsChangePassword.errors.passwords_do_not_match"),
       ),
   });
 
@@ -44,10 +44,21 @@ export default function SettingsChangePassword() {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
+    trigger,
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(schema),
   });
+
+  const newPassword = watch("newPassword");
+  const confirmedPassword = watch("confirmedPassword");
+
+  useEffect(() => {
+    if (confirmedPassword) {
+      trigger("confirmedPassword");
+    }
+  }, [newPassword, confirmedPassword, trigger]);
 
   const onSubmit = async (passwordData) => {
     setLoading(true);
