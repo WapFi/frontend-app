@@ -55,6 +55,7 @@ function ChangePassword() {
     }
     try {
       const response = await resetPassword({
+        identifier: localStorage.getItem("userIdentifier"),
         code: localStorage.getItem("otpCode"),
         new_password: passwordData.newPassword,
       });
@@ -66,6 +67,7 @@ function ChangePassword() {
         reset();
 
         localStorage.removeItem("otpCode");
+        localStorage.removeItem("userIdentifier");
         // navigate to sign in page
         setTimeout(() => {
           navigate("/sign-in");

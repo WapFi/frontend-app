@@ -62,7 +62,7 @@
   },
   "change_password": {
     "title": "Change Password",
-    "subtext": "Enter your current password and set a new one to keep your account secure",
+    "subtext": "Set a new password to regain access to your account.",
     "success": "Password changed successfully!",
     "general_error": "Please complete all fields correctly to update your password.",
     "new": "New Password",
@@ -79,7 +79,7 @@
   },
   "forgot_password": {
     "title": "Forgot Password",
-    "subtext": "We'll send you a 4-digit code to your email or phone number to verify your identity and help you reset your password.",
+    "subtext": "We'll send you a 6-digit code to your email or phone number to verify your identity and help you reset your password.",
     "error": "We couldn't send the code. Please make sure your email or phone number is correct.",
     "success": "Verification code sent successfully!",
     "email_or_phone": "Email or Phone Number",
@@ -94,7 +94,7 @@
   },
   "verify": {
     "title": "Verify Your Email or Phone Number",
-    "subtext": "Please enter the 4-digit code sent to your email or phone number.",
+    "subtext": "Please enter the 6-digit code sent to your email or phone number.",
     "error": "The code you entered is incorrect. Please try again.",
     "success": "Code verified successfully!",
     "continue": "Continue",
@@ -609,7 +609,7 @@
 
   "settingsVerify": {
     "title": "Verify Your Email Address or Phone Number",
-    "subtext": "We’ve sent a 4-digit code to your email or phone. Please enter it below to verify your account.",
+    "subtext": "We’ve sent a 6-digit code to your email or phone. Please enter it below to verify your account.",
     "continue": "Continue",
     "resend": "Resend code",
     "resend_in": "Resend code in",
