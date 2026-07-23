@@ -77,8 +77,8 @@ export default function PasswordResetForm() {
     } catch (error) {
       setShowFormError(error.response?.data?.message);
     } finally {
+      setLoading(false);
       setTimeout(() => {
-        setLoading(false);
         setShowSuccessMessage("");
         setShowFormError("");
       }, 3000);
