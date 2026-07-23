@@ -19,11 +19,17 @@ export default function EnterBVN() {
   const [showSuccessMessage, setShowSuccessMessage] = useState("");
   const { refreshNotificationsCount } = useNotifications();
 
-  const { refreshUserData } = use_UserData();
+  const { refreshUserData, userData } = use_UserData();
 
   useEffect(() => {
     setFadeIn(true);
   }, []);
+
+  useEffect(() => {
+    if (userData?.bvn_verified && !userData?.phone_verified) {
+      navigate("/take-a-loan/verify-phone");
+    }
+  }, [userData?.bvn_verified, userData?.phone_verified, navigate]);
 
   const schema = yup.object({
     bvn: yup
@@ -60,6 +66,13 @@ export default function EnterBVN() {
       }
     } catch (error) {
       setFormError(error.response?.data?.message);
+      const freshUserData = await refreshUserData();
+
+      if (freshUserData?.bvn_verified && !freshUserData?.phone_verified) {
+        setTimeout(() => {
+          navigate("/take-a-loan/verify-phone");
+        }, 2500);
+      }
     } finally {
       setLoading(false);
       setTimeout(() => {
