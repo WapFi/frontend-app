@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { requestPasswordReset, verifyResetCode } from "../../api/authApi";
+import { requestPasswordReset } from "../../api/authApi";
 import arrowTimer from "../../assets/arrow-timer.svg";
 import BackgroundImage from "../BackgroundImage";
 import LoadingSpinner from "../LoadingSpinner";
@@ -115,23 +115,14 @@ function VerifyPhoneEmail() {
       otpCode.sixthDigit;
 
     try {
-      const response = await verifyResetCode(code);
+      localStorage.setItem("otpCode", code);
+      setShowVerificationSuccess(t("verify.success"));
 
-      if (response.status === 200) {
-        localStorage.setItem("otpCode", code);
-
-        setShowVerificationSuccess(response.data?.message);
-
-        setTimeout(() => {
-          navigate("/change-password");
-        }, 4000);
-      } else {
-        setShowFormError(response.data?.message);
-      }
-    } catch (error) {
-      console.error("Code verification error:", error);
-      setShowFormError(error.response?.data?.message);
-      // setLoading(false);
+      setTimeout(() => {
+        navigate("/change-password");
+      }, 2000);
+    } catch {
+      setShowFormError(t("verify.error"));
     } finally {
       setLoading(false);
       setTimeout(() => {
