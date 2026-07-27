@@ -453,7 +453,10 @@
     "cancelModalYes": "Cancel application",
     "cancelSuccess": "Loan application cancelled successfully.",
     "cancelError": "Unable to cancel the loan application. Please try again.",
-    "cancelMissingLoan": "No pending loan application was found."
+    "cancelMissingLoan": "No pending loan application was found.",
+    "noPendingTitle": "No pending loan application",
+    "noPendingBody": "You do not have a pending loan application to review.",
+    "noPendingButton": "Back to dashboard"
   },
   "loanApprovalModal": {
     "title": "Loan Approved & Sent!",

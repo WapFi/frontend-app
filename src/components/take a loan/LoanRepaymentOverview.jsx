@@ -96,11 +96,40 @@ export default function LoanRepaymentOverview() {
         updateLoanFormData(updatedFields);
       }
     }
-  }, [loanCancelled, loanDetails, loanFormData.loan_amount, updateLoanFormData, userData]);
+  }, [
+    loanCancelled,
+    loanDetails,
+    loanFormData.loan_amount,
+    updateLoanFormData,
+    userData,
+  ]);
 
   // Guard rendering until form data is ready
-  if (!loanDetails || !isDataReady) {
+  // if (!loanDetails || !isDataReady) {
+  //   return <LoadingSpinner />;
+  // }
+  if (!isDataReady) {
     return <LoadingSpinner />;
+  }
+
+  if (!loanDetails) {
+    return (
+      <div className="w-[95%] mx-auto md:w-[80%] flex flex-col items-center gap-4 rounded-[12px] bg-white p-6 text-center lg:my-16">
+        <p className="text-[24px] font-raleway font-bold text-[#10172E]">
+          {t("loanRepaymentOverview.noPendingTitle")}
+        </p>
+        <p className="text-[#656565]">
+          {t("loanRepaymentOverview.noPendingBody")}
+        </p>
+        <button
+          type="button"
+          onClick={() => navigate("/dashboard")}
+          className="mt-2 rounded-[50px] bg-[#439182] px-6 py-3 font-medium text-white hover:opacity-80"
+        >
+          {t("loanRepaymentOverview.noPendingButton")}
+        </button>
+      </div>
+    );
   }
 
   const handleBackArrowClick = () => {

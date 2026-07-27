@@ -453,7 +453,10 @@
     "cancelModalYes": "Soke aikace-aikacen",
     "cancelSuccess": "An soke aikace-aikacen lamuni cikin nasara.",
     "cancelError": "Ba a iya soke aikace-aikacen lamuni ba. Don Allah a sake gwadawa.",
-    "cancelMissingLoan": "Ba a sami aikace-aikacen lamuni da ke jiran amincewa ba."
+    "cancelMissingLoan": "Ba a sami aikace-aikacen lamuni da ke jiran amincewa ba.",
+    "noPendingTitle": "Babu neman aro da ke jiran kammalawa",
+    "noPendingBody": "Ba ka da neman aro da ke jiran dubawa.",
+    "noPendingButton": "Koma dashboard"
   },
   "loanApprovalModal": {
     "title": "An Amince da Lamuni Kuma An Tura Shi!",
