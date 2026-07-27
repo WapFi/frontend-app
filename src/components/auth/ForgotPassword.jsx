@@ -4,10 +4,10 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import BackgroundImage from "../BackgroundImage";
-import WapfiLogo from "../WapfiLogo";
 import { requestPasswordReset } from "../../api/authApi";
+import BackgroundImage from "../BackgroundImage";
 import LoadingSpinner from "../LoadingSpinner";
+import WapfiLogo from "../WapfiLogo";
 
 function ForgotPassword() {
   const [fadeIn, setFadeIn] = useState(false);
@@ -35,7 +35,8 @@ function ForgotPassword() {
         t("forgot_password.errors.invalid_email_or_phone"),
         (value) => {
           return (
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{11}$/.test(value)
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
+            /^0(?:70|80|81|90|91)\d{8}$/.test(value)
           );
         },
       ),
