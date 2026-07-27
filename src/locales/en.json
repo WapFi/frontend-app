@@ -23,7 +23,7 @@
 
     "errors": {
       "email_or_phone_required": "Please enter your email or phone number",
-      "invalid_email_or_phone": "Invalid email or phone number",
+      "invalid_email_or_phone": "Please enter a valid email or Nigerian phone number, e.g. 08012345678.",
       "password_required": "Please enter your password",
       "password_min": "Password must be at least 8 characters"
     }
@@ -48,7 +48,7 @@
       "full_name_required": "Please enter your full name",
       "full_name_invalid": "Invalid full name",
       "email_or_phone_required": "Please enter your email or phone number",
-      "invalid_email_or_phone": "Invalid email or phone number",
+      "invalid_email_or_phone": "Please enter a valid email or Nigerian phone number, e.g. 08012345678.",
       "password_required": "Please enter your password",
       "password_min": "Password must be at least 8 characters",
       "passwords_do_not_match": "Passwords do not match. Please try again."
@@ -86,7 +86,7 @@
     "continue": "Continue",
     "errors": {
       "email_or_phone_required": "Please enter your email or phone number",
-      "invalid_email_or_phone": "Invalid email or phone number"
+      "invalid_email_or_phone": "Please enter a valid email or Nigerian phone number, e.g. 08012345678."
     },
     "placeholders": {
       "email_phone": "Enter your email address or phone number"
@@ -603,7 +603,7 @@
     "success": "A reset code has been sent to your email or phone.",
     "errors": {
       "email_or_phone_required": "Email or phone number is required.",
-      "invalid_email_or_phone": "Please enter a valid email or 11-digit phone number."
+      "invalid_email_or_phone": "Please enter a valid email or Nigerian phone number, e.g. 08012345678."
     }
   },
 

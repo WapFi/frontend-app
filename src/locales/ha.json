@@ -23,7 +23,7 @@
 
     "errors": {
       "email_or_phone_required": "Da fatan za a shigar da imel ko lambar waya",
-      "invalid_email_or_phone": "Imel ko lambar waya bai dace ba",
+      "invalid_email_or_phone": "Da fatan za a shigar da imel mai inganci ko lambar wayar Najeriya.",
       "password_required": "Da fatan za a shigar da kalmar sirri",
       "password_min": "Kalmar sirri dole ta kasance aƙalla haruffa 8"
     }
@@ -48,7 +48,7 @@
       "full_name_required": "Da fatan a shigar da cikakken suna",
       "full_name_invalid": "Cikakken suna bai dace ba",
       "email_or_phone_required": "Da fatan za a shigar da imel ko lambar waya",
-      "invalid_email_or_phone": "Imel ko lambar waya bai dace ba",
+      "invalid_email_or_phone": "Da fatan za a shigar da imel mai inganci ko lambar wayar Najeriya.",
       "password_required": "Da fatan za a shigar da kalmar sirri",
       "password_min": "Kalmar sirri dole ta kasance aƙalla haruffa 8",
       "passwords_do_not_match": "Kalmar sirri da aka tabbatar ba su dace ba. Don Allah a sake gwadawa."
@@ -86,7 +86,7 @@
     "continue": "Ci gaba",
     "errors": {
       "email_or_phone_required": "Da fatan za a shigar da imel ko lambar waya",
-      "invalid_email_or_phone": "Imel ko lambar waya bai dace ba"
+      "invalid_email_or_phone": "Da fatan za a shigar da imel mai inganci ko lambar wayar Najeriya."
     },
     "placeholders": {
       "email_phone": "Shigar da imel ko lambar waya"
@@ -602,7 +602,7 @@
     "success": "An aiko da lambar sauya kalmar sirri zuwa imel ko wayarka.",
     "errors": {
       "email_or_phone_required": "Dole ne a shigar da imel ko lambar waya.",
-      "invalid_email_or_phone": "Da fatan za a shigar da imel mai inganci ko lambar waya guda 11."
+      "invalid_email_or_phone": "Da fatan za a shigar da imel mai inganci ko lambar wayar Najeriya."
     }
   },
 

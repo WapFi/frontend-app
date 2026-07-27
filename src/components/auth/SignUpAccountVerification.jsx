@@ -50,7 +50,8 @@ function SignUpAccountVerification() {
         t("sign_up.errors.invalid_email_or_phone"),
         (value) => {
           return (
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{11}$/.test(value)
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
+            /^0(?:70|80|81|90|91)\d{8}$/.test(value)
           );
         },
       ),
