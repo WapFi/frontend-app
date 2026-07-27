@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { requestPasswordReset, verifyResetCode } from "../../api/authApi";
+import { requestPasswordReset } from "../../api/authApi";
 import arrowTimer from "../../assets/arrow-timer.svg";
 import LoadingSpinner from "../LoadingSpinner";
 
@@ -119,20 +119,15 @@ export default function SettingsVerifyEmailPhone() {
       otpCode.sixthDigit;
 
     try {
-      const response = await verifyResetCode(code);
       localStorage.setItem("otpCode", code);
+      setShowVerificationSuccess(t("settingsVerify.success"));
+      reset();
 
-      if (response.status === 200) {
-        setShowVerificationSuccess(response.data?.message);
-        reset();
-        setTimeout(() => {
-          navigate("/settings/reset-password");
-        }, 3000);
-      } else {
-        setShowFormError(response.data?.message);
-      }
-    } catch (error) {
-      setShowFormError(error.response?.data?.message);
+      setTimeout(() => {
+        navigate("/settings/reset-password");
+      }, 2000);
+    } catch {
+      setShowFormError(t("settingsVerify.error"));
     } finally {
       setLoading(false);
       setTimeout(() => {
@@ -156,6 +151,8 @@ export default function SettingsVerifyEmailPhone() {
         setValue("secondDigit", "");
         setValue("thirdDigit", "");
         setValue("fourthDigit", "");
+        setValue("fifthDigit", "");
+        setValue("sixthDigit", "");
         firstRef.current && firstRef.current.focus();
       } else {
         setShowResendFailure(response.data?.message);
