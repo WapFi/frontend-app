@@ -1,25 +1,23 @@
-
-
-import UnverifiedIcon from "../../assets/unverified icon.svg";
-import VerifiedIcon from "../../assets/verified icon.svg";
-import { useTranslation } from "react-i18next";
-import LoadingSpinner from "../LoadingSpinner";
-import { useState, useEffect } from "react";
-import { use_UserData } from "../../context/UserContext";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import * as yup from "yup";
-import { useForm, Controller } from "react-hook-form";
-import countriesData from "../../data/countries.json";
+import { verifyIdentity } from "../../api/apiData";
 import chevronDown from "../../assets/chevron-down.svg";
 import chevronUp from "../../assets/chevron-up.svg";
-import { verifyIdentity } from "../../api/apiData";
+import UnverifiedIcon from "../../assets/unverified icon.svg";
+import VerifiedIcon from "../../assets/verified icon.svg";
 import { useDashboard } from "../../context/DashboardContext";
 import { useNotifications } from "../../context/NotificationContext";
+import { use_UserData } from "../../context/UserContext";
+import countriesData from "../../data/countries.json";
+import LoadingSpinner from "../LoadingSpinner";
 
 // Datepicker imports
+import { format } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { format } from "date-fns";
 
 export default function IdentityVerification() {
   const [loading, setLoading] = useState(false);
@@ -28,12 +26,13 @@ export default function IdentityVerification() {
   const { t } = useTranslation();
   const { refreshNotificationsCount } = useNotifications();
 
-  const [displayCountryDropdown, setDisplayCountryDropdown] = useState(false);
   const [displayStateDropdown, setDisplayStateDropdown] = useState(false);
   const [formMessage, setFormMessage] = useState({
     type: "",
     text: "",
   });
+
+  const LOCKED_COUNTRY = "Nigeria";
 
   // Verification flags
   const bvn_verified = userData.bvn_verified;
@@ -71,14 +70,14 @@ export default function IdentityVerification() {
           .required(t("identityVerification.errors.streetRequired"))
           .matches(
             /^[a-zA-Z0-9\s.,'-]+$/,
-            t("identityVerification.errors.streetFormat")
+            t("identityVerification.errors.streetFormat"),
           )
       : yup.string().optional(),
     house_number: yup
       .string()
       .matches(
         /^[a-zA-Z0-9\s.,'-]*$/,
-        t("identityVerification.errors.houseFormat")
+        t("identityVerification.errors.houseFormat"),
       ),
   });
 
@@ -94,19 +93,15 @@ export default function IdentityVerification() {
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
-  const countryName = watch("country");
   const stateName = watch("state");
 
-  const selectedCountry = countriesData.find((c) => c.name === countryName);
+  const selectedCountry = countriesData.find((c) => c.name === LOCKED_COUNTRY);
   const statesOfSelectedCountry = selectedCountry ? selectedCountry.states : [];
 
   // Reset state when country changes
   useEffect(() => {
-    if (countryName) {
-      setValue("state", "");
-    }
-  }, [countryName, setValue]);
-
+    setValue("country", LOCKED_COUNTRY, { shouldValidate: true });
+  }, [setValue]);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -150,7 +145,7 @@ export default function IdentityVerification() {
         try {
           const response = await verifyIdentity(
             verification.key,
-            verification.data
+            verification.data,
           );
           if (response.status !== 200) {
             setError(verification.key, {
@@ -162,7 +157,7 @@ export default function IdentityVerification() {
             allSuccessful = false;
           } else {
             successMessages.push(
-              `${verification.type}: ${response?.data?.message || "Verified"}`
+              `${verification.type}: ${response?.data?.message || "Verified"}`,
             );
           }
         } catch (error) {
@@ -171,7 +166,7 @@ export default function IdentityVerification() {
             message:
               error?.response?.data?.message ||
               `${verification.type}: ${t(
-                "identityVerification.errors.genericError"
+                "identityVerification.errors.genericError",
               )}`,
           });
           allSuccessful = false;
@@ -497,60 +492,23 @@ export default function IdentityVerification() {
           {!address_verified && (
             <>
               {/* Country */}
-              <div className="mb-3 lg:mb-6 relative">
+              <div className="mb-3 lg:mb-6">
                 <label className="text-[#222]">
-                  {" "}
                   {t("identityVerification.form.country")}
                 </label>
-                <div
-                  className={`flex items-center justify-between cursor-pointer mt-2 bg-white ${
-                    displayCountryDropdown ? "rounded-t-lg" : "rounded-[8px]"
-                  } p-[14px] border border-[rgba(0,0,0,0.08)]`}
-                  onClick={() =>
-                    !loading && setDisplayCountryDropdown((open) => !open)
-                  }
-                  tabIndex={0}
-                >
-                  <span className="text-[rgba(34,34,34,0.50)]">
-                    {countryName ||
-                      t("identityVerification.form.selectCountry")}
-                  </span>
-                  <img
-                    src={displayCountryDropdown ? chevronUp : chevronDown}
-                    alt="toggle"
-                    className="ml-2"
-                  />
+
+                <div className="mt-2 bg-gray-50 rounded-[8px] p-[14px] border border-[rgba(0,0,0,0.08)]">
+                  <p className="text-[#222]">{LOCKED_COUNTRY}</p>
+                  <p className="text-xs text-[rgba(34,34,34,0.55)] mt-1">
+                    {t("identityVerification.form.countryLocked")}
+                  </p>
                 </div>
+
                 <input
                   type="hidden"
                   {...register("country")}
-                  disabled={loading}
+                  value={LOCKED_COUNTRY}
                 />
-                {displayCountryDropdown && (
-                  <div className="absolute left-0 right-0 z-40 mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3 max-h-[260px] overflow-y-auto">
-                    {countriesData.map((countryObj) => (
-                      <button
-                        key={countryObj.name}
-                        type="button"
-                        disabled={loading}
-                        onClick={() => {
-                          setValue("country", countryObj.name, {
-                            shouldValidate: true,
-                          });
-                          setDisplayCountryDropdown(false);
-                        }}
-                        className="text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"
-                      >
-                        {countryObj.name}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                {errors.country && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.country?.message}
-                  </p>
-                )}
               </div>
 
               {/* State */}
@@ -564,9 +522,7 @@ export default function IdentityVerification() {
                     displayStateDropdown ? "rounded-t-lg" : "rounded-[8px]"
                   } p-[14px] border border-[rgba(0,0,0,0.08)]`}
                   onClick={() =>
-                    !loading &&
-                    countryName &&
-                    setDisplayStateDropdown((open) => !open)
+                    !loading && setDisplayStateDropdown((open) => !open)
                   }
                   tabIndex={0}
                 >

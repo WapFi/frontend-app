@@ -548,6 +548,7 @@
       "selectDob": "Select your date of birth",
       "dobWarning": "Please enter a correct date of birth, you won't be able to change it again.",
       "country": "Country",
+      "countryLocked": "Country is locked to Nigeria for now.",
       "selectCountry": "Select country",
       "state": "State",
       "selectState": "Select State",
