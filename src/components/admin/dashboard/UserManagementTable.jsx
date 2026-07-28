@@ -1,6 +1,6 @@
-import UserAvatar from "../../common/UserAvatar";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getUsers } from "../../../api/adminApi";
+import UserAvatar from "../../common/UserAvatar";
 
 function UserManagementTable({
   onUserClick,
@@ -25,7 +25,7 @@ function UserManagementTable({
   const fetchUsers = async (
     page = 1,
     search = "",
-    startDate = ""
+    startDate = "",
     // endDate = ""
   ) => {
     try {
@@ -180,12 +180,6 @@ function UserManagementTable({
       {/* Pagination */}
       <div className="mt-6 flex items-center justify-between p-4">
         <div className="flex items-center space-x-4">
-          <span className="text-sm text-gray-700">
-            Showing {(pagination.currentPage - 1) * perPage + 1} to{" "}
-            {Math.min(pagination.currentPage * perPage, pagination.totalUsers)}{" "}
-            of {pagination.totalUsers} results
-          </span>
-
           <div className="flex items-center space-x-2">
             <label className="text-sm text-gray-700">Per page:</label>
             <select
@@ -195,7 +189,7 @@ function UserManagementTable({
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
-              <option value={20}>20</option>
+              <option value={25}>25</option>
               <option value={50}>50</option>
             </select>
           </div>
@@ -209,10 +203,6 @@ function UserManagementTable({
           >
             Previous
           </button>
-
-          <span className="px-3 py-1 text-sm text-gray-700">
-            Page {pagination.currentPage} of {pagination.totalPages}
-          </span>
 
           <button
             onClick={() => handlePageChange(pagination.currentPage + 1)}

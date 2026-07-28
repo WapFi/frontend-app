@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getRepayments } from "../../../api/repaymentsApi";
+import UserAvatar from "../../common/UserAvatar";
 import RepaymentDetailsModal from "../modals/RepaymentDetailsModal";
 import UserDetailsModal from "../modals/UserDetailsModal";
-import UserAvatar from "../../common/UserAvatar";
-import { getRepayments } from "../../../api/repaymentsApi";
 
 function LoanRepaymentManagement() {
   const [repaymentData, setRepaymentData] = useState([]);
@@ -43,7 +43,7 @@ function LoanRepaymentManagement() {
     page = 1,
     search = "",
     date = "",
-    limit = 10
+    limit = 10,
   ) => {
     try {
       setLoading(true);
@@ -150,9 +150,9 @@ function LoanRepaymentManagement() {
     handlePageChange(pagination.currentPage + 1);
   };
 
-  const handlePerPageChange = (e) => {
-    setPerPage(Number(e.target.value));
-    setPagination((prev) => ({ ...prev, currentPage: 1 })); // Reset to page 1
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(Number(newPerPage));
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
   };
 
   const dataToDisplay = repaymentData;
@@ -322,50 +322,22 @@ function LoanRepaymentManagement() {
           </table>
         </div>
 
-        <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-          <div className="flex-1 flex justify-between sm:hidden">
+        <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+          <div className="flex items-center justify-between sm:hidden">
             <button
+              type="button"
               onClick={handlePrevPage}
               disabled={pagination.currentPage === 1}
               className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Previous
             </button>
-            <button
-              onClick={handleNextPage}
-              disabled={pagination.currentPage === pagination.totalPages}
-              className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Next
-            </button>
-          </div>
-          <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm text-gray-700">
-                Showing{" "}
-                <span className="font-medium">
-                  {(pagination.currentPage - 1) * perPage + 1}
-                </span>{" "}
-                to{" "}
-                <span className="font-medium">
-                  {Math.min(
-                    pagination.currentPage * perPage,
-                    pagination.totalRepayments
-                  )}
-                </span>{" "}
-                of{" "}
-                <span className="font-medium">
-                  {pagination.totalRepayments}
-                </span>{" "}
-                results
-              </p>
-            </div>
 
             <div className="flex items-center">
               <label className="text-sm text-gray-700 mr-2">Per page</label>
               <select
                 value={perPage}
-                onChange={handlePerPageChange}
+                onChange={(e) => handlePerPageChange(e.target.value)}
                 className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
               >
                 <option value="5">5</option>
@@ -374,24 +346,49 @@ function LoanRepaymentManagement() {
                 <option value="50">50</option>
               </select>
             </div>
-            <div>
-              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                <button
-                  onClick={handlePrevPage}
-                  disabled={pagination.currentPage === 1}
-                  className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={handleNextPage}
-                  disabled={pagination.currentPage === pagination.totalPages}
-                  className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Next
-                </button>
-              </nav>
+
+            <button
+              type="button"
+              onClick={handleNextPage}
+              disabled={pagination.currentPage === pagination.totalPages}
+              className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+
+          <div className="hidden sm:flex sm:items-center sm:justify-between">
+            <button
+              type="button"
+              onClick={handlePrevPage}
+              disabled={pagination.currentPage === 1}
+              className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+
+            <div className="flex items-center">
+              <label className="text-sm text-gray-700 mr-2">Per page</label>
+              <select
+                value={perPage}
+                onChange={(e) => handlePerPageChange(e.target.value)}
+                className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
+              >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+              </select>
             </div>
+
+            <button
+              type="button"
+              onClick={handleNextPage}
+              disabled={pagination.currentPage === pagination.totalPages}
+              className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
