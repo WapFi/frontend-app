@@ -1,19 +1,16 @@
-
-
-
 import { useEffect, useState } from "react";
-import UserDetailsModal from "../modals/UserDetailsModal";
-import UserAvatar from "../../common/UserAvatar";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
   getVerifications,
   processIdentityVerification,
 } from "../../../api/adminApi";
-import unverifiedIcon from "../../../assets/unverified icon.svg";
-import verifiedIcon from "../../../assets/verified icon.svg";
 import calendarIcon from "../../../assets/calendar icon.svg";
 import chevronDown from "../../../assets/chevron-down.svg";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import unverifiedIcon from "../../../assets/unverified icon.svg";
+import verifiedIcon from "../../../assets/verified icon.svg";
+import UserAvatar from "../../common/UserAvatar";
+import UserDetailsModal from "../modals/UserDetailsModal";
 
 function formatDateText(date) {
   if (!date) return "";
@@ -41,7 +38,7 @@ function BVNVerification() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalVerifications, setTotalVerifications] = useState(0);
   const [showPerPageDropdown, setShowPerPageDropdown] = useState(false);
-  const perPageOptions = [10, 20, 30, 40, 50];
+  const perPageOptions = [5, 10, 25, 50];
 
   // debounce search
   useEffect(() => {
@@ -93,9 +90,7 @@ function BVNVerification() {
     try {
       await processIdentityVerification(userId, "VERIFY", "BVN");
       setBvnData((prev) =>
-        prev.map((u) =>
-          u._id === userId ? { ...u, status: "verified" } : u
-        )
+        prev.map((u) => (u._id === userId ? { ...u, status: "verified" } : u)),
       );
     } catch (err) {
       alert("Failed to verify user");
@@ -109,9 +104,7 @@ function BVNVerification() {
     try {
       await processIdentityVerification(userId, "REJECT", "BVN");
       setBvnData((prev) =>
-        prev.map((u) =>
-          u._id === userId ? { ...u, status: "rejected" } : u
-        )
+        prev.map((u) => (u._id === userId ? { ...u, status: "rejected" } : u)),
       );
     } catch (err) {
       alert("Failed to reject user");
@@ -130,14 +123,9 @@ function BVNVerification() {
     setShowPerPageDropdown(false);
   };
 
-  // showing X–Y
-  const startCount = (currentPage - 1) * itemsPerPage + 1;
-  const endCount = Math.min(currentPage * itemsPerPage, totalVerifications);
-
   if (loading)
     return <div className="p-6 text-center">Loading BVN verifications...</div>;
-  if (error)
-    return <div className="p-6 text-center text-red-500">{error}</div>;
+  if (error) return <div className="p-6 text-center text-red-500">{error}</div>;
 
   return (
     <div className="space-y-6">
@@ -183,8 +171,12 @@ function BVNVerification() {
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
           </svg>
         </div>
       </div>
@@ -227,8 +219,12 @@ function BVNVerification() {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
           </div>
         </div>
@@ -240,19 +236,36 @@ function BVNVerification() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">BVN</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Phone
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  BVN
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Action
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {bvnData.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
+                  <td
+                    colSpan={7}
+                    className="px-6 py-4 text-center text-gray-500"
+                  >
                     No BVN verifications found.
                   </td>
                 </tr>
@@ -272,8 +285,12 @@ function BVNVerification() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.phone}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.bvn || user.identity_value}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {user.phone}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {user.bvn || user.identity_value}
+                    </td>
                     <td className="px-6 py-4">
                       {user.bvn_verified === true ? (
                         <div className="inline-flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] text-[#16A34A] text-xs border border-[#D3F3DF] bg-[#F2FDF5] w-max min-w-0">
@@ -301,7 +318,9 @@ function BVNVerification() {
                           className="text-yellow-600 hover:text-yellow-900"
                           disabled={actionLoading === user._id}
                         >
-                          {actionLoading === user._id ? "Verifying..." : "Verify"}
+                          {actionLoading === user._id
+                            ? "Verifying..."
+                            : "Verify"}
                         </button>
                       ) : (
                         <button
@@ -339,10 +358,6 @@ function BVNVerification() {
           >
             Previous
           </button>
-
-          <span className="text-sm text-gray-600">
-            Showing {startCount}-{endCount} of {totalVerifications}
-          </span>
 
           <div className="relative">
             <div

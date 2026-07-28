@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import UserDetailsModal from "../modals/UserDetailsModal";
-import LoanApplicationModal from "../modals/LoanApplicationModal";
-import UserAvatar from "../../common/UserAvatar";
 import {
   getLoanApplications,
-  updateLoanApplicationStatus,
   getUserDetails,
+  updateLoanApplicationStatus,
 } from "../../../api/adminApi";
+import UserAvatar from "../../common/UserAvatar";
+import UserDetailsModal from "../modals/UserDetailsModal";
 
 function LoanApplications() {
   const [loanApplications, setLoanApplications] = useState([]);
@@ -42,7 +41,7 @@ function LoanApplications() {
     page = 1,
     search = "",
     startDate = "",
-    endDate = ""
+    endDate = "",
   ) => {
     try {
       setLoading(true);
@@ -78,8 +77,8 @@ function LoanApplications() {
             app.status === "PENDING"
               ? "PENDING"
               : app.status === "APPROVED"
-              ? "APPROVED"
-              : "REJECTED",
+                ? "APPROVED"
+                : "REJECTED",
           status: app.status,
           avatar: app.user?.avatar || null,
           tier: app.user?.credit_score?.tier || "N/A",
@@ -327,7 +326,7 @@ function LoanApplications() {
               {loanApplications.map((loan) => (
                 <tr
                   key={loan.id}
-                //   onClick={() => handleLoanClick(loan)}
+                  //   onClick={() => handleLoanClick(loan)}
                   className="hover:bg-gray-50 cursor-pointer"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -370,10 +369,35 @@ function LoanApplications() {
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
           {/* Mobile pagination */}
           <div className="flex-1 flex justify-between sm:hidden">
-            <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <button
+              type="button"
+              disabled={pagination.currentPage === 1}
+              onClick={() => handlePageChange(pagination.currentPage - 1)}
+              className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Previous
             </button>
-            <button className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+
+            <div className="flex items-center">
+              <label className="text-sm text-gray-700 mr-2">Per page</label>
+              <select
+                value={perPage}
+                onChange={(e) => handlePerPageChange(parseInt(e.target.value))}
+                className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
+              >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+
+            <button
+              type="button"
+              disabled={pagination.currentPage === pagination.totalPages}
+              onClick={() => handlePageChange(pagination.currentPage + 1)}
+              className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Next
             </button>
           </div>
@@ -383,7 +407,7 @@ function LoanApplications() {
             {/* Previous button - left */}
             <div>
               <button
-                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={pagination.currentPage === 1}
                 onClick={() => handlePageChange(pagination.currentPage - 1)}
               >
@@ -409,7 +433,7 @@ function LoanApplications() {
             {/* Next button - right */}
             <div>
               <button
-                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={pagination.currentPage === pagination.totalPages}
                 onClick={() => handlePageChange(pagination.currentPage + 1)}
               >

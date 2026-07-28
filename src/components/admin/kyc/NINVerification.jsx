@@ -1,18 +1,16 @@
-
-
 import { useEffect, useState } from "react";
-import UserDetailsModal from "../modals/UserDetailsModal";
-import UserAvatar from "../../common/UserAvatar";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
   getVerifications,
   processIdentityVerification,
 } from "../../../api/adminApi";
-import unverifiedIcon from "../../../assets/unverified icon.svg";
-import verifiedIcon from "../../../assets/verified icon.svg";
 import calendarIcon from "../../../assets/calendar icon.svg";
 import chevronDown from "../../../assets/chevron-down.svg";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import unverifiedIcon from "../../../assets/unverified icon.svg";
+import verifiedIcon from "../../../assets/verified icon.svg";
+import UserAvatar from "../../common/UserAvatar";
+import UserDetailsModal from "../modals/UserDetailsModal";
 
 function formatDateText(date) {
   if (!date) return "";
@@ -42,7 +40,7 @@ function NINVerification() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalVerifications, setTotalVerifications] = useState(0);
   const [showPerPageDropdown, setShowPerPageDropdown] = useState(false);
-  const perPageOptions = [10, 20, 30, 40, 50];
+  const perPageOptions = [5, 10, 25, 50];
 
   // debounce
   useEffect(() => {
@@ -64,7 +62,7 @@ function NINVerification() {
         if (startDate) {
           const d = startDate;
           params.start_date = `${d.getFullYear()}-${String(
-            d.getMonth() + 1
+            d.getMonth() + 1,
           ).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
         }
         const res = await getVerifications(params);
@@ -95,7 +93,7 @@ function NINVerification() {
     try {
       await processIdentityVerification(userId, "VERIFY", "NIN");
       setNinData((prev) =>
-        prev.map((u) => (u._id === userId ? { ...u, status: "verified" } : u))
+        prev.map((u) => (u._id === userId ? { ...u, status: "verified" } : u)),
       );
     } catch (err) {
       alert("Failed to verify user");
@@ -109,7 +107,7 @@ function NINVerification() {
     try {
       await processIdentityVerification(userId, "REJECT", "NIN");
       setNinData((prev) =>
-        prev.map((u) => (u._id === userId ? { ...u, status: "rejected" } : u))
+        prev.map((u) => (u._id === userId ? { ...u, status: "rejected" } : u)),
       );
     } catch (err) {
       alert("Failed to reject user");
@@ -127,10 +125,6 @@ function NINVerification() {
     setCurrentPage(1);
     setShowPerPageDropdown(false);
   };
-
-  // showing X–Y
-  const startCount = (currentPage - 1) * itemsPerPage + 1;
-  const endCount = Math.min(currentPage * itemsPerPage, totalVerifications);
 
   if (loading)
     return <div className="p-6 text-center">Loading NIN verifications...</div>;
@@ -368,10 +362,6 @@ function NINVerification() {
           >
             Previous
           </button>
-
-          <span className="text-sm text-gray-600">
-            Showing {startCount}-{endCount} of {totalVerifications}
-          </span>
 
           <div className="relative">
             <div
