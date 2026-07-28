@@ -1,11 +1,14 @@
-
-
 import { useEffect, useState } from "react";
-import UserAvatar from "../../common/UserAvatar";
 import { getUsers } from "../../../api/adminApi";
 import NairaIcon from "../../../assets/naira icon.svg";
+import UserAvatar from "../../common/UserAvatar";
 
-function UserManagementTable({ onUserClick, searchTerm = "", selectedDate = "", filters }) {
+function UserManagementTable({
+  onUserClick,
+  searchTerm = "",
+  selectedDate = "",
+  filters,
+}) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -37,17 +40,25 @@ function UserManagementTable({ onUserClick, searchTerm = "", selectedDate = "", 
       if (searchTerm) params.search = searchTerm;
       if (selectedDate) params.start_date = selectedDate;
 
-      
-      if (filters.tier) params.tier = parseInt(filters.tier.split(' ')[1], 10);
-      if (filters.kycStatus.includes("BVN Verified")) params.bvn_verified = true;
-      if (filters.kycStatus.includes("BVN Unverified")) params.bvn_verified = false;
-      if (filters.kycStatus.includes("NIN Verified")) params.nin_verified = true;
-      if (filters.kycStatus.includes("NIN Unverified")) params.nin_verified = false;
+      if (filters.tier) params.tier = parseInt(filters.tier.split(" ")[1], 10);
+      if (filters.kycStatus.includes("BVN Verified"))
+        params.bvn_verified = true;
+      if (filters.kycStatus.includes("BVN Unverified"))
+        params.bvn_verified = false;
+      if (filters.kycStatus.includes("NIN Verified"))
+        params.nin_verified = true;
+      if (filters.kycStatus.includes("NIN Unverified"))
+        params.nin_verified = false;
 
       const res = await getUsers(params);
 
       if (res.data) {
-        const { users: userData, total_users, total_pages, current_page } = res.data;
+        const {
+          users: userData,
+          total_users,
+          total_pages,
+          current_page,
+        } = res.data;
         const transformedUsers = (userData || []).map((user) => ({
           _id: user._id,
           full_name: user.full_name || "Unknown User",
@@ -59,7 +70,7 @@ function UserManagementTable({ onUserClick, searchTerm = "", selectedDate = "", 
           loan_due_date: user.loan_due_date,
           profile_picture: user.profile_picture || null,
         }));
-        
+
         setUsers(transformedUsers);
         setPagination({
           currentPage: current_page,
@@ -187,17 +198,20 @@ function UserManagementTable({ onUserClick, searchTerm = "", selectedDate = "", 
           )}
         </tbody>
       </table>
-      
+
       {/* Pagination */}
       {users.length > 0 && (
-        <div className="mt-6 flex items-center justify-between p-4">
-          <div className="flex items-center space-x-4">
+        <div className="mt-6 flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:space-x-4">
             <span className="text-sm text-gray-700">
               Showing {(pagination.currentPage - 1) * perPage + 1} to{" "}
-              {Math.min(pagination.currentPage * perPage, pagination.totalUsers)}{" "}
+              {Math.min(
+                pagination.currentPage * perPage,
+                pagination.totalUsers,
+              )}{" "}
               of {pagination.totalUsers} results
             </span>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-between gap-2 sm:justify-start">
               <label className="text-sm text-gray-700">Per page:</label>
               <select
                 value={perPage}
