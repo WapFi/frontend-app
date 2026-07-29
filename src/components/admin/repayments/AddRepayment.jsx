@@ -155,15 +155,18 @@ function AddRepayment() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-lg shadow max-w-6xl mx-auto">
+    <div className="w-full">
+      <div className="bg-white rounded-lg shadow max-w-3xl mx-auto overflow-hidden">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 text-center pt-6">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 text-center px-4 pt-6">
             Add Repayment
           </h1>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="px-4 py-6 sm:p-6 space-y-5 sm:space-y-6"
+        >
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
               {error}
@@ -177,9 +180,11 @@ function AddRepayment() {
             </label>
             <input
               type="text"
+              inputMode="email"
+              autoComplete="off"
               placeholder="Enter borrower email or phone number"
               {...register("borrowerIdentifier")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
+              className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
             />
             {errors.borrowerIdentifier && (
               <p className="text-red-600 text-sm mt-1">
@@ -195,7 +200,7 @@ function AddRepayment() {
             <select
               {...register("repaymentMethod")}
               onChange={handleMethodChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
+              className="w-full px-3 py-2.5 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
             >
               <option value="">Select repayment method</option>
               <option value="CASH">Cash</option>
@@ -220,7 +225,7 @@ function AddRepayment() {
                 type="number"
                 placeholder="Enter quantity in kg"
                 {...register("recyclableQuantity")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
                 min="0.01"
                 step="0.01"
               />
@@ -257,9 +262,9 @@ function AddRepayment() {
             type="submit"
             disabled={loading}
             style={{ background: "#B88E00" }}
-            className="w-full text-white py-3 px-4 rounded-full font-medium hover:bg-yellow-600 transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full text-white py-3 px-4 rounded-full font-medium hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
-            {loading ? "Processing..." : "Submit Payment"}
+            {loading ? "Processing..." : "Submit Repayment"}
           </button>
         </form>
       </div>
