@@ -4,7 +4,9 @@ import PageLoader from "../components/PageLoader";
 
 // Structural components — always needed immediately, not lazy-loaded
 import AdminLayout from "../components/admin/layout/AdminLayout";
+import SignOut from "../components/auth/SignOut";
 import Layout from "../components/dashboard/layout/Layout";
+import LazyLoadErrorBoundary from "../components/LazyLoadErrorBoundary";
 import { DisbursedLoansProvider } from "../context/DisbursedLoansContext";
 import { LoanFormProvider } from "../context/LoanFormContext";
 import { NotificationProvider } from "../context/NotificationContext";
@@ -19,7 +21,7 @@ const SignUpAccountVerification = lazy(
   () => import("../components/auth/SignUpAccountVerification"),
 );
 const SignIn = lazy(() => import("../components/auth/SignIn"));
-const SignOut = lazy(() => import("../components/auth/SignOut"));
+// const SignOut = lazy(() => import("../components/auth/SignOut"));
 const ForgotPassword = lazy(() => import("../components/auth/ForgotPassword"));
 const VerifyPhoneEmail = lazy(
   () => import("../components/auth/VerifyPhoneEmail"),
@@ -123,9 +125,15 @@ const Notifications = lazy(
 );
 const Support = lazy(() => import("../components/settings/Support"));
 
-// Tiny helper to avoid repeating Suspense on every route element
+// // Tiny helper to avoid repeating Suspense on every route element
+// const S = ({ children }) => (
+//   <Suspense fallback={<PageLoader />}>{children}</Suspense>
+// );
+
 const S = ({ children }) => (
-  <Suspense fallback={<PageLoader />}>{children}</Suspense>
+  <LazyLoadErrorBoundary>
+    <Suspense fallback={<PageLoader />}>{children}</Suspense>
+  </LazyLoadErrorBoundary>
 );
 
 const PageTitle = ({ title, children }) => {
