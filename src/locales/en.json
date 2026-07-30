@@ -767,5 +767,10 @@
     "previous": "Previous",
     "next": "Next",
     "perPage": "Per page"
+  },
+  "app_error": {
+    "title": "Something went wrong",
+    "message": "The app needs to refresh to load the latest version.",
+    "refresh": "Refresh"
   }
 }

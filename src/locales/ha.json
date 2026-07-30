@@ -766,5 +766,10 @@
     "previous": "Baya",
     "next": "Gaba",
     "perPage": "A shafi daya"
+  },
+  "app_error": {
+    "title": "Wani abu ya faru",
+    "message": "Aikace-aikacen na bukatar sabuntawa domin loda sabon sigar.",
+    "refresh": "Sabunta"
   }
 }
