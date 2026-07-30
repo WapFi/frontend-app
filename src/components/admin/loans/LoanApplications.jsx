@@ -256,10 +256,10 @@ function LoanApplications() {
 
       {/* Search and Filter Section */}
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <div className="flex justify-between items-center gap-4">
+        <div className="px-4 py-4 border-b border-gray-200 sm:px-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center sm:gap-4">
             {/* Date */}
-            <div className="w-1/4">
+            <div className="w-full sm:w-1/4">
               <input
                 type="date"
                 value={startDate}
@@ -269,7 +269,7 @@ function LoanApplications() {
             </div>
 
             {/* Search Input */}
-            <div className="w-3/5">
+            <div className="w-full sm:w-3/5">
               <div className="relative">
                 <input
                   type="text"
@@ -301,22 +301,22 @@ function LoanApplications() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
                   Amount
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Loan Term
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Reason
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
                   Action
                 </th>
               </tr>
@@ -329,7 +329,7 @@ function LoanApplications() {
                   //   onClick={() => handleLoanClick(loan)}
                   className="hover:bg-gray-50 cursor-pointer"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-4 sm:px-6">
                     <div className="flex items-center">
                       <UserAvatar user={loan} />
                       <div className="ml-3">
@@ -344,19 +344,19 @@ function LoanApplications() {
                     </div>
                   </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900 sm:px-6">
                     {loan.amount}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {loan.loanTerm}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {loan.reason}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {loan.date}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-4 whitespace-nowrap sm:px-6">
                     {getActionButton(loan)}
                   </td>
                 </tr>
@@ -368,7 +368,7 @@ function LoanApplications() {
         {/* Pagination */}
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
           {/* Mobile pagination */}
-          <div className="flex-1 flex justify-between sm:hidden">
+          <div className="flex-1 flex items-center justify-between gap-3 sm:hidden">
             <button
               type="button"
               disabled={pagination.currentPage === 1}
@@ -379,7 +379,7 @@ function LoanApplications() {
             </button>
 
             <div className="flex items-center">
-              <label className="text-sm text-gray-700 mr-2">Per page</label>
+              <label className="sr-only">Per page</label>
               <select
                 value={perPage}
                 onChange={(e) => handlePerPageChange(parseInt(e.target.value))}
@@ -396,7 +396,7 @@ function LoanApplications() {
               type="button"
               disabled={pagination.currentPage === pagination.totalPages}
               onClick={() => handlePageChange(pagination.currentPage + 1)}
-              className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
             </button>

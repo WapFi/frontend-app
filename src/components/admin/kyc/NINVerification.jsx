@@ -235,29 +235,32 @@ function NINVerification() {
 
       {/* Table */}
       <div className="bg-white rounded-lg shadow">
-        <div className="overflow-x-auto">
+        <div className="w-full overflow-x-auto md:overflow-visible">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Phone
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
                   NIN
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider md:hidden">
+                  Status
+                </th>
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Action
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Action
                 </th>
               </tr>
@@ -275,7 +278,7 @@ function NINVerification() {
               ) : (
                 ninData.map((user) => (
                   <tr key={user._id || user.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 py-4 sm:px-6">
                       <div className="flex items-center">
                         <UserAvatar user={user} />
                         <div className="ml-3">
@@ -288,13 +291,13 @@ function NINVerification() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {user.phone}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900 sm:px-6">
                       {user.nin || user.identity_value}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="hidden md:table-cell px-6 py-4">
                       {user.nin_verified === true ? (
                         <div className="inline-flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] text-[#16A34A] text-xs border border-[#D3F3DF] bg-[#F2FDF5] w-max min-w-0">
                           <img src={verifiedIcon} alt="verified icon" />
@@ -308,14 +311,27 @@ function NINVerification() {
                       )}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(user.created_at).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
                       })}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td className="px-3 py-4 md:hidden">
+                      {user.nin_verified === true ? (
+                        <div className="inline-flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] text-[#16A34A] text-xs border border-[#D3F3DF] bg-[#F2FDF5] w-max min-w-0">
+                          <img src={verifiedIcon} alt="verified icon" />
+                          <span>Verified</span>
+                        </div>
+                      ) : (
+                        <div className="inline-flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] text-[#EF4444] text-xs border border-[rgba(239,68,68,0.15)] bg-[rgba(239,68,68,0.08)] w-max min-w-0">
+                          <img src={unverifiedIcon} alt="unverified icon" />
+                          <span>Unverified</span>
+                        </div>
+                      )}
+                    </td>
+                    <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm font-medium">
                       {user.status === "unverified" ? (
                         <button
                           onClick={() => handleVerify(user._id)}
@@ -335,7 +351,7 @@ function NINVerification() {
                         </button>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
                         onClick={() => handleReject(user._id)}
                         className="text-red-600 hover:text-red-900"
