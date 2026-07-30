@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import {
-  getLoanApplications,
-  getUserDetails,
-  updateLoanApplicationStatus,
-} from "../../../api/adminApi";
+import { getLoanApplications, getUserDetails } from "../../../api/adminApi";
 import UserAvatar from "../../common/UserAvatar";
 import UserDetailsModal from "../modals/UserDetailsModal";
 
@@ -73,12 +68,6 @@ function LoanApplications() {
                 day: "numeric",
               })
             : "Unknown",
-          action:
-            app.status === "PENDING"
-              ? "PENDING"
-              : app.status === "APPROVED"
-                ? "APPROVED"
-                : "REJECTED",
           status: app.status,
           avatar: app.user?.avatar || null,
           tier: app.user?.credit_score?.tier || "N/A",
@@ -121,36 +110,6 @@ function LoanApplications() {
     setSelectedUser(null);
   };
 
-  const handleApprove = async (loanId) => {
-    try {
-      const response = await updateLoanApplicationStatus(loanId, "APPROVED");
-      if (response.status) {
-        toast.success("Loan application approved successfully");
-        fetchLoanApplications();
-      } else {
-        toast.error("Failed to approve loan application");
-      }
-    } catch (err) {
-      console.error("Error approving loan:", err);
-      toast.error("Failed to approve loan application");
-    }
-  };
-
-  const handleDecline = async (loanId) => {
-    try {
-      let response = await updateLoanApplicationStatus(loanId, "REJECTED");
-      if (response.status) {
-        toast.success("Loan application declined successfully");
-        fetchLoanApplications();
-      } else {
-        toast.error("Failed to decline loan application");
-      }
-    } catch (err) {
-      console.error("Error declining loan:", err);
-      toast.error("Failed to decline loan application");
-    }
-  };
-
   // Search is now handled automatically via useEffect
 
   const handlePageChange = (page) => {
@@ -176,35 +135,15 @@ function LoanApplications() {
     }
   };
 
-  const getActionButton = (loan) => {
-    if (loan.status === "PENDING") {
-      return (
-        <div className="flex space-x-2">
-          <button
-            onClick={() => handleApprove(loan.id)}
-            className="text-green-600 hover:text-green-900 text-sm cursor-pointer"
-          >
-            Accept
-          </button>
-        </div>
-      );
-    } else if (loan.status === "APPROVED" || loan.status === "DISBURSED") {
-      return (
-        <button
-          onClick={() => handleDecline(loan.id)}
-          className="text-red-600 hover:text-red-900 text-sm cursor-pointer"
-        >
-          Decline
-        </button>
-      );
-    } else if (loan.status === "REJECTED") {
-      return (
-        <span className="text-red-600 hover:text-red-900 text-sm cursor-pointer">
-          Rejected
-        </span>
-      );
-    }
-  };
+  const getStatusBadge = (status) => (
+    <span
+      className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${getStatusColor(
+        status?.toLowerCase(),
+      )}`}
+    >
+      {status || "Unknown"}
+    </span>
+  );
 
   if (loading) {
     return (
@@ -317,7 +256,7 @@ function LoanApplications() {
                   Date
                 </th>
                 <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
-                  Action
+                  Status
                 </th>
               </tr>
             </thead>
@@ -357,7 +296,7 @@ function LoanApplications() {
                     {loan.date}
                   </td>
                   <td className="px-3 py-4 whitespace-nowrap sm:px-6">
-                    {getActionButton(loan)}
+                    {getStatusBadge(loan.status)}
                   </td>
                 </tr>
               ))}
