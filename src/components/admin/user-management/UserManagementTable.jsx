@@ -104,29 +104,27 @@ function UserManagementTable({
   if (error) return <div className="p-6 text-center text-red-500">{error}</div>;
 
   return (
-    <div className="overflow-x-auto">
+    <div className="w-full overflow-x-auto md:overflow-visible">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
               Name
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
               Total Loan Taken
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Outstanding Loan
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Amount Repaid
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Last Loan Date
+            <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
+              <span className="sm:hidden">Due Date</span>
+              <span className="hidden sm:inline">Last Loan Date</span>
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Action
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Action
             </th>
           </tr>
@@ -134,14 +132,14 @@ function UserManagementTable({
         <tbody className="bg-white divide-y divide-gray-200">
           {users.length === 0 ? (
             <tr>
-              <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
+              <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
                 No users found.
               </td>
             </tr>
           ) : (
             users.map((user) => (
               <tr key={user._id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-3 py-4 sm:px-6">
                   <div className="flex items-center">
                     <UserAvatar user={user} />
                     <div className="ml-3">
@@ -152,25 +150,25 @@ function UserManagementTable({
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900 sm:px-6">
                   <div className="flex items-center gap-1">
                     <img src={NairaIcon} alt="naira icon" />
                     <span>{formatCurrency(user.total_loan_taken)}</span>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <div className="flex items-center gap-1">
                     <img src={NairaIcon} alt="naira icon" />
                     <span>{formatCurrency(user.outstanding_loan)}</span>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <div className="flex items-center gap-1">
                     <img src={NairaIcon} alt="naira icon" />
                     <span>{formatCurrency(user.amount_repaid)}</span>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500 sm:px-6">
                   {user.loan_due_date
                     ? new Date(user.loan_due_date).toLocaleDateString("en-US", {
                         year: "numeric",
@@ -179,17 +177,12 @@ function UserManagementTable({
                       })
                     : "No loans"}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button
                     onClick={() => onUserClick(user)}
                     className="text-yellow-600 hover:text-yellow-900"
                   >
                     View
-                  </button>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button className="text-red-600 hover:text-red-900">
-                    Delete
                   </button>
                 </td>
               </tr>
@@ -201,7 +194,7 @@ function UserManagementTable({
       {/* Pagination */}
       {users.length > 0 && (
         <div className="mt-6 border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-          <div className="flex items-center justify-between sm:hidden">
+          <div className="flex items-center justify-between gap-3 sm:hidden">
             <button
               type="button"
               onClick={() => handlePageChange(pagination.currentPage - 1)}
@@ -212,7 +205,7 @@ function UserManagementTable({
             </button>
 
             <div className="flex items-center">
-              <label className="text-sm text-gray-700 mr-2">Per page</label>
+              <label className="sr-only">Per page</label>
               <select
                 value={perPage}
                 onChange={(e) => handlePerPageChange(e.target.value)}
@@ -229,7 +222,7 @@ function UserManagementTable({
               type="button"
               onClick={() => handlePageChange(pagination.currentPage + 1)}
               disabled={pagination.currentPage >= pagination.totalPages}
-              className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
             </button>

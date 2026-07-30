@@ -207,9 +207,9 @@ function LoanRepaymentManagement() {
       </div>
 
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <div className="flex justify-between items-center gap-4">
-            <div className="w-1/4">
+        <div className="px-4 py-4 border-b border-gray-200 sm:px-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center sm:gap-4">
+            <div className="w-full sm:w-1/4">
               <input
                 type="date"
                 value={startDate}
@@ -221,7 +221,7 @@ function LoanRepaymentManagement() {
               />
             </div>
 
-            <div className="w-3/5">
+            <div className="w-full sm:w-3/5">
               <div className="relative max-w-md">
                 <input
                   type="text"
@@ -255,19 +255,19 @@ function LoanRepaymentManagement() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
                   Installment Payment
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Loan Amount
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Outstanding Loan
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
                   Date Paid
                 </th>
               </tr>
@@ -280,7 +280,7 @@ function LoanRepaymentManagement() {
                     className="hover:bg-gray-50 cursor-pointer"
                     onClick={() => handleRepaymentClick(repayment)}
                   >
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 py-4 sm:px-6">
                       <div className="flex items-center">
                         <UserAvatar user={repayment} />
                         <div className="ml-3">
@@ -294,16 +294,16 @@ function LoanRepaymentManagement() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900 sm:px-6">
                       {repayment.installmentPayment}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {repayment.loanAmount}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {repayment.outstandingLoan}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500 sm:px-6">
                       {repayment.datePaid}
                     </td>
                   </tr>
@@ -323,7 +323,7 @@ function LoanRepaymentManagement() {
         </div>
 
         <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
-          <div className="flex items-center justify-between sm:hidden">
+          <div className="flex items-center justify-between gap-3 sm:hidden">
             <button
               type="button"
               onClick={handlePrevPage}
@@ -334,7 +334,7 @@ function LoanRepaymentManagement() {
             </button>
 
             <div className="flex items-center">
-              <label className="text-sm text-gray-700 mr-2">Per page</label>
+              <label className="sr-only">Per page</label>
               <select
                 value={perPage}
                 onChange={(e) => handlePerPageChange(e.target.value)}
@@ -351,7 +351,7 @@ function LoanRepaymentManagement() {
               type="button"
               onClick={handleNextPage}
               disabled={pagination.currentPage === pagination.totalPages}
-              className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
             </button>
