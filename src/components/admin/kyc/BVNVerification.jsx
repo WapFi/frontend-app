@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {
-  getVerifications,
-  processIdentityVerification,
-} from "../../../api/adminApi";
+import { getVerifications } from "../../../api/adminApi";
 import calendarIcon from "../../../assets/calendar icon.svg";
 import chevronDown from "../../../assets/chevron-down.svg";
 import unverifiedIcon from "../../../assets/unverified icon.svg";
@@ -24,13 +21,13 @@ function formatDateText(date) {
 function BVNVerification() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUserModal, setShowUserModal] = useState(false);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
   const [startDate, setStartDate] = useState(null);
   const [bvnData, setBvnData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [actionLoading, setActionLoading] = useState(null);
 
   // pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,6 +36,16 @@ function BVNVerification() {
   const [totalVerifications, setTotalVerifications] = useState(0);
   const [showPerPageDropdown, setShowPerPageDropdown] = useState(false);
   const perPageOptions = [5, 10, 25, 50];
+
+  const handleUserClick = (user) => {
+    setSelectedUser(user);
+    setShowUserModal(true);
+  };
+
+  const handleCloseUserModal = () => {
+    setShowUserModal(false);
+    setSelectedUser(null);
+  };
 
   // debounce search
   useEffect(() => {
@@ -75,43 +82,6 @@ function BVNVerification() {
     };
     fetchBVNs();
   }, [debouncedSearchTerm, startDate, currentPage, itemsPerPage]);
-
-  const handleUserClick = (user) => {
-    setSelectedUser(user);
-    setShowUserModal(true);
-  };
-  const handleCloseUserModal = () => {
-    setShowUserModal(false);
-    setSelectedUser(null);
-  };
-
-  const handleVerify = async (userId) => {
-    setActionLoading(userId);
-    try {
-      await processIdentityVerification(userId, "VERIFY", "BVN");
-      setBvnData((prev) =>
-        prev.map((u) => (u._id === userId ? { ...u, status: "verified" } : u)),
-      );
-    } catch (err) {
-      alert("Failed to verify user");
-    } finally {
-      setActionLoading(null);
-    }
-  };
-
-  const handleReject = async (userId) => {
-    setActionLoading(userId);
-    try {
-      await processIdentityVerification(userId, "REJECT", "BVN");
-      setBvnData((prev) =>
-        prev.map((u) => (u._id === userId ? { ...u, status: "rejected" } : u)),
-      );
-    } catch (err) {
-      alert("Failed to reject user");
-    } finally {
-      setActionLoading(null);
-    }
-  };
 
   // pagination handlers like LoanHistory
   const handlePreviousPage = () => setCurrentPage((p) => Math.max(p - 1, 1));
@@ -251,14 +221,11 @@ function BVNVerification() {
                 <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Date
                 </th>
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Action
+                </th>
                 <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider md:hidden">
                   Status
-                </th>
-                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
                 </th>
               </tr>
             </thead>
@@ -266,7 +233,7 @@ function BVNVerification() {
               {bvnData.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={5}
                     className="px-6 py-4 text-center text-gray-500"
                   >
                     No BVN verifications found.
@@ -314,6 +281,14 @@ function BVNVerification() {
                         day: "numeric",
                       })}
                     </td>
+                    <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button
+                        onClick={() => handleUserClick(user)}
+                        className="text-yellow-600 hover:text-yellow-900"
+                      >
+                        View
+                      </button>
+                    </td>
                     <td className="px-3 py-4 md:hidden">
                       {user.bvn_verified === true ? (
                         <div className="inline-flex gap-1 items-center py-[2px] px-1.5 rounded-[6px] text-[#16A34A] text-xs border border-[#D3F3DF] bg-[#F2FDF5] w-max min-w-0">
@@ -326,35 +301,6 @@ function BVNVerification() {
                           <span>Unverified</span>
                         </div>
                       )}
-                    </td>
-                    <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      {user.status === "unverified" ? (
-                        <button
-                          onClick={() => handleVerify(user._id)}
-                          className="text-yellow-600 hover:text-yellow-900"
-                          disabled={actionLoading === user._id}
-                        >
-                          {actionLoading === user._id
-                            ? "Verifying..."
-                            : "Verify"}
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => handleUserClick(user)}
-                          className="text-yellow-600 hover:text-yellow-900"
-                        >
-                          View
-                        </button>
-                      )}
-                    </td>
-                    <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button
-                        onClick={() => handleReject(user._id)}
-                        className="text-red-600 hover:text-red-900"
-                        disabled={actionLoading === user._id}
-                      >
-                        {actionLoading === user._id ? "Rejecting..." : "Reject"}
-                      </button>
                     </td>
                   </tr>
                 ))
@@ -410,8 +356,6 @@ function BVNVerification() {
           </button>
         </div>
       )}
-
-      {/* User Details Modal */}
       {showUserModal && selectedUser && (
         <UserDetailsModal user={selectedUser} onClose={handleCloseUserModal} />
       )}
