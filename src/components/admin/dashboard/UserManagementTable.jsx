@@ -121,24 +121,25 @@ function UserManagementTable({
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="w-full overflow-x-auto md:overflow-visible">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
               Name
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
               Total Loan Taken
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Outstanding Loan
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Amount Repaid
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Loan Due Date
+            <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
+              <span className="sm:hidden">Due Date</span>
+              <span className="hidden sm:inline">Loan Due Date</span>
             </th>
           </tr>
         </thead>
@@ -149,27 +150,29 @@ function UserManagementTable({
               className="hover:bg-gray-50 cursor-pointer"
               onClick={() => onUserClick(user)}
             >
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-3 py-4 sm:px-6">
                 <div className="flex items-center">
                   <UserAvatar user={user} />
-                  <div className="ml-3">
-                    <div className="text-sm font-medium text-gray-900">
+                  <div className="ml-3 min-w-0">
+                    <div className="text-sm font-medium text-gray-900 truncate">
                       {user.full_name}
                     </div>
-                    <div className="text-sm text-gray-500">{user.phone}</div>
+                    <div className="text-sm text-gray-500 truncate">
+                      {user.phone}
+                    </div>
                   </div>
                 </div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900 sm:px-6">
                 {user.totalLoanTaken}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {user.outstandingLoan}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {user.amountRepaid}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500 sm:px-6">
                 {user.lastLoanDate}
               </td>
             </tr>
@@ -178,14 +181,23 @@ function UserManagementTable({
       </table>
 
       {/* Pagination */}
-      <div className="mt-6 flex items-center justify-between p-4">
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <label className="text-sm text-gray-700">Per page:</label>
+      <div className="mt-6 border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => handlePageChange(pagination.currentPage - 1)}
+            disabled={pagination.currentPage <= 1}
+            className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Previous
+          </button>
+
+          <div className="flex items-center">
+            <label className="text-sm text-gray-700 mr-2">Per page</label>
             <select
               value={perPage}
               onChange={(e) => handlePerPageChange(parseInt(e.target.value))}
-              className="px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -193,21 +205,12 @@ function UserManagementTable({
               <option value={50}>50</option>
             </select>
           </div>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => handlePageChange(pagination.currentPage - 1)}
-            disabled={pagination.currentPage <= 1}
-            className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Previous
-          </button>
 
           <button
+            type="button"
             onClick={() => handlePageChange(pagination.currentPage + 1)}
             disabled={pagination.currentPage >= pagination.totalPages}
-            className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
           </button>
