@@ -123,6 +123,15 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
       : "N/A",
   };
 
+  const isEmailIdentifier = detailedUser.identifier?.includes("@");
+  const isPhoneIdentifier = detailedUser.identifier && !isEmailIdentifier;
+
+  const displayEmail =
+    detailedUser.email || (isEmailIdentifier ? detailedUser.identifier : "N/A");
+
+  const displayPhone =
+    detailedUser.phone || (isPhoneIdentifier ? detailedUser.identifier : "N/A");
+
   return (
     <div className="fixed inset-0 bg-white sm:bg-black/40 z-50 overflow-y-auto">
       <div className="min-h-screen sm:flex sm:items-center sm:justify-center sm:p-4">
@@ -204,7 +213,7 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
                       </svg>
                     </div>
                     <p className="text-sm text-gray-700">
-                      {detailedUser.phone}
+                      {displayPhone}
                     </p>
                   </div>
 
@@ -228,7 +237,7 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
                       </svg>
                     </div>
                     <p className="text-sm text-gray-700 break-all">
-                      {detailedUser.identifier || "N/A"}
+                      {displayEmail}
                     </p>
                   </div>
                   <div className="grid grid-cols-2 gap-4 sm:flex sm:items-center sm:gap-4">
