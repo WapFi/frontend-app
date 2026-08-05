@@ -127,7 +127,6 @@ function SignIn() {
       });
 
       if (response.status === 200) {
-        localStorage.setItem("auth_token", response.data.token);
         // setShowFormError("");
         setShowSuccessMessage(response.data?.message);
         reset();

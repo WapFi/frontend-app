@@ -31,3 +31,4 @@ localhost-key.pem
 
 test.py
 combined_code.txt
+.env.local

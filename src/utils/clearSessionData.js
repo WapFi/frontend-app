@@ -1,5 +1,4 @@
 const sessionStorageKeys = [
-  "auth_token",
   "dashboardData",
   "loanConfirmationData",
   "repaymentsData",

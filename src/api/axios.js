@@ -7,40 +7,43 @@ if (!apiBaseUrl) {
   throw new Error("VITE_API_BASE_URL is not configured");
 }
 
-let isHandlingUnauthorized = false;
-
 const instance = axios.create({
   baseURL: apiBaseUrl,
-
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
 
-instance.interceptors.request.use((config) => {
-  const token = localStorage.getItem("auth_token");
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-});
-
 instance.interceptors.response.use(
   (response) => response,
-  (error) => {
-    const status = error.response?.status;
-    const hasToken = Boolean(localStorage.getItem("auth_token"));
+  async (error) => {
+    const originalRequest = error.config;
 
-    if (status === 401 && hasToken && !isHandlingUnauthorized) {
-      isHandlingUnauthorized = true;
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest._retried &&
+      !originalRequest.url?.includes("/auth/refresh") &&
+      !originalRequest.url?.includes("/auth/sign_in") &&
+      !originalRequest.url?.includes("/auth/sign_out")
+    ) {
+      originalRequest._retried = true;
 
-      clearSessionData();
-      sessionStorage.setItem("sessionExpired", "true");
+      try {
+        await instance.post("/auth/refresh");
+        return instance(originalRequest);
+      } catch {
+        clearSessionData();
 
-      window.location.replace("/sign-in");
+        if (window.location.pathname !== "/sign-in") {
+          sessionStorage.setItem("sessionExpired", "true");
+          window.location.replace("/sign-in");
+        }
+
+        return Promise.reject(error);
+      }
     }
 
     return Promise.reject(error);
