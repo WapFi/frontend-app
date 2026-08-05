@@ -35,10 +35,24 @@ export function UserContextProvider({ children }) {
     }
   }, []);
 
-  // Initial fetch on mount
+  // Initial fetch on mount, but only on pages that need an authenticated user.
   useEffect(() => {
+    const publicPaths = [
+      "/",
+      "/select-language",
+      "/sign-in",
+      "/sign-up",
+      "/forgot-password",
+      "/verify-code",
+      "/change-password",
+    ];
+
+    if (publicPaths.includes(window.location.pathname)) {
+      return;
+    }
+
     refreshUserData();
-  }, [refreshUserData]); // Now it depends on the memoized function
+  }, [refreshUserData]);
 
   return (
     <UserContext.Provider value={{ userData, setUserData, refreshUserData }}>
