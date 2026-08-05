@@ -8,8 +8,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target:
-          "https://wapfi-backend-service-staging-718658406507.europe-west1.run.app",
+        // target:
+        //   "https://wapfi-backend-service-staging-718658406507.europe-west1.run.app",
+        target: "https://api-staging.wapfilending.com",
         changeOrigin: true,
         secure: true,
       },
