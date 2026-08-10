@@ -53,6 +53,7 @@ export default function Step2BankAccount() {
     defaultValues: {
       account_number: loanFormData.account_number,
       bank_name: loanFormData.bank_name,
+      bank_code: loanFormData.bank_code,
     },
   });
 
@@ -69,11 +70,14 @@ export default function Step2BankAccount() {
     setLoading(true);
     setFormError(false);
 
+    const submittedBank = banks.find((bank) => bank.name === data.bank_name);
+
     try {
       updateLoanFormData({
         account_name: userData.full_name,
         account_number: data.account_number,
         bank_name: data.bank_name.trim(),
+        bank_code: submittedBank?.code || "",
       });
 
       if (setHasUnsavedChanges) {
@@ -172,6 +176,7 @@ export default function Step2BankAccount() {
                   key={bank.code}
                   onClick={() => {
                     setValue("bank_name", bank.name, { shouldValidate: true });
+                    setValue("bank_code", bank.code, { shouldValidate: true });
                     setDisplayBankDropdown(false);
                   }}
                   className="flex items-center gap-2 text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"

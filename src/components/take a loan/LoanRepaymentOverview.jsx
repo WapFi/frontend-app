@@ -79,6 +79,7 @@ export default function LoanRepaymentOverview() {
           account_name: loanDetails.bank_account?.account_name ?? "",
           account_number: loanDetails.disbursement_account ?? "",
           bank_name: loanDetails.bank_account?.bank_name ?? "",
+          bank_code: loanDetails.bank_account?.bank_code ?? "",
           repayment_method: loanDetails.repayment_method ?? "",
           recyclable_drop_off_known:
             loanDetails.recyclable_drop_off_known ?? false,

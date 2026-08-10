@@ -1,11 +1,11 @@
-import editIcon from "../../assets/edit icon.svg";
-import LoadingSpinner from "../LoadingSpinner";
-import { useLoanForm } from "../../context/LoanFormContext";
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { applyForLoan, updatePendingLoanDetails } from "../../api/loansApi";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { applyForLoan, updatePendingLoanDetails } from "../../api/loansApi";
+import editIcon from "../../assets/edit icon.svg";
 import { useDashboard } from "../../context/DashboardContext";
+import { useLoanForm } from "../../context/LoanFormContext";
+import LoadingSpinner from "../LoadingSpinner";
 
 export default function Step4Summary() {
   const { t } = useTranslation();
@@ -29,7 +29,8 @@ export default function Step4Summary() {
             updateLoanFormData({
               loan_amount: freshDashboardRes.pending_loan.loan_amount ?? "",
               loan_purpose: freshDashboardRes.pending_loan.loan_purpose ?? "",
-              other_purpose: freshDashboardRes.pending_loan.loan_purpose_other ?? "",
+              other_purpose:
+                freshDashboardRes.pending_loan.loan_purpose_other ?? "",
               wapan_member:
                 freshDashboardRes.pending_loan.wapan_member ?? false,
               account_name:
@@ -38,6 +39,8 @@ export default function Step4Summary() {
                 freshDashboardRes.pending_loan.disbursement_account ?? "",
               bank_name:
                 freshDashboardRes.pending_loan.bank_account?.bank_name ?? "",
+              bank_code:
+                freshDashboardRes.pending_loan.bank_account?.bank_code ?? "",
               repayment_method:
                 freshDashboardRes.pending_loan.repayment_method ?? "",
               recyclable_drop_off_known:
@@ -59,7 +62,6 @@ export default function Step4Summary() {
     fetchAndSyncLoanData();
   }, [dashboardData.pending_loan, refreshDashboardData, updateLoanFormData]);
 
-
   const onSubmit = async () => {
     setLoading(true);
 
@@ -70,8 +72,9 @@ export default function Step4Summary() {
       account_name: loanFormData.account_name,
       account_number: loanFormData.account_number,
       bank_name: loanFormData.bank_name,
+      bank_code: loanFormData.bank_code,
       recyclable_drop_off_known: loanFormData.recyclable_drop_off_known,
-      
+
       repayment_method: loanFormData.repayment_method,
       repayment_schedule: loanFormData.repayment_schedule,
     };
@@ -94,14 +97,14 @@ export default function Step4Summary() {
         const updatedLoanDetails = await updatePendingLoanDetails(
           payload,
           // pendingLoanID
-          dashboardData.pending_loan._id
+          dashboardData.pending_loan._id,
         );
         if (updatedLoanDetails.status === 200) {
           setFormSuccess(updatedLoanDetails.data?.message);
           // save updatedLoanDetails and navigate to overview page
           localStorage.setItem(
             "latestLoanApplicationData",
-            JSON.stringify(updatedLoanDetails.data?.data)
+            JSON.stringify(updatedLoanDetails.data?.data),
           );
           setTimeout(() => {
             navigate("/take-a-loan/loan-repayment-overview");
@@ -125,7 +128,7 @@ export default function Step4Summary() {
           setFormSuccess(response.data?.message);
           localStorage.setItem(
             "latestLoanApplicationData",
-            JSON.stringify(response.data?.data)
+            JSON.stringify(response.data?.data),
           );
           setTimeout(() => {
             navigate("/take-a-loan/loan-repayment-overview");
