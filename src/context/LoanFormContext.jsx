@@ -14,6 +14,7 @@ const emptyLoanFormData = {
   account_name: "",
   account_number: "",
   bank_name: "",
+  bank_code: "",
   repayment_method: "",
   recyclable_drop_off_known: "",
   repayment_schedule: "",
@@ -64,6 +65,7 @@ export function LoanFormProvider({ children }) {
           account_name: restoredData.bank_account?.account_name ?? "",
           account_number: restoredData.bank_account?.account_number ?? "",
           bank_name: restoredData.bank_account?.bank_name ?? "",
+          bank_code: restoredData.bank_account?.bank_code ?? "",
           repayment_method: restoredData.repayment_method ?? "",
           recyclable_drop_off_known:
             restoredData.recyclable_drop_off_known ?? false,
