@@ -1,44 +1,52 @@
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
+import calendarIcon from "../../assets/calendar icon.svg";
 import NairaIcon from "../../assets/naira icon.svg";
-import RepaymentsSection from "./RepaymentsSection";
-import RepaymentProgressBar from "./RepaymentProgressBar";
+import plusIcon from "../../assets/plus icon.svg";
+import searchIcon from "../../assets/search icon.svg";
+import { DisbursedLoansProvider } from "../../context/DisbursedLoansContext";
+// import { use_UserData } from "../../context/UserContext";
 import CountdownTimer from "./CountdownTimer";
 import CreditScore from "./CreditScore";
-import Overview from "./Overview";
-import { useTranslation } from "react-i18next";
-import plusIcon from "../../assets/plus icon.svg";
-import calendarIcon from "../../assets/calendar icon.svg";
-import searchIcon from "../../assets/search icon.svg";
-import { Link } from "react-router-dom";
-import { use_UserData } from "../../context/UserContext";
-import { RepaymentsProvider } from "../../context/RepaymentsContext";
-import { useState } from "react";
-import { DisbursedLoansProvider } from "../../context/DisbursedLoansContext";
-import DisbursedLoansSection from "./DisbursedLoansSection";
 import DisbursedLoansProgressBar from "./DisbursedLoansProgressBar";
+import DisbursedLoansSection from "./DisbursedLoansSection";
+import Overview from "./Overview";
 
 function Dashboard({ dashboardData }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { userData } = use_UserData();
+  // const { userData } = use_UserData();
   const [showActiveLoanModal, setShowActiveLoanModal] = useState(false);
 
   // REVISED: The condition for a new user
   const isNewUser = dashboardData.total_loans_taken === 0;
 
+  // TEMPORARY PILOT BYPASS:
+  // BVN and phone verification are disabled for the pilot because BVN integration is not ready.
+  // Keep the old logic below as a reference. Restore it when BVN/phone verification becomes required again.
+
   // Handles the "Take a Loan" button click for all user types
   const handleTakeLoanClick = () => {
+    // if (dashboardData?.active_loan) {
+    //   setShowActiveLoanModal(true);
+    // } else if (
+    //   dashboardData?.pending_loan?.status === "PENDING" &&
+    //   userData.phone_verified === true
+    // ) {
+    //   navigate("/take-a-loan/loan-repayment-overview");
+    // } else if (dashboardData.credit_score.current_score === 0) {
+    //   navigate("/take-a-loan/enter-bvn");
+    // } else if (userData.phone_verified === false) {
+    //   navigate("/take-a-loan/verify-phone");
+    // } else {
+    //   navigate("/take-a-loan/form/loan-amount-purpose");
+    // }
+
     if (dashboardData?.active_loan) {
       setShowActiveLoanModal(true);
-    } else if (
-      dashboardData?.pending_loan?.status === "PENDING" &&
-      userData.phone_verified === true
-    ) {
+    } else if (dashboardData?.pending_loan) {
       navigate("/take-a-loan/loan-repayment-overview");
-    } else if (dashboardData.credit_score.current_score === 0) {
-      navigate("/take-a-loan/enter-bvn");
-    } else if (userData.phone_verified === false) {
-      navigate("/take-a-loan/verify-phone");
     } else {
       navigate("/take-a-loan/form/loan-amount-purpose");
     }
@@ -151,7 +159,6 @@ function Dashboard({ dashboardData }) {
                 className="text-[14px] md:text-[16px] text-[#2D6157] text-center font-semibold shrink-0 opacity-50 pointer-events-none"
                 onClick={(e) => e.preventDefault()}
                 // to="/loans/disbursed-loans"
-
               >
                 {t("newUserRepayments.viewAll")}
               </Link>
@@ -169,7 +176,6 @@ function Dashboard({ dashboardData }) {
                 // to="/loans/disbursed-loans"
               >
                 {t("newUserRepayments.viewAll")}
-            
               </Link>
             </div>
             <div className="flex items-center justify-between gap-2.5 pl-3 shrink-0 rounded-[30px] w-full border border-[rgba(0,0,0,0.08)] bg-[rgba(255,255,255,0.80)] opacity-50 cursor-not-allowed">
