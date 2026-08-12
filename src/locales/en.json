@@ -301,8 +301,8 @@
   },
   "verifyPhone": {
     "title": "Verify Your Phone Number",
-    "subtext": "We've found the phone number linked to your BVN. Enter the 4-digit code sent to your phone to complete verification and continue your loan application.",
-    "error": "Invalid code. Double-check and enter the 4-digit code sent to your phone.",
+    "subtext": "We've found the phone number linked to your BVN. Enter the 6-digit code sent to your phone to complete verification and continue your loan application.",
+    "error": "Invalid code. Double-check and enter the 6-digit code sent to your phone.",
     "success": "Phone number verified successfully!",
     "resend_success": "A new verification code has been sent to your phone.",
     "continue": "Continue",

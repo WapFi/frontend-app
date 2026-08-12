@@ -21,6 +21,8 @@ export default function VerifyPhoneNumber() {
   const secondRef = useRef(null);
   const thirdRef = useRef(null);
   const fourthRef = useRef(null);
+  const fifthRef = useRef(null);
+  const sixthRef = useRef(null);
 
   useEffect(() => {
     setFadeIn(true);
@@ -52,6 +54,18 @@ export default function VerifyPhoneNumber() {
         return /^\d{1}$/.test(value);
       }),
     fourthDigit: yup
+      .string()
+      .required(t("verifyPhone.errors.digit_required"))
+      .test("is-digit", t("verifyPhone.errors.invalid_digit"), (value) => {
+        return /^\d{1}$/.test(value);
+      }),
+    fifthDigit: yup
+      .string()
+      .required(t("verifyPhone.errors.digit_required"))
+      .test("is-digit", t("verifyPhone.errors.invalid_digit"), (value) => {
+        return /^\d{1}$/.test(value);
+      }),
+    sixthDigit: yup
       .string()
       .required(t("verifyPhone.errors.digit_required"))
       .test("is-digit", t("verifyPhone.errors.invalid_digit"), (value) => {
@@ -90,7 +104,9 @@ export default function VerifyPhoneNumber() {
       otpCode.firstDigit +
       otpCode.secondDigit +
       otpCode.thirdDigit +
-      otpCode.fourthDigit;
+      otpCode.fourthDigit +
+      otpCode.fifthDigit +
+      otpCode.sixthDigit;
     try {
       setLoading(true);
       const response = await verifyIdentity("phone", code);
@@ -195,7 +211,7 @@ export default function VerifyPhoneNumber() {
           </button>
         </div>
 
-        <div className="w-[263px] flex justify-center items-center gap-3 mx-auto -mt-2.5 text-[rgba(34,34,34,0.50)]">
+        <div className="w-full max-w-[384px] flex justify-center items-center gap-2 sm:gap-3 mx-auto -mt-2.5 text-[rgba(34,34,34,0.50)]">
           <input
             type="text"
             maxLength={1}
@@ -231,8 +247,28 @@ export default function VerifyPhoneNumber() {
             maxLength={1}
             {...register("fourthDigit")}
             ref={mergeRefs(register("fourthDigit").ref, fourthRef)}
-            onChange={(e) => handleInput(e, null, thirdRef)}
-            onKeyDown={(e) => handleInput(e, null, thirdRef)}
+            onChange={(e) => handleInput(e, fifthRef, thirdRef)}
+            onKeyDown={(e) => handleInput(e, fifthRef, thirdRef)}
+            className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
+          />
+
+          <input
+            type="text"
+            maxLength={1}
+            {...register("fifthDigit")}
+            ref={mergeRefs(register("fifthDigit").ref, fifthRef)}
+            onChange={(e) => handleInput(e, sixthRef, fourthRef)}
+            onKeyDown={(e) => handleInput(e, sixthRef, fourthRef)}
+            className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
+          />
+
+          <input
+            type="text"
+            maxLength={1}
+            {...register("sixthDigit")}
+            ref={mergeRefs(register("sixthDigit").ref, sixthRef)}
+            onChange={(e) => handleInput(e, null, fifthRef)}
+            onKeyDown={(e) => handleInput(e, null, fifthRef)}
             className="text-center w-[50px] h-[50px] border p-3.5 rounded-[8px] border-[rgba(0,0,0,0.15)]"
           />
         </div>
