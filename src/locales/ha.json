@@ -301,8 +301,8 @@
   },
   "verifyPhone": {
     "title": "Tabbatar da Lambar Wayarka",
-    "subtext": "Mun samo lambar waya da aka danganta da BVN ɗinka. Shigar da lambar sirri mai ƙafa huɗu da aka aiko zuwa wayarka don kammala tantancewa da ci gaba da neman rance.",
-    "error": "Lambar da ka shigar ba daidai ba ce. Duba sosai sannan ka shigar da lambar lambobi 4 da aka aiko maka ta wayarka.",
+    "subtext": "Mun samo lambar waya da aka danganta da BVN ɗinka. Shigar da lambar sirri mai lambobi 6 da aka aiko zuwa wayarka don kammala tantancewa da ci gaba da neman rance.",
+    "error": "Lambar da ka shigar ba daidai ba ce. Duba sosai sannan ka shigar da lambar lambobi 6 da aka aiko maka ta wayarka.",
     "success": "An tabbatar da lambar waya cikin nasara!",
     "resend_success": "An sake aiko da sabon lambar tantancewa zuwa wayarka.",
     "continue": "Ci gaba",
