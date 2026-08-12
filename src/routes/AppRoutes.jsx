@@ -65,10 +65,10 @@ const Analytics = lazy(() => import("../components/admin/analytics/Analytics"));
 const LoanFlowWrapper = lazy(
   () => import("../components/take a loan/LoanFlowWrapper"),
 );
-const EnterBVN = lazy(() => import("../components/take a loan/EnterBVN"));
-const VerifyPhoneNumber = lazy(
-  () => import("../components/take a loan/VerifyPhoneNumber"),
-);
+// const EnterBVN = lazy(() => import("../components/take a loan/EnterBVN"));
+// const VerifyPhoneNumber = lazy(
+//   () => import("../components/take a loan/VerifyPhoneNumber"),
+// );
 const Step1LoanAmount = lazy(
   () => import("../components/take a loan/Step1LoanAmount"),
 );
@@ -295,25 +295,40 @@ const router = createBrowserRouter([
         ),
       },
 
+      // TEMPORARY PILOT BYPASS:
+      // Redirect identity-verification routes to Step 1 until BVN/phone verification is restored.
+
       // Loan flow
+      // {
+      //   path: "take-a-loan/enter-bvn",
+      //   element: (
+      //     <PageTitle title="Enter BVN">
+      //       <S>
+      //         <EnterBVN />
+      //       </S>
+      //     </PageTitle>
+      //   ),
+      // },
       {
         path: "take-a-loan/enter-bvn",
         element: (
-          <PageTitle title="Enter BVN">
-            <S>
-              <EnterBVN />
-            </S>
-          </PageTitle>
+          <Navigate to="/take-a-loan/form/loan-amount-purpose" replace />
         ),
       },
+      // {
+      //   path: "take-a-loan/verify-phone",
+      //   element: (
+      //     <PageTitle title="Verify Phone">
+      //       <S>
+      //         <VerifyPhoneNumber />
+      //       </S>
+      //     </PageTitle>
+      //   ),
+      // },
       {
         path: "take-a-loan/verify-phone",
         element: (
-          <PageTitle title="Verify Phone">
-            <S>
-              <VerifyPhoneNumber />
-            </S>
-          </PageTitle>
+          <Navigate to="/take-a-loan/form/loan-amount-purpose" replace />
         ),
       },
       {
