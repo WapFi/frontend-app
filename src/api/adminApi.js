@@ -48,9 +48,14 @@ export const getLoanApplications = async (params = {}) => {
   }
 };
 
-export const updateLoanApplicationStatus = async (loanId, status) => {
+export const updateLoanApplicationStatus = async (loanId, statusOrPayload) => {
   try {
-    const response = await axios.patch(`/admins/loans/${loanId}/status`, { status });
+    const payload =
+      typeof statusOrPayload === 'string'
+        ? { status: statusOrPayload }
+        : statusOrPayload;
+
+    const response = await axios.patch(`/admins/loans/${loanId}/status`, payload);
     return response.data;
   } catch (error) {
     throw error;
