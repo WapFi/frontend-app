@@ -4,6 +4,8 @@ import WapfiLogo from "../../WapfiLogo";
 
 const navigation = [
   { name: "Dashboard", href: "/admin/dashboard", icon: "dashboard" },
+  { name: "Sponsors", href: "/admin/sponsors", icon: "sponsor" },
+  { name: "Funds", href: "/admin/funds", icon: "fund" },
   { name: "Add Repayment", href: "/admin/add-repayment", icon: "add" },
   { name: "Loan Applications", href: "/admin/loan-applications", icon: "loan" },
   { name: "Loan Repayment", href: "/admin/loan-repayment", icon: "repayment" },
@@ -128,6 +130,44 @@ function AdminSidebar({ isOpen, onClose }) {
               d="M10 1V19M1 10H19"
               stroke="#A0B0AB"
               strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        );
+      case "sponsor":
+        return (
+          <svg
+            className="ml-3"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <path
+              d="M3 18V4.6C3 3.71634 3.71634 3 4.6 3H11.4C12.2837 3 13 3.71634 13 4.6V18M13 8H15.4C16.2837 8 17 8.71634 17 9.6V18M1.5 18H18.5M6 7H10M6 10H10M6 13H10"
+              stroke="#A0B0AB"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        );
+      case "fund":
+        return (
+          <svg
+            className="ml-3"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <path
+              d="M10 18C14.4183 18 18 16.6569 18 15V5M10 18C5.58172 18 2 16.6569 2 15V5M10 18V8M18 5C18 6.65685 14.4183 8 10 8C5.58172 8 2 6.65685 2 5M18 5C18 3.34315 14.4183 2 10 2C5.58172 2 2 3.34315 2 5M18 10C18 11.6569 14.4183 13 10 13C5.58172 13 2 11.6569 2 10"
+              stroke="#A0B0AB"
+              strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"
             />

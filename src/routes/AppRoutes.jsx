@@ -44,6 +44,8 @@ const UserManagement = lazy(
 const AdminManagement = lazy(
   () => import("../components/admin/admin-management/AdminManagement"),
 );
+const Sponsors = lazy(() => import("../components/admin/funding/Sponsors"));
+const Funds = lazy(() => import("../components/admin/funding/Funds"));
 const BVNVerification = lazy(
   () => import("../components/admin/kyc/BVNVerification"),
 );
@@ -531,6 +533,26 @@ const router = createBrowserRouter([
           <PageTitle title="Admin Management">
             <S>
               <AdminManagement />
+            </S>
+          </PageTitle>
+        ),
+      },
+      {
+        path: "sponsors",
+        element: (
+          <PageTitle title="Sponsors">
+            <S>
+              <Sponsors />
+            </S>
+          </PageTitle>
+        ),
+      },
+      {
+        path: "funds",
+        element: (
+          <PageTitle title="Funds">
+            <S>
+              <Funds />
             </S>
           </PageTitle>
         ),
