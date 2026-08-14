@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { getLoanApplications, getUserDetails } from "../../../api/adminApi";
 import UserAvatar from "../../common/UserAvatar";
+import LoanApplicationModal from "../modals/LoanApplicationModal";
 import UserDetailsModal from "../modals/UserDetailsModal";
 
 function LoanApplications() {
   const [loanApplications, setLoanApplications] = useState([]);
+  const [selectedLoan, setSelectedLoan] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUserModal, setShowUserModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,6 +62,7 @@ function LoanApplications() {
           phone: app.user?.phone || "No phone",
           amount: `₦ ${app.loan_amount?.toLocaleString() || "0"}`,
           loanTerm: `${app.loan_term_months || 0} Months`,
+          loanAmountValue: Number(app.loan_amount || 0),
           reason: app.loan_purpose || "Not specified",
           date: app.application_date
             ? new Date(app.application_date).toLocaleDateString("en-US", {
@@ -108,6 +111,10 @@ function LoanApplications() {
   const handleCloseUserModal = () => {
     setShowUserModal(false);
     setSelectedUser(null);
+  };
+
+  const handleCloseLoanModal = () => {
+    setSelectedLoan(null);
   };
 
   // Search is now handled automatically via useEffect
@@ -258,6 +265,9 @@ function LoanApplications() {
                 <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
                   Status
                 </th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
+                  Action
+                </th>
               </tr>
             </thead>
 
@@ -297,6 +307,15 @@ function LoanApplications() {
                   </td>
                   <td className="px-3 py-4 whitespace-nowrap sm:px-6">
                     {getStatusBadge(loan.status)}
+                  </td>
+                  <td className="px-3 py-4 whitespace-nowrap text-sm sm:px-6">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedLoan(loan)}
+                      className="font-medium text-yellow-700 hover:text-yellow-800 cursor-pointer"
+                    >
+                      Review
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -389,6 +408,21 @@ function LoanApplications() {
           user={selectedUser}
           onClose={handleCloseUserModal}
           onUserUpdate={() => fetchLoanApplications()}
+        />
+      )}
+
+      {selectedLoan && (
+        <LoanApplicationModal
+          loan={selectedLoan}
+          onClose={handleCloseLoanModal}
+          onUpdated={() =>
+            fetchLoanApplications(
+              pagination.currentPage,
+              searchTerm,
+              startDate,
+              endDate,
+            )
+          }
         />
       )}
     </div>
