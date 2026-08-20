@@ -138,7 +138,8 @@ function formatCurrency(value) {
   return `NGN ${amount.toLocaleString()}`;
 }
 
-function buildTermsPayload(formData) {
+function buildTermsPayload(formData, options = {}) {
+  const { clearBlankMaxLoanAmount = false } = options;
   const terms = {};
 
   if (formData.loss_bearer) terms.loss_bearer = formData.loss_bearer;
@@ -153,6 +154,8 @@ function buildTermsPayload(formData) {
   }
   if (formData.max_loan_amount !== "") {
     terms.max_loan_amount = Number(formData.max_loan_amount);
+  } else if (clearBlankMaxLoanAmount) {
+    terms.max_loan_amount = null;
   }
 
   return terms;
@@ -240,7 +243,9 @@ function FundModal({ fund, sponsors, onClose, onSaved }) {
       return;
     }
 
-    const terms = buildTermsPayload(formData);
+    const terms = buildTermsPayload(formData, {
+      clearBlankMaxLoanAmount: isEditing,
+    });
     const payload = isEditing
       ? {
           name: formData.name.trim(),
@@ -270,7 +275,7 @@ function FundModal({ fund, sponsors, onClose, onSaved }) {
         : await createFund(payload);
 
       toast.success(response.message || "Fund saved successfully.");
-      onSaved();
+      await onSaved(response.data);
     } catch (err) {
       setError(getErrorMessage(err, "Failed to save fund."));
     } finally {
@@ -925,7 +930,8 @@ function FundDetailsModal({ fund, onClose, onEdit }) {
                   <DetailItem
                     label="Max Loan Amount"
                     value={
-                      fundDetails.terms?.max_loan_amount !== undefined
+                      fundDetails.terms?.max_loan_amount !== undefined &&
+                      fundDetails.terms?.max_loan_amount !== null
                         ? formatCurrency(fundDetails.terms.max_loan_amount)
                         : "--"
                     }
@@ -1173,10 +1179,18 @@ export default function Funds() {
     setModalMode("fund");
   };
 
-  const handleSaved = () => {
+  const handleSaved = async (savedFund) => {
+    if (savedFund?._id) {
+      setFunds((currentFunds) =>
+        currentFunds.map((fund) =>
+          fund._id === savedFund._id ? { ...fund, ...savedFund } : fund,
+        ),
+      );
+    }
+
     setModalMode(null);
     setSelectedFund(null);
-    loadFunds();
+    await loadFunds();
   };
 
   return (
