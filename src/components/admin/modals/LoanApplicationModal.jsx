@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
-import { updateLoanApplicationStatus } from "../../../api/adminApi";
+import {
+  retryLoanDisbursement,
+  updateLoanApplicationStatus,
+} from "../../../api/adminApi";
 import { getFunds } from "../../../api/fundsApi";
 
 function getErrorMessage(error, fallback) {
@@ -46,7 +49,9 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
   const [actionLoading, setActionLoading] = useState("");
 
   const loanStatus = loan?.status?.toUpperCase();
+  const disbursementStatus = loan?.disbursementStatus?.toUpperCase();
   const isPending = loanStatus === "PENDING";
+  const isFailedDisbursement = disbursementStatus === "FAILED";
   const loanAmount = Number(loan?.loanAmountValue || 0);
 
   useEffect(() => {
@@ -128,6 +133,28 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
       }
     } catch (error) {
       setActionError(getErrorMessage(error, "Unable to decline loan."));
+    } finally {
+      setActionLoading("");
+    }
+  };
+
+  const handleRetryDisbursement = async () => {
+    try {
+      setActionLoading("retry");
+      setActionError("");
+      const response = await retryLoanDisbursement(loan.id);
+
+      if (response.status) {
+        toast.success(response.message || "Disbursement retry started.");
+        onUpdated?.();
+        onClose();
+      } else {
+        setActionError(response.message || "Unable to retry disbursement.");
+      }
+    } catch (error) {
+      setActionError(
+        getErrorMessage(error, "Unable to retry disbursement."),
+      );
     } finally {
       setActionLoading("");
     }
@@ -304,10 +331,40 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
               </button>
             </div>
           ) : (
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-600">
-                Current status: {loan.status || "Unknown"}
-              </p>
+            <div className="space-y-4">
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm text-gray-600">
+                  Current status: {loan.status || "Unknown"}
+                </p>
+                {loan.disbursementStatus && (
+                  <p className="mt-1 text-sm text-gray-600">
+                    Disbursement status: {loan.disbursementStatus}
+                  </p>
+                )}
+              </div>
+
+              {isFailedDisbursement && (
+                <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+                  <h3 className="text-sm font-semibold text-red-800">
+                    Disbursement failed
+                  </h3>
+                  <p className="mt-1 text-sm text-red-700">
+                    Retry the payout for this failed disbursement. If the
+                    borrower has already re-confirmed it, the request will no
+                    longer be accepted.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleRetryDisbursement}
+                    disabled={Boolean(actionLoading)}
+                    className="mt-4 w-full rounded-md bg-yellow-500 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                  >
+                    {actionLoading === "retry"
+                      ? "Retrying..."
+                      : "Retry Disbursement"}
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

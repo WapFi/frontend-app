@@ -62,6 +62,15 @@ export const updateLoanApplicationStatus = async (loanId, statusOrPayload) => {
   }
 };
 
+export const retryLoanDisbursement = async (loanId) => {
+  try {
+    const response = await axios.post(`/admins/loans/${loanId}/retry-disbursement`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Analytics
 export const getAnalyticsData = async (params = {}) => {
   try {
