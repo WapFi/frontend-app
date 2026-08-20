@@ -63,15 +63,8 @@ function MobileMenu({
     setMenuOpen(false); // close the menu if open
     if (dashboardData?.active_loan) {
       setShowActiveLoanModal(true);
-    } else if (
-      dashboardData?.pending_loan?.status === "PENDING" &&
-      userData.phone_verified === true
-    ) {
+    } else if (dashboardData?.pending_loan) {
       navigate("/take-a-loan/loan-repayment-overview");
-    } else if (dashboardData.credit_score.current_score === 0) {
-      navigate("/take-a-loan/enter-bvn");
-    } else if (userData.phone_verified === false) {
-      navigate("/take-a-loan/verify-phone");
     } else {
       navigate("/take-a-loan/form/loan-amount-purpose");
     }

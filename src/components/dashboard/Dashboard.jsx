@@ -67,6 +67,97 @@ function Dashboard({ dashboardData }) {
     </p>
   );
 
+  const formatDisplayDate = (dateValue) => {
+    if (!dateValue) return "";
+
+    return new Date(dateValue).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const renderPendingLoanCallout = () => {
+    const pendingLoan = dashboardData?.pending_loan;
+    const pendingLoanStatus = pendingLoan?.status?.toUpperCase();
+    const disbursementStatus = pendingLoan?.disbursement_status?.toUpperCase();
+
+    if (!pendingLoan || dashboardData?.active_loan) return null;
+    if (!["PENDING", "APPROVED"].includes(pendingLoanStatus)) return null;
+
+    const isApproved = pendingLoanStatus === "APPROVED";
+    const isProcessingDisbursement = disbursementStatus === "PROCESSING";
+    const isSuccessfulDisbursement = disbursementStatus === "SUCCESSFUL";
+    const isFailedDisbursement = disbursementStatus === "FAILED";
+    const confirmBy = formatDisplayDate(pendingLoan.confirm_by);
+
+    return (
+      <div className="w-full self-stretch rounded-[12px] border border-[#439182]/20 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-2">
+            <span
+              className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+                isFailedDisbursement
+                  ? "bg-red-50 text-red-600"
+                  : isProcessingDisbursement || isSuccessfulDisbursement || isApproved
+                  ? "bg-[#439182]/10 text-[#2D6157]"
+                  : "bg-[#9C6D10]/10 text-[#9C6D10]"
+              }`}
+            >
+              {isFailedDisbursement
+                ? t("dashboard.pendingLoan.failedBadge")
+                : isSuccessfulDisbursement
+                  ? t("dashboard.pendingLoan.successfulBadge")
+                  : isProcessingDisbursement
+                ? t("dashboard.pendingLoan.processingBadge")
+                : isApproved
+                  ? t("dashboard.pendingLoan.approvedBadge")
+                  : t("dashboard.pendingLoan.pendingBadge")}
+            </span>
+            <p className="font-raleway text-[22px] font-bold text-[#10172E]">
+              {isFailedDisbursement
+                ? t("dashboard.pendingLoan.failedTitle")
+                : isSuccessfulDisbursement
+                  ? t("dashboard.pendingLoan.successfulTitle")
+                  : isProcessingDisbursement
+                ? t("dashboard.pendingLoan.processingTitle")
+                : isApproved
+                  ? t("dashboard.pendingLoan.approvedTitle")
+                  : t("dashboard.pendingLoan.pendingTitle")}
+            </p>
+            <p className="max-w-2xl text-[15px] text-[#656565]">
+              {isFailedDisbursement
+                ? t("dashboard.pendingLoan.failedBody")
+                : isSuccessfulDisbursement
+                  ? t("dashboard.pendingLoan.successfulBody")
+                  : isProcessingDisbursement
+                ? t("dashboard.pendingLoan.processingBody")
+                : isApproved
+                  ? t("dashboard.pendingLoan.approvedBody", { confirmBy })
+                  : t("dashboard.pendingLoan.pendingBody")}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => navigate("/take-a-loan/loan-repayment-overview")}
+            className="w-full rounded-[50px] bg-[#439182] px-6 py-3 text-center text-[15px] font-medium text-white hover:opacity-80 md:w-auto md:shrink-0"
+          >
+            {isFailedDisbursement
+              ? t("dashboard.pendingLoan.failedButton")
+              : isSuccessfulDisbursement
+                ? t("dashboard.pendingLoan.successfulButton")
+                : isProcessingDisbursement
+              ? t("dashboard.pendingLoan.processingButton")
+              : isApproved
+                ? t("dashboard.pendingLoan.approvedButton")
+                : t("dashboard.pendingLoan.pendingButton")}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const renderOverviewSection = () => {
     if (isNewUser) {
       return (
@@ -245,6 +336,7 @@ function Dashboard({ dashboardData }) {
   return (
     <div className="text-[18px] text-[#222] flex flex-col items-end md:items-start md:shrink-0 gap-8 py-4 px-2.5 lg:px-[23px]">
       {renderDashboardTitle()}
+      {renderPendingLoanCallout()}
 
       {/* Conditional Rendering for Returning User Loan Info */}
       {!isNewUser && dashboardData.active_loan?.status === "DISBURSED" && (
