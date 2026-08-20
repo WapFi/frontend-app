@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { Outlet, useBlocker } from "react-router-dom";
+import { Navigate, Outlet, useBlocker } from "react-router-dom";
+import { useDashboard } from "../../context/DashboardContext";
 import { useLoanForm } from "../../context/LoanFormContext";
 import CancelApplicationModal from "./CancelApplicationModal";
 import LoanFlowStepper from "./LoanFlowStepper";
@@ -7,8 +8,12 @@ import LoanFlowStepper from "./LoanFlowStepper";
 export default function LoanFlowWrapper() {
   const { clearLoanFormData, hasLoanFormData, hasUnsavedChanges } =
     useLoanForm();
+  const { dashboardData } = useDashboard();
+  const pendingLoanStatus = dashboardData?.pending_loan?.status?.toUpperCase();
+  const isApprovedPendingLoan = pendingLoanStatus === "APPROVED";
 
-  const shouldWarnBeforeLeaving = hasLoanFormData || hasUnsavedChanges;
+  const shouldWarnBeforeLeaving =
+    !isApprovedPendingLoan && (hasLoanFormData || hasUnsavedChanges);
   const [showModal, setShowModal] = useState(false);
 
   // Paths that are considered "inside" the loan application experience.
@@ -58,6 +63,12 @@ export default function LoanFlowWrapper() {
     };
   }, [shouldWarnBeforeLeaving]);
 
+  useEffect(() => {
+    if (isApprovedPendingLoan) {
+      clearLoanFormData();
+    }
+  }, [clearLoanFormData, isApprovedPendingLoan]);
+
   const confirmLeave = () => {
     clearLoanFormData();
     setShowModal(false);
@@ -74,6 +85,10 @@ export default function LoanFlowWrapper() {
       blocker.reset();
     }
   };
+
+  if (isApprovedPendingLoan) {
+    return <Navigate to="/take-a-loan/loan-repayment-overview" replace />;
+  }
 
   return (
     <div className="rounded-[12px] lg:w-[85%] lg:mx-auto mb-12 md:mb-18 pb-6 lg:pb-10 lg:mt-12 lg:mr-30 lg:bg-white flex flex-col gap-6">
