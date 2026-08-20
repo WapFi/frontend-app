@@ -72,6 +72,7 @@ function LoanApplications() {
               })
             : "Unknown",
           status: app.status,
+          disbursementStatus: app.disbursement_status,
           avatar: app.user?.avatar || null,
           tier: app.user?.credit_score?.tier || "N/A",
           creditScore: app.user?.credit_score?.current_score || "N/A",
@@ -151,6 +152,33 @@ function LoanApplications() {
       {status || "Unknown"}
     </span>
   );
+
+  const getDisbursementStatusColor = (status) => {
+    switch (status) {
+      case "successful":
+        return "bg-green-100 text-green-800";
+      case "failed":
+        return "bg-red-100 text-red-800";
+      case "processing":
+        return "bg-yellow-100 text-yellow-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getDisbursementStatusBadge = (status) => {
+    if (!status) return <span className="text-sm text-gray-500">--</span>;
+
+    return (
+      <span
+        className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${getDisbursementStatusColor(
+          status.toLowerCase(),
+        )}`}
+      >
+        {status}
+      </span>
+    );
+  };
 
   if (loading) {
     return (
@@ -266,6 +294,9 @@ function LoanApplications() {
                   Status
                 </th>
                 <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
+                  Disbursement
+                </th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-6">
                   Action
                 </th>
               </tr>
@@ -307,6 +338,9 @@ function LoanApplications() {
                   </td>
                   <td className="px-3 py-4 whitespace-nowrap sm:px-6">
                     {getStatusBadge(loan.status)}
+                  </td>
+                  <td className="px-3 py-4 whitespace-nowrap sm:px-6">
+                    {getDisbursementStatusBadge(loan.disbursementStatus)}
                   </td>
                   <td className="px-3 py-4 whitespace-nowrap text-sm sm:px-6">
                     <button
