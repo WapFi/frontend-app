@@ -47,6 +47,7 @@ const AdminManagement = lazy(
 const Sponsors = lazy(() => import("../components/admin/funding/Sponsors"));
 const Funds = lazy(() => import("../components/admin/funding/Funds"));
 const FundLedger = lazy(() => import("../components/admin/funding/FundLedger"));
+const Settlements = lazy(() => import("../components/admin/funding/Settlements"));
 const BVNVerification = lazy(
   () => import("../components/admin/kyc/BVNVerification"),
 );
@@ -564,6 +565,16 @@ const router = createBrowserRouter([
           <PageTitle title="Fund Ledger">
             <S>
               <FundLedger />
+            </S>
+          </PageTitle>
+        ),
+      },
+      {
+        path: "settlements",
+        element: (
+          <PageTitle title="Settlements">
+            <S>
+              <Settlements />
             </S>
           </PageTitle>
         ),

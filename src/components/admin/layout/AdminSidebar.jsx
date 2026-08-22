@@ -6,6 +6,7 @@ const navigation = [
   { name: "Dashboard", href: "/admin/dashboard", icon: "dashboard" },
   { name: "Sponsors", href: "/admin/sponsors", icon: "sponsor" },
   { name: "Funds", href: "/admin/funds", icon: "fund" },
+  { name: "Settlements", href: "/admin/settlements", icon: "repayment" },
   { name: "Add Repayment", href: "/admin/add-repayment", icon: "add" },
   { name: "Loan Applications", href: "/admin/loan-applications", icon: "loan" },
   { name: "Loan Repayment", href: "/admin/loan-repayment", icon: "repayment" },
