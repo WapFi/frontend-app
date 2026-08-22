@@ -47,3 +47,16 @@ export const getSettlements = async (params = {}) => {
   const response = await axios.get("/funds/settlements", { params });
   return response.data;
 };
+
+export const getWriteOffCandidates = async (params = {}) => {
+  const response = await axios.get("/funds/write-offs/candidates", { params });
+  return response.data;
+};
+
+export const writeOffLoan = async (loanId, writeOffData) => {
+  const response = await axios.post(
+    `/funds/write-offs/${loanId}`,
+    writeOffData,
+  );
+  return response.data;
+};
