@@ -32,3 +32,18 @@ export const getContributions = async (params = {}) => {
   const response = await axios.get("/funds/contributions", { params });
   return response.data;
 };
+
+export const getSettlementQueue = async (params = {}) => {
+  const response = await axios.get("/funds/settlements/queue", { params });
+  return response.data;
+};
+
+export const recordSettlement = async (settlementData) => {
+  const response = await axios.post("/funds/settlements", settlementData);
+  return response.data;
+};
+
+export const getSettlements = async (params = {}) => {
+  const response = await axios.get("/funds/settlements", { params });
+  return response.data;
+};
