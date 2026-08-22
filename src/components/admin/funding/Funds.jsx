@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import {
@@ -1074,6 +1075,7 @@ function FundDetailsModal({ fund, onClose, onEdit }) {
 }
 
 export default function Funds() {
+  const navigate = useNavigate();
   const [funds, setFunds] = useState([]);
   const [sponsors, setSponsors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -1167,6 +1169,10 @@ export default function Funds() {
   const handleOpenDetails = (fund) => {
     setSelectedFund(fund);
     setModalMode("details");
+  };
+
+  const handleOpenLedger = (fund) => {
+    navigate(`/admin/funds/${fund._id}/ledger`);
   };
 
   const handleOpenContribution = (fund) => {
@@ -1355,6 +1361,13 @@ export default function Funds() {
                         </button>
                         <button
                           type="button"
+                          onClick={() => handleOpenLedger(fund)}
+                          className="cursor-pointer font-medium text-[#2D6157] hover:text-[#224c44]"
+                        >
+                          View Ledger
+                        </button>
+                        <button
+                          type="button"
                           onClick={() => handleOpenContribution(fund)}
                           className="cursor-pointer font-medium text-[#B88E00] hover:text-[#8f6f00]"
                         >
@@ -1452,6 +1465,13 @@ export default function Funds() {
                     className="cursor-pointer text-sm font-medium text-gray-700"
                   >
                     View Details
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleOpenLedger(fund)}
+                    className="cursor-pointer text-sm font-medium text-[#2D6157]"
+                  >
+                    View Ledger
                   </button>
                   <button
                     type="button"
