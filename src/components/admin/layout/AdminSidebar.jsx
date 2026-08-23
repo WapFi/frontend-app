@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAdminRole } from "../../../context/AdminRoleContext";
 import WapfiLogo from "../../WapfiLogo";
 
 const navigation = [
@@ -7,7 +8,12 @@ const navigation = [
   { name: "Sponsors", href: "/admin/sponsors", icon: "sponsor" },
   { name: "Funds", href: "/admin/funds", icon: "fund" },
   { name: "Settlements", href: "/admin/settlements", icon: "repayment" },
-  { name: "Write-offs", href: "/admin/write-offs", icon: "repayment" },
+  {
+    name: "Write-offs",
+    href: "/admin/write-offs",
+    icon: "repayment",
+    superAdminOnly: true,
+  },
   { name: "Add Repayment", href: "/admin/add-repayment", icon: "add" },
   { name: "Loan Applications", href: "/admin/loan-applications", icon: "loan" },
   { name: "Loan Repayment", href: "/admin/loan-repayment", icon: "repayment" },
@@ -20,7 +26,11 @@ const navigation = [
 
 function AdminSidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
+  const { isSuperAdmin } = useAdminRole();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const visibleNavigation = navigation.filter(
+    (item) => !item.superAdminOnly || isSuperAdmin,
+  );
 
   const handleLogout = () => {
     setIsLoggingOut(true);
@@ -287,7 +297,7 @@ function AdminSidebar({ isOpen, onClose }) {
 
           {/* Navigation */}
           <nav className="flex-1 px-2 pb-4 space-y-1">
-            {navigation.map((item) => (
+            {visibleNavigation.map((item) => (
               <NavLink
                 key={item.name}
                 to={item.href}
@@ -362,7 +372,7 @@ function AdminSidebar({ isOpen, onClose }) {
 
           {/* Navigation */}
           <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
-            {navigation.map((item) => (
+            {visibleNavigation.map((item) => (
               <NavLink
                 key={item.name}
                 to={item.href}
