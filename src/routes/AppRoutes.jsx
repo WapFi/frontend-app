@@ -11,6 +11,7 @@ import { DisbursedLoansProvider } from "../context/DisbursedLoansContext";
 import { LoanFormProvider } from "../context/LoanFormContext";
 import { NotificationProvider } from "../context/NotificationContext";
 import { UserContextProvider } from "../context/UserContext";
+import { useAdminRole } from "../context/AdminRoleContext";
 import AdminRoute from "./AdminRoute";
 import PrivateRoute from "./PrivateRoute";
 
@@ -145,6 +146,16 @@ const PageTitle = ({ title, children }) => {
   useEffect(() => {
     document.title = `${title} | Wapfi`;
   }, [title]);
+
+  return children;
+};
+
+const SuperAdminRoute = ({ children }) => {
+  const { isSuperAdmin } = useAdminRole();
+
+  if (!isSuperAdmin) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
 
   return children;
 };
@@ -584,9 +595,11 @@ const router = createBrowserRouter([
         path: "write-offs",
         element: (
           <PageTitle title="Write-offs">
-            <S>
-              <WriteOffs />
-            </S>
+            <SuperAdminRoute>
+              <S>
+                <WriteOffs />
+              </S>
+            </SuperAdminRoute>
           </PageTitle>
         ),
       },

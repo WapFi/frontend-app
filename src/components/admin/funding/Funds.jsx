@@ -11,6 +11,7 @@ import {
 } from "../../../api/fundsApi";
 import { getSponsors } from "../../../api/sponsorsApi";
 import chevronDown from "../../../assets/chevron-down.svg";
+import { useAdminRole } from "../../../context/AdminRoleContext";
 
 const currentYear = new Date().getFullYear();
 const maxFundYear = currentYear + 10;
@@ -808,7 +809,7 @@ function ContributionModal({ fund, onClose, onSaved }) {
   );
 }
 
-function FundDetailsModal({ fund, onClose, onEdit }) {
+function FundDetailsModal({ fund, onClose, onEdit, canManageFunds }) {
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -1060,13 +1061,15 @@ function FundDetailsModal({ fund, onClose, onEdit }) {
             >
               Close
             </button>
-            <button
-              type="button"
-              onClick={() => onEdit(fund)}
-              className="theme_bg_color cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600"
-            >
-              Edit Fund
-            </button>
+            {canManageFunds && (
+              <button
+                type="button"
+                onClick={() => onEdit(fund)}
+                className="theme_bg_color cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600"
+              >
+                Edit Fund
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -1076,6 +1079,8 @@ function FundDetailsModal({ fund, onClose, onEdit }) {
 
 export default function Funds() {
   const navigate = useNavigate();
+  const { isSuperAdmin } = useAdminRole();
+  const canManageFunds = isSuperAdmin;
   const [funds, setFunds] = useState([]);
   const [sponsors, setSponsors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -1157,11 +1162,15 @@ export default function Funds() {
   };
 
   const handleOpenCreate = () => {
+    if (!canManageFunds) return;
+
     setSelectedFund(null);
     setModalMode("fund");
   };
 
   const handleOpenEdit = (fund) => {
+    if (!canManageFunds) return;
+
     setSelectedFund(fund);
     setModalMode("fund");
   };
@@ -1176,11 +1185,15 @@ export default function Funds() {
   };
 
   const handleOpenContribution = (fund) => {
+    if (!canManageFunds) return;
+
     setSelectedFund(fund);
     setModalMode("contribution");
   };
 
   const handleEditFromDetails = (fund) => {
+    if (!canManageFunds) return;
+
     setSelectedFund(fund);
     setModalMode("fund");
   };
@@ -1208,13 +1221,15 @@ export default function Funds() {
             Manage lending funds, capital balances, and sponsor contributions.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleOpenCreate}
-          className="theme_bg_color inline-flex cursor-pointer items-center justify-center rounded-full px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600"
-        >
-          Add Fund
-        </button>
+        {canManageFunds && (
+          <button
+            type="button"
+            onClick={handleOpenCreate}
+            className="theme_bg_color inline-flex cursor-pointer items-center justify-center rounded-full px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600"
+          >
+            Add Fund
+          </button>
+        )}
       </div>
 
       <div className="rounded-lg bg-white shadow">
@@ -1366,20 +1381,24 @@ export default function Funds() {
                         >
                           View Ledger
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => handleOpenContribution(fund)}
-                          className="cursor-pointer font-medium text-[#B88E00] hover:text-[#8f6f00]"
-                        >
-                          Add Contribution
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleOpenEdit(fund)}
-                          className="cursor-pointer font-medium text-[#2D6157] hover:text-[#224c44]"
-                        >
-                          Edit
-                        </button>
+                        {canManageFunds && (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => handleOpenContribution(fund)}
+                              className="cursor-pointer font-medium text-[#B88E00] hover:text-[#8f6f00]"
+                            >
+                              Add Contribution
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEdit(fund)}
+                              className="cursor-pointer font-medium text-[#2D6157] hover:text-[#224c44]"
+                            >
+                              Edit
+                            </button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -1473,20 +1492,24 @@ export default function Funds() {
                   >
                     View Ledger
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleOpenContribution(fund)}
-                    className="cursor-pointer text-sm font-medium text-[#B88E00]"
-                  >
-                    Add Contribution
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleOpenEdit(fund)}
-                    className="cursor-pointer text-sm font-medium text-[#2D6157]"
-                  >
-                    Edit Fund
-                  </button>
+                  {canManageFunds && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenContribution(fund)}
+                        className="cursor-pointer text-sm font-medium text-[#B88E00]"
+                      >
+                        Add Contribution
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEdit(fund)}
+                        className="cursor-pointer text-sm font-medium text-[#2D6157]"
+                      >
+                        Edit Fund
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             ))
@@ -1564,6 +1587,7 @@ export default function Funds() {
           fund={selectedFund}
           onClose={() => setModalMode(null)}
           onEdit={handleEditFromDetails}
+          canManageFunds={canManageFunds}
         />
       )}
     </div>

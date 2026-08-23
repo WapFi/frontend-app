@@ -7,6 +7,7 @@ import {
   updateSponsor,
 } from "../../../api/sponsorsApi";
 import chevronDown from "../../../assets/chevron-down.svg";
+import { useAdminRole } from "../../../context/AdminRoleContext";
 
 const initialFormState = {
   sponsor_id: "",
@@ -383,6 +384,7 @@ function SponsorModal({ sponsor, onClose, onSaved }) {
 }
 
 export default function Sponsors() {
+  const { isSuperAdmin } = useAdminRole();
   const [sponsors, setSponsors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -461,13 +463,15 @@ export default function Sponsors() {
             Manage sponsor profiles used to create and fund loan pools.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleAddSponsor}
-          className="theme_bg_color inline-flex cursor-pointer items-center justify-center rounded-full px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600"
-        >
-          Add Sponsor
-        </button>
+        {isSuperAdmin && (
+          <button
+            type="button"
+            onClick={handleAddSponsor}
+            className="theme_bg_color inline-flex cursor-pointer items-center justify-center rounded-full px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600"
+          >
+            Add Sponsor
+          </button>
+        )}
       </div>
 
       <div className="rounded-lg bg-white shadow">
@@ -528,21 +532,29 @@ export default function Sponsors() {
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                   Created
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Action
-                </th>
+                {isSuperAdmin && (
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Action
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-sm text-gray-500">
+                  <td
+                    colSpan={isSuperAdmin ? 7 : 6}
+                    className="px-6 py-8 text-center text-sm text-gray-500"
+                  >
                     Loading sponsors...
                   </td>
                 </tr>
               ) : sponsors.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-sm text-gray-500">
+                  <td
+                    colSpan={isSuperAdmin ? 7 : 6}
+                    className="px-6 py-8 text-center text-sm text-gray-500"
+                  >
                     No sponsors found.
                   </td>
                 </tr>
@@ -575,15 +587,17 @@ export default function Sponsors() {
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-700">
                       {formatDate(sponsor.created_at)}
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm">
-                      <button
-                        type="button"
-                        onClick={() => handleEditSponsor(sponsor)}
-                        className="cursor-pointer font-medium text-[#2D6157] hover:text-[#224c44]"
-                      >
-                        Edit
-                      </button>
-                    </td>
+                    {isSuperAdmin && (
+                      <td className="whitespace-nowrap px-6 py-4 text-sm">
+                        <button
+                          type="button"
+                          onClick={() => handleEditSponsor(sponsor)}
+                          className="cursor-pointer font-medium text-[#2D6157] hover:text-[#224c44]"
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))
               )}
@@ -636,13 +650,15 @@ export default function Sponsors() {
                     {formatDate(sponsor.created_at)}
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleEditSponsor(sponsor)}
-                  className="cursor-pointer text-sm font-medium text-[#2D6157]"
-                >
-                  Edit Sponsor
-                </button>
+                {isSuperAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => handleEditSponsor(sponsor)}
+                    className="cursor-pointer text-sm font-medium text-[#2D6157]"
+                  >
+                    Edit Sponsor
+                  </button>
+                )}
               </div>
             ))
           )}
