@@ -12,6 +12,7 @@ function LoanApplications() {
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   const [perPage, setPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,23 +23,24 @@ function LoanApplications() {
   });
 
   useEffect(() => {
-    fetchLoanApplications();
+    fetchLoanApplications(1, searchTerm, startDate, endDate, statusFilter);
   }, [perPage]);
 
   // Filter when date or search changes
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchLoanApplications(1, searchTerm, startDate, endDate);
+      fetchLoanApplications(1, searchTerm, startDate, endDate, statusFilter);
     }, 500); // Debounce search
 
     return () => clearTimeout(timeoutId);
-  }, [searchTerm, startDate, endDate]);
+  }, [searchTerm, startDate, endDate, statusFilter]);
 
   const fetchLoanApplications = async (
     page = 1,
     search = "",
     startDate = "",
     endDate = "",
+    status = "",
   ) => {
     try {
       setLoading(true);
@@ -46,6 +48,7 @@ function LoanApplications() {
       if (search) params.search = search;
       if (startDate) params.start_date = startDate;
       if (endDate) params.end_date = endDate;
+      if (status) params.status = status;
 
       const response = await getLoanApplications(params);
 
@@ -121,7 +124,7 @@ function LoanApplications() {
   // Search is now handled automatically via useEffect
 
   const handlePageChange = (page) => {
-    fetchLoanApplications(page, searchTerm, startDate, endDate);
+    fetchLoanApplications(page, searchTerm, startDate, endDate, statusFilter);
   };
 
   const handlePerPageChange = (newPerPage) => {
@@ -179,6 +182,15 @@ function LoanApplications() {
       </span>
     );
   };
+
+  const loanStatusOptions = [
+    { value: "", label: "All statuses" },
+    { value: "PENDING", label: "Pending" },
+    { value: "APPROVED", label: "Approved" },
+    { value: "REJECTED", label: "Rejected" },
+    { value: "DISBURSED", label: "Disbursed" },
+    { value: "CANCELLED", label: "Cancelled" },
+  ];
 
   if (loading) {
     return (
@@ -242,8 +254,24 @@ function LoanApplications() {
               />
             </div>
 
+            {/* Status Filter */}
+            <div className="w-full sm:w-1/4">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 cursor-pointer"
+                aria-label="Filter loan applications by status"
+              >
+                {loanStatusOptions.map((option) => (
+                  <option key={option.value || "all"} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Search Input */}
-            <div className="w-full sm:w-3/5">
+            <div className="w-full sm:w-2/5">
               <div className="relative">
                 <input
                   type="text"
@@ -455,6 +483,7 @@ function LoanApplications() {
               searchTerm,
               startDate,
               endDate,
+              statusFilter,
             )
           }
         />
