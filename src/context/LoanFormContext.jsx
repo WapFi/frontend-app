@@ -10,7 +10,7 @@ const emptyLoanFormData = {
   loan_amount: "",
   loan_purpose: "",
   other_purpose: "",
-  wapan_member: "",
+  association_membership: "",
   account_name: "",
   account_number: "",
   bank_name: "",
@@ -61,7 +61,9 @@ export function LoanFormProvider({ children }) {
           loan_amount: restoredData.loan_amount ?? "",
           loan_purpose: restoredData.loan_purpose ?? "",
           other_purpose: restoredData.loan_purpose_other ?? "",
-          wapan_member: restoredData.wapan_member ?? "",
+          association_membership:
+            restoredData.association_membership ??
+            (restoredData.wapan_member ? "WAPAN" : "NONE"),
           account_name: restoredData.bank_account?.account_name ?? "",
           account_number: restoredData.bank_account?.account_number ?? "",
           bank_name: restoredData.bank_account?.bank_name ?? "",
