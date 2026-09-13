@@ -9,6 +9,8 @@
     "sign_in": "Shiga",
     "invalid_credentials": "Imel ko lambar waya da kalmar sirri ba daidai ba. Da fatan a sake gwadawa.",
     "success": "An shiga cikin nasara!",
+    "success_title": "Barka da dawowa",
+    "success_button": "Ci gaba",
     "dont_have_account": "Ba ku da asusu?",
     "sign_up": "Yi rijista",
     "agree_terms": "Ta hanyar shiga, kuna yarda da",
@@ -43,6 +45,8 @@
     "terms_conditions": "Sharuɗɗa & Ka'idoji",
     "privacy_policy": "Manufar Sirri",
     "success": "An ƙirƙiri asusun cikin nasara!",
+    "success_title": "An ƙirƙiri asusu",
+    "success_button": "Ci gaba zuwa shiga",
     "error": "An riga an yi rijista da wannan imel ko lambar waya. Da fatan a shiga ko amfani da wani daban.",
     "errors": {
       "full_name_required": "Da fatan a shigar da cikakken suna",
