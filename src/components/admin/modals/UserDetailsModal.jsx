@@ -5,6 +5,15 @@ import NairaIcon from "../../../assets/naira icon.svg";
 import PageLoader from "../../PageLoader";
 import RepaymentDetailsModal from "./RepaymentDetailsModal";
 
+function getActionErrorMessage(error, fallback) {
+  const responseData = error.response?.data;
+
+  if (responseData?.errors?.[0]?.message) return responseData.errors[0].message;
+  if (responseData?.message) return responseData.message;
+
+  return fallback;
+}
+
 function UserDetailsModal({ user, onClose, onUserUpdate }) {
   const [showBlockModal, setShowBlockModal] = useState(false);
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
@@ -13,6 +22,7 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
   const [detailedUser, setDetailedUser] = useState(null);
   const [detailsError, setDetailsError] = useState(null);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+  const [statusActionError, setStatusActionError] = useState("");
 
   if (!user) return null;
 
@@ -27,6 +37,7 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
   const handleBlockUser = async () => {
     try {
       setLoading(true);
+      setStatusActionError("");
       await updateUserStatus(user._id, "INACTIVE");
       toast.success("User blocked successfully");
       setShowBlockModal(false);
@@ -36,7 +47,12 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
       onClose();
     } catch (error) {
       console.error("Error blocking user:", error);
-      toast.error("Failed to block user. Please try again.");
+      const message = getActionErrorMessage(
+        error,
+        "Failed to block user. Please try again.",
+      );
+      setStatusActionError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -45,6 +61,7 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
   const handleDeactivateUser = async () => {
     try {
       setLoading(true);
+      setStatusActionError("");
       await updateUserStatus(user._id, "DEACTIVATED");
       toast.success("User deactivated successfully");
       setShowDeactivateModal(false);
@@ -54,7 +71,12 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
       onClose();
     } catch (error) {
       console.error("Error deactivating user:", error);
-      toast.error("Failed to deactivate user. Please try again.");
+      const message = getActionErrorMessage(
+        error,
+        "Failed to deactivate user. Please try again.",
+      );
+      setStatusActionError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -453,21 +475,27 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
 
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-end sm:space-x-3 sm:gap-0">
               <button
-                onClick={() => setShowBlockModal(true)}
+                onClick={() => {
+                  setStatusActionError("");
+                  setShowBlockModal(true);
+                }}
                 style={{ background: "#B88E00" }}
-                className="text-sm border-gray-100 w-full sm:w-33 bg-yellow-500 text-white py-2 px-2 rounded-full font-medium hover:bg-yellow-600 transition-colors"
+                className="cursor-pointer text-sm border-gray-100 w-full sm:w-33 bg-yellow-500 text-white py-2 px-2 rounded-full font-medium hover:bg-yellow-600 transition-colors"
               >
                 Block User
               </button>
               <button
                 onClick={() => setShowRepaymentDetails(true)}
-                className="text-sm w-full sm:w-[132px] border border-gray-100 text-dark py-2 px-2 rounded-full font-medium hover:bg-gray-50 transition-colors"
+                className="cursor-pointer text-sm w-full sm:w-[132px] border border-gray-100 text-dark py-2 px-2 rounded-full font-medium hover:bg-gray-50 transition-colors"
               >
                 Latest Repayment
               </button>
               <button
-                onClick={() => setShowDeactivateModal(true)}
-                className="text-sm w-full sm:w-33 border border-gray-100 text-red-700 py-2 px-2 rounded-full font-medium hover:bg-red-200 transition-colors"
+                onClick={() => {
+                  setStatusActionError("");
+                  setShowDeactivateModal(true);
+                }}
+                className="cursor-pointer text-sm w-full sm:w-33 border border-gray-100 text-red-700 py-2 px-2 rounded-full font-medium hover:bg-red-200 transition-colors"
               >
                 Deactivate User
               </button>
@@ -486,6 +514,11 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
             <p className="text-gray-600 mb-6">
               Are you sure you want to block this user?
             </p>
+            {statusActionError && (
+              <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+                {statusActionError}
+              </p>
+            )}
             <div className="flex flex-col gap-3 sm:flex-row sm:space-x-3 sm:gap-0 pb-8">
               <button
                 onClick={handleBlockUser}
@@ -496,7 +529,10 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
                 {loading ? "Blocking..." : "Block User"}
               </button>
               <button
-                onClick={() => setShowBlockModal(false)}
+                onClick={() => {
+                  setStatusActionError("");
+                  setShowBlockModal(false);
+                }}
                 className="flex-1 bg-white text-black border border-gray-300 py-2 px-4 rounded-full font-medium hover:bg-gray-50 transition-colors"
               >
                 Cancel
@@ -516,6 +552,11 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
             <p className="text-gray-600 mb-6">
               Are you sure you want to deactivate this user?
             </p>
+            {statusActionError && (
+              <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+                {statusActionError}
+              </p>
+            )}
             <div className="flex flex-col gap-3 sm:flex-row sm:space-x-3 sm:gap-0 pb-8">
               <button
                 onClick={handleDeactivateUser}
@@ -526,7 +567,10 @@ function UserDetailsModal({ user, onClose, onUserUpdate }) {
                 {loading ? "Deactivating..." : "Deactivate User"}
               </button>
               <button
-                onClick={() => setShowDeactivateModal(false)}
+                onClick={() => {
+                  setStatusActionError("");
+                  setShowDeactivateModal(false);
+                }}
                 className="flex-1 bg-white text-black border border-gray-300 py-2 px-4 rounded-full font-medium hover:bg-gray-50 transition-colors"
               >
                 Cancel

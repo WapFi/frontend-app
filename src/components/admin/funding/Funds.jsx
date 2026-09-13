@@ -42,7 +42,6 @@ const contributionInitialState = {
   amount: "",
   type: "SPONSOR_DEPOSIT",
   contribution_date: "",
-  payment_reference: "",
   notes: "",
 };
 
@@ -112,7 +111,6 @@ const contributionSchema = yup.object({
     .required("Contribution amount is required."),
   type: yup.string().oneOf(["SPONSOR_DEPOSIT", "WAPFI_INDEMNITY"]).required(),
   contribution_date: yup.string().trim().optional(),
-  payment_reference: yup.string().trim().optional(),
   notes: yup.string().trim().optional(),
 });
 
@@ -640,9 +638,6 @@ function ContributionModal({ fund, onClose, onSaved }) {
         formData.contribution_date,
       ).toISOString();
     }
-    if (formData.payment_reference.trim()) {
-      payload.payment_reference = formData.payment_reference.trim();
-    }
     if (formData.notes.trim()) {
       payload.notes = formData.notes.trim();
     }
@@ -744,33 +739,17 @@ function ContributionModal({ fund, onClose, onSaved }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Contribution Date
-              </label>
-              <input
-                type="date"
-                name="contribution_date"
-                value={formData.contribution_date}
-                onChange={handleChange}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-yellow-500 focus:outline-none focus:ring-1 focus:ring-yellow-500"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Payment Reference
-              </label>
-              <input
-                type="text"
-                name="payment_reference"
-                value={formData.payment_reference}
-                onChange={handleChange}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-yellow-500 focus:outline-none focus:ring-1 focus:ring-yellow-500"
-                placeholder="Optional bank reference"
-              />
-            </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Contribution Date
+            </label>
+            <input
+              type="date"
+              name="contribution_date"
+              value={formData.contribution_date}
+              onChange={handleChange}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-yellow-500 focus:outline-none focus:ring-1 focus:ring-yellow-500"
+            />
           </div>
 
           <div>
