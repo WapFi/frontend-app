@@ -9,6 +9,8 @@
     "sign_in": "Sign In",
     "invalid_credentials": "Incorrect email or phone number. Please try again.",
     "success": "Login successful!",
+    "success_title": "Welcome back",
+    "success_button": "Continue",
     "dont_have_account": "Don't have an account?",
     "sign_up": "Sign Up",
     "agree_terms": "By signing in, you agree to our",
@@ -43,6 +45,8 @@
     "terms_conditions": "Terms & Conditions",
     "privacy_policy": "Privacy Policy",
     "success": "Account created successfully!",
+    "success_title": "Account created",
+    "success_button": "Continue to sign in",
     "error": "This email or phone number is already registered. Try logging in or use another.",
     "errors": {
       "full_name_required": "Please enter your full name",

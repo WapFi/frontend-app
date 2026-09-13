@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,18 +8,28 @@ import { signUp } from "../../api/authApi";
 import BackgroundImage from "../BackgroundImage";
 import LoadingSpinner from "../LoadingSpinner";
 import WapfiLogo from "../WapfiLogo";
+import AuthSuccessModal from "./AuthSuccessModal";
 
 function SignUpAccountVerification() {
   const [fadeIn, setFadeIn] = useState(false);
   const [loading, setLoading] = useState(false);
+  const successTimerRef = useRef(null);
 
   const [showFormError, setShowFormError] = useState("");
-  const [showSuccessMessage, setShowSuccessMessage] = useState("");
+  const [successModal, setSuccessModal] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     setFadeIn(true);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (successTimerRef.current) {
+        clearTimeout(successTimerRef.current);
+      }
+    };
   }, []);
 
   const { t } = useTranslation();
@@ -99,14 +109,17 @@ function SignUpAccountVerification() {
       });
 
       if (response.status === 200) {
-        setShowSuccessMessage(response.data?.message);
+        setSuccessModal({
+          message: response.data?.message || t("sign_up.success"),
+        });
 
         // reset form
         reset();
 
-        setTimeout(() => {
+        successTimerRef.current = setTimeout(() => {
+          setSuccessModal(null);
           navigate("/sign-in");
-        }, 3500);
+        }, 2500);
       } else {
         setShowFormError(response.data?.message);
       }
@@ -118,7 +131,6 @@ function SignUpAccountVerification() {
       setTimeout(() => {
         // reset success and error states
         setShowFormError("");
-        setShowSuccessMessage("");
       }, 3000);
     }
   };
@@ -129,6 +141,20 @@ function SignUpAccountVerification() {
         fadeIn ? "opacity-100" : "opacity-0"
       }`}
     >
+      {successModal && (
+        <AuthSuccessModal
+          title={t("sign_up.success_title")}
+          message={successModal.message}
+          buttonText={t("sign_up.success_button")}
+          onContinue={() => {
+            if (successTimerRef.current) {
+              clearTimeout(successTimerRef.current);
+            }
+            setSuccessModal(null);
+            navigate("/sign-in");
+          }}
+        />
+      )}
       <div className="px-3 lg:px-0 lg:w-[48%] lg:min-w-0 lg:max-w-[600px]">
         <WapfiLogo />
         <div className="mx-auto flex flex-col items-center gap-[40px] w-full mb-12 max-w-[95%] md:text-[18px] md:max-w-[75%] lg:max-w-[511px] lg:w-full lg:px-4 lg:mx-auto lg:gap-[40px]">
@@ -148,12 +174,6 @@ function SignUpAccountVerification() {
             {showFormError && (
               <p className="text-red-500 mb-3">
                 {showFormError || t("sign_up.error")}
-              </p>
-            )}
-
-            {showSuccessMessage && (
-              <p className="text-green-500 mb-3">
-                {showSuccessMessage || "sign_up.success"}
               </p>
             )}
 

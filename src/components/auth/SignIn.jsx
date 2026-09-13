@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,12 +9,14 @@ import BackgroundImage from "../BackgroundImage";
 import LoadingSpinner from "../LoadingSpinner";
 import WapfiLogo from "../WapfiLogo";
 import AuthFooter from "./AuthFooter";
+import AuthSuccessModal from "./AuthSuccessModal";
 
 function SignIn() {
   const [sessionExpired, setSessionExpired] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const [logoutResult, setLogoutResult] = useState(null);
+  const successTimerRef = useRef(null);
 
   useEffect(() => {
     const expired = sessionStorage.getItem("sessionExpired");
@@ -59,6 +61,14 @@ function SignIn() {
     setFadeIn(true);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (successTimerRef.current) {
+        clearTimeout(successTimerRef.current);
+      }
+    };
+  }, []);
+
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -89,7 +99,7 @@ function SignIn() {
   });
 
   const [showFormError, setShowFormError] = useState("");
-  const [showSuccessMessage, setShowSuccessMessage] = useState("");
+  const [successModal, setSuccessModal] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -128,24 +138,24 @@ function SignIn() {
 
       if (response.status === 200) {
         // setShowFormError("");
-        setShowSuccessMessage(response.data?.message);
         reset();
 
         // navigate to dashboard
         const userRole = response.data?.role || null;
-        if (userRole === "WAPFI_SUPER_ADMIN" || userRole === "WAPFI_ADMIN") {
-          setTimeout(() => {
-            // reset state and navigate
-            setShowSuccessMessage("");
-            navigate("/admin/dashboard");
-          }, 3000);
-        } else {
-          setTimeout(() => {
-            // reset state and navigate
-            setShowSuccessMessage("");
-            navigate("/dashboard");
-          }, 3000);
-        }
+        const redirectPath =
+          userRole === "WAPFI_SUPER_ADMIN" || userRole === "WAPFI_ADMIN"
+            ? "/admin/dashboard"
+            : "/dashboard";
+
+        setSuccessModal({
+          message: response.data?.message || t("sign_in.success"),
+          redirectPath,
+        });
+
+        successTimerRef.current = setTimeout(() => {
+          setSuccessModal(null);
+          navigate(redirectPath);
+        }, 2500);
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -165,6 +175,21 @@ function SignIn() {
         fadeIn ? "opacity-100" : "opacity-0"
       }`}
     >
+      {successModal && (
+        <AuthSuccessModal
+          title={t("sign_in.success_title")}
+          message={successModal.message}
+          buttonText={t("sign_in.success_button")}
+          onContinue={() => {
+            const redirectPath = successModal.redirectPath;
+            if (successTimerRef.current) {
+              clearTimeout(successTimerRef.current);
+            }
+            setSuccessModal(null);
+            navigate(redirectPath);
+          }}
+        />
+      )}
       {/* <WapfiLogo /> */}
       <div className="px-3 lg:px-0 lg:w-[48%] lg:min-w-0 lg:max-w-[600px]">
         <WapfiLogo />
@@ -218,12 +243,6 @@ function SignIn() {
             {showFormError && (
               <p className="text-red-500 mb-3">
                 {showFormError || t("sign_in.invalid_credentials")}
-              </p>
-            )}
-
-            {showSuccessMessage && (
-              <p className="text-green-500 mb-3">
-                {showSuccessMessage || t("sign_in.success")}
               </p>
             )}
 
