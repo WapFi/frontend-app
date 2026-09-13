@@ -92,7 +92,9 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
 
   const handleApprove = async () => {
     if (!selectedFundId) {
-      setActionError("Select an eligible fund before approving this loan.");
+      setActionError(
+        "Select an eligible fund before approving and disbursing this loan.",
+      );
       return;
     }
 
@@ -105,14 +107,21 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
       });
 
       if (response.status) {
-        toast.success(response.message || "Loan approved successfully.");
-        onUpdated?.();
+        toast.success(
+          response.message ||
+            "Loan approved. Disbursement has been initiated.",
+        );
+        await onUpdated?.();
         onClose();
       } else {
-        setActionError(response.message || "Unable to approve loan.");
+        setActionError(
+          response.message || "Unable to approve and disburse loan.",
+        );
       }
     } catch (error) {
-      setActionError(getErrorMessage(error, "Unable to approve loan."));
+      setActionError(
+        getErrorMessage(error, "Unable to approve and disburse loan."),
+      );
     } finally {
       setActionLoading("");
     }
@@ -126,7 +135,7 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
 
       if (response.status) {
         toast.success(response.message || "Loan declined successfully.");
-        onUpdated?.();
+        await onUpdated?.();
         onClose();
       } else {
         setActionError(response.message || "Unable to decline loan.");
@@ -146,7 +155,7 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
 
       if (response.status) {
         toast.success(response.message || "Disbursement retry started.");
-        onUpdated?.();
+        await onUpdated?.();
         onClose();
       } else {
         setActionError(response.message || "Unable to retry disbursement.");
@@ -226,9 +235,17 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
                   Select funding source
                 </h3>
                 <p className="text-xs text-gray-500">
-                  Approval reserves capital from the selected fund. No payout is
-                  made until the borrower confirms the loan.
+                  Approval now initiates disbursement immediately from the
+                  selected fund. Only approve when the application and bank
+                  details have been reviewed.
                 </p>
+              </div>
+
+              <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800">
+                Approving this loan will start the payout process. A successful
+                approval response only means disbursement has started; use the
+                disbursement status after refresh to confirm whether the money
+                reached the borrower.
               </div>
 
               {loadingFunds ? (
@@ -320,7 +337,9 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
                 }
                 className="flex-1 bg-yellow-500 text-white py-3 px-4 rounded-md font-medium hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
-                {actionLoading === "approve" ? "Approving..." : "Approve Loan"}
+                {actionLoading === "approve"
+                  ? "Approving and disbursing..."
+                  : "Approve and Disburse"}
               </button>
               <button 
                 onClick={handleDecline}
