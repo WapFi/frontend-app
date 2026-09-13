@@ -189,7 +189,6 @@ function LoanApplications() {
     { value: "APPROVED", label: "Approved" },
     { value: "REJECTED", label: "Rejected" },
     { value: "DISBURSED", label: "Disbursed" },
-    { value: "CANCELLED", label: "Cancelled" },
   ];
 
   if (loading) {
