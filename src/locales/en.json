@@ -417,11 +417,11 @@
     "no": "No",
     "locationLabel": "Location",
     "selectOption": "Select Option",
-    "locations": {
-      "Gwagwalada": "Gwagwalada",
-      "Kubwa": "Kubwa",
-      "Maitama": "Maitama"
+    "locationGroups": {
+      "abuja": "Abuja",
+      "lagos": "Lagos"
     },
+    "noLagosLocations": "No Lagos drop-off locations are available yet.",
     "repaymentScheduleLabel": "Select your preferred repayment schedule",
     "repaymentScheduleOptions": {
       "14 days": "14 days",

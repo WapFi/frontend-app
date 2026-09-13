@@ -417,11 +417,11 @@
     "no": "A'a",
     "locationLabel": "Wuri",
     "selectOption": "Zaɓi zaɓi",
-    "locations": {
-      "Gwagwalada": "Gwagwalada",
-      "Kubwa": "Kubwa",
-      "Maitama": "Maitama"
+    "locationGroups": {
+      "abuja": "Abuja",
+      "lagos": "Lagos"
     },
+    "noLagosLocations": "Babu wuraren ajiya a Lagos tukuna.",
     "repaymentScheduleLabel": "Zaɓi tsarin biyan kuɗin da kake so",
     "repaymentScheduleOptions": {
       "14 days": "Kwanaki 14",

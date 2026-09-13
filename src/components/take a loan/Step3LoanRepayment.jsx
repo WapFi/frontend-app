@@ -9,6 +9,90 @@ import { useNavigate } from "react-router-dom";
 import { useLoanForm } from "../../context/LoanFormContext";
 import { useTranslation } from "react-i18next";
 
+const dropOffLocations = [
+  {
+    name: "Zuba",
+    address: "New garage, Dankogi, Zuba",
+    phone: "08105910930",
+  },
+  {
+    name: "Nyanya",
+    address: "After Nyanya overhead bridge, Nyanya",
+    phone: "080376982160",
+  },
+  {
+    name: "Bwari",
+    address: "Living Faith Road, Bwari",
+    phone: "08165498261",
+  },
+  {
+    name: "Gwagwalada",
+    address: "Phase 3, off Waterboard, beside the dump site",
+    phone: "08068993112",
+  },
+  {
+    name: "Gwagwalada 2",
+    address: "SDP Junction, Gwagwalada",
+    phone: "08189724806",
+  },
+  {
+    name: "Jikwoyi",
+    address: "Near Phase II Market, Jikwoyi Phase II",
+    phone: "08095615451",
+  },
+  {
+    name: "Giri",
+    address: "Giri Junction",
+    phone: "08089948627",
+  },
+  {
+    name: "Utako",
+    address: "Opp. NNPC Clinic Utako, beside Utako Market",
+    phone: "08096009920",
+  },
+  {
+    name: "Area 1",
+    address: "Opp. Zoological Garden, opposite Area 1 Shopping Plaza",
+    phone: "08171332124",
+  },
+  {
+    name: "Banex 1",
+    address: "Car park, behind Conoil Filling Station",
+    phone: "07083517907",
+  },
+  {
+    name: "Banex 2",
+    address:
+      "Opp. Banex Plaza, beside Federation of Muslim Women Association of Nigeria",
+    phone: "08138191530",
+  },
+  {
+    name: "Garki",
+    address: "Opposite entrance of old Garki Market",
+    phone: "08136210324",
+  },
+  {
+    name: "Gwarimpa",
+    address: "Opposite St. Matthew Anglican Church, off 1st Avenue",
+    phone: "08123834941",
+  },
+  {
+    name: "Kubwa",
+    address: "Kubwa Express, near Phase 3 Road, Kubwa",
+    phone: "08133950304",
+  },
+  {
+    name: "Lugbe",
+    address: "Berger Yard, Lugbe",
+    phone: "09085078345",
+  },
+  {
+    name: "Kuje",
+    address: "Kuje Stadium Gate",
+    phone: "07059744483",
+  },
+];
+
 export default function Step3RepaymentUnderstanding() {
   const { loanFormData, updateLoanFormData, setHasUnsavedChanges } =
     useLoanForm();
@@ -73,6 +157,9 @@ export default function Step3RepaymentUnderstanding() {
   const knowDropOff = watch("know_drop_off");
   const repaymentLocation = watch("repayment_location");
   const repaymentSchedule = watch("repayment_schedule");
+  const selectedDropOffLocation = dropOffLocations.find(
+    (location) => location.name === repaymentLocation,
+  );
 
   let dropOffLabel = t("loanStep3.dropOffLabelDefault");
   if (repaymentMethod === "RECYCLABLES") {
@@ -233,9 +320,9 @@ export default function Step3RepaymentUnderstanding() {
               onClick={() => setDisplayLocationForm(!displayLocationForm)}
             >
               <p className="text-[rgba(34,34,34,0.50)]">
-                {repaymentLocation
-                  ? t(`loanStep3.locations.${repaymentLocation}`)
-                  : t("loanStep3.selectOption")}
+                {selectedDropOffLocation?.name ||
+                  repaymentLocation ||
+                  t("loanStep3.selectOption")}
               </p>
               <img
                 src={displayLocationForm ? chevronUp : chevronDown}
@@ -244,23 +331,47 @@ export default function Step3RepaymentUnderstanding() {
               />
             </div>
             {displayLocationForm && (
-              <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
-                {["Gwagwalada", "Kubwa", "Maitama"].map((option) => (
+              <div className="mt-[0.2px] max-h-80 overflow-y-auto bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
+                <p className="px-2 pt-1 text-xs font-semibold uppercase tracking-wide text-[#439182]">
+                  {t("loanStep3.locationGroups.abuja")}
+                </p>
+                {dropOffLocations.map((location) => (
                   <button
-                    key={option}
+                    key={location.name}
                     type="button"
                     onClick={() => {
-                      setValue("repayment_location", option, {
+                      setValue("repayment_location", location.name, {
                         shouldValidate: true,
                       });
                       setDisplayLocationForm(false);
                     }}
                     className="text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"
                   >
-                    {t(`loanStep3.locations.${option}`)}
+                    <span className="block font-medium">{location.name}</span>
+                    <span className="mt-1 block text-sm text-[#656565]">
+                      {location.address}
+                    </span>
+                    <span className="mt-1 block text-xs text-[#439182]">
+                      {location.phone}
+                    </span>
                   </button>
                 ))}
+
+                <div className="border-t border-[rgba(0,0,0,0.08)] px-2 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[#439182]">
+                    {t("loanStep3.locationGroups.lagos")}
+                  </p>
+                  <p className="mt-1 text-sm text-[#656565]">
+                    {t("loanStep3.noLagosLocations")}
+                  </p>
+                </div>
               </div>
+            )}
+            {selectedDropOffLocation && (
+              <p className="mt-2 text-sm text-[#656565]">
+                {selectedDropOffLocation.address} ·{" "}
+                {selectedDropOffLocation.phone}
+              </p>
             )}
             {errors.repayment_location && (
               <p className="text-red-600 text-sm mt-1">
