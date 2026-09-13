@@ -77,7 +77,7 @@ export default function Step1LoanAmount() {
     loanPurpose: yup
       .string()
       .required(t("loanStep1.errors.loanPurposeRequired")),
-    wapanMembership: yup
+    associationMembership: yup
       .string()
       .required(t("loanStep1.errors.membershipRequired")),
     otherPurpose: yup.string().when("loanPurpose", {
@@ -102,12 +102,7 @@ export default function Step1LoanAmount() {
       loanAmount: loanFormData.loan_amount,
       loanPurpose: loanFormData.loan_purpose,
       otherPurpose: loanFormData.other_purpose,
-      wapanMembership:
-        loanFormData.wapan_member === true
-          ? "Yes"
-          : loanFormData.wapan_member === false
-            ? "No"
-            : "",
+      associationMembership: loanFormData.association_membership,
     },
   });
 
@@ -116,17 +111,12 @@ export default function Step1LoanAmount() {
       loanAmount: loanFormData.loan_amount,
       loanPurpose: loanFormData.loan_purpose,
       otherPurpose: loanFormData.other_purpose,
-      wapanMembership:
-        loanFormData.wapan_member === true
-          ? "Yes"
-          : loanFormData.wapan_member === false
-            ? "No"
-            : "",
+      associationMembership: loanFormData.association_membership,
     });
   }, [loanFormData, reset]);
 
   const loanPurpose = watch("loanPurpose");
-  const wapanMembership = watch("wapanMembership");
+  const associationMembership = watch("associationMembership");
 
   useEffect(() => {
     if (setHasUnsavedChanges) {
@@ -143,7 +133,7 @@ export default function Step1LoanAmount() {
         loan_amount: data.loanAmount,
         loan_purpose: data.loanPurpose,
         other_purpose: data.otherPurpose,
-        wapan_member: data.wapanMembership === "Yes",
+        association_membership: data.associationMembership,
       });
 
       if (setHasUnsavedChanges) {
@@ -293,11 +283,9 @@ export default function Step1LoanAmount() {
             onClick={() => setDisplayMembershipForm(!displayMembershipForm)}
           >
             <p className="text-[rgba(34,34,34,0.50)] text-[16px]">
-              {wapanMembership === "Yes"
-                ? t("loanStep1.options.yes")
-                : wapanMembership === "No"
-                  ? t("loanStep1.options.no")
-                  : t("loanStep1.membershipPlaceholder")}
+              {associationMembership
+                ? t(`loanStep1.associationOptions.${associationMembership}`)
+                : t("loanStep1.membershipPlaceholder")}
             </p>
             <img
               src={displayMembershipForm ? chevronUp : chevronDown}
@@ -307,30 +295,26 @@ export default function Step1LoanAmount() {
           </div>
           {displayMembershipForm && (
             <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
-              {["true", "false"].map((value) => (
+              {["WAPAN", "ASWOL", "RAN", "NONE"].map((value) => (
                 <button
                   key={value}
                   type="button"
                   onClick={() => {
-                    setValue(
-                      "wapanMembership",
-                      value === "true" ? "Yes" : "No",
-                      { shouldValidate: true },
-                    );
+                    setValue("associationMembership", value, {
+                      shouldValidate: true,
+                    });
                     setDisplayMembershipForm(false);
                   }}
                   className="text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"
                 >
-                  {value === "true"
-                    ? t("loanStep1.options.yes")
-                    : t("loanStep1.options.no")}
+                  {t(`loanStep1.associationOptions.${value}`)}
                 </button>
               ))}
             </div>
           )}
-          {errors.wapanMembership && (
+          {errors.associationMembership && (
             <p className="text-red-600 text-sm mt-1">
-              {errors.wapanMembership.message}
+              {errors.associationMembership.message}
             </p>
           )}
         </div>

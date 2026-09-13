@@ -15,14 +15,6 @@ export const cancelPendingLoan = async (loanID) => {
   return response;
 };
 
-export const confirmLoanApplication = async (loan_id, password) => {
-  const response = await axios.post("/loans/confirm", {
-    loan_id,
-    password,
-  });
-  return response;
-};
-
 export const fetchLoans = async (page = 1, limit = 10, filters = {}) => {
   const { query, startDate, endDate, status } = filters;
   let queryString = `page=${page}&limit=${limit}`;

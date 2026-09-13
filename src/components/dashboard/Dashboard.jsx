@@ -67,16 +67,6 @@ function Dashboard({ dashboardData }) {
     </p>
   );
 
-  const formatDisplayDate = (dateValue) => {
-    if (!dateValue) return "";
-
-    return new Date(dateValue).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   const renderPendingLoanCallout = () => {
     const pendingLoan = dashboardData?.pending_loan;
     const pendingLoanStatus = pendingLoan?.status?.toUpperCase();
@@ -89,7 +79,6 @@ function Dashboard({ dashboardData }) {
     const isProcessingDisbursement = disbursementStatus === "PROCESSING";
     const isSuccessfulDisbursement = disbursementStatus === "SUCCESSFUL";
     const isFailedDisbursement = disbursementStatus === "FAILED";
-    const confirmBy = formatDisplayDate(pendingLoan.confirm_by);
 
     return (
       <div className="w-full self-stretch rounded-[12px] border border-[#439182]/20 bg-white p-5 shadow-sm">
@@ -133,7 +122,7 @@ function Dashboard({ dashboardData }) {
                   : isProcessingDisbursement
                 ? t("dashboard.pendingLoan.processingBody")
                 : isApproved
-                  ? t("dashboard.pendingLoan.approvedBody", { confirmBy })
+                  ? t("dashboard.pendingLoan.approvedBody")
                   : t("dashboard.pendingLoan.pendingBody")}
             </p>
           </div>
