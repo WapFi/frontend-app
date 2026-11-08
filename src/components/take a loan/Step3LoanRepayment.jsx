@@ -126,7 +126,9 @@ export default function Step3RepaymentUnderstanding() {
       otherwise: (schema) => schema.notRequired(),
     }),
     repayment_schedule: yup
-      .string()
+      .number()
+      .typeError(t("loanStep3.errors.repaymentScheduleRequired"))
+      .oneOf([14, 21], t("loanStep3.errors.repaymentScheduleRequired"))
       .required(t("loanStep3.errors.repaymentScheduleRequired")),
   });
 
@@ -143,7 +145,7 @@ export default function Step3RepaymentUnderstanding() {
       know_drop_off:
         loanFormData.recyclable_drop_off_known === true ? "true" : "false",
       repayment_location: loanFormData.recyclable_drop_off_location,
-      repayment_schedule: loanFormData.repayment_schedule,
+      repayment_schedule: [14, 21].includes(Number(loanFormData.repayment_schedule)) ? Number(loanFormData.repayment_schedule) : "",
     },
   });
 
@@ -396,7 +398,7 @@ export default function Step3RepaymentUnderstanding() {
           >
             <p className="text-[rgba(34,34,34,0.50)]">
               {repaymentSchedule
-                ? t(`loanStep3.repaymentScheduleOptions.${repaymentSchedule}`)
+                ? t(`loanStep3.repaymentScheduleOptions.${repaymentSchedule} days`)
                 : t("loanStep3.selectOption")}
             </p>
             <img
@@ -407,7 +409,7 @@ export default function Step3RepaymentUnderstanding() {
           </div>
           {displayScheduleForm && (
             <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
-              {["14 days", "21 days"].map((option) => (
+              {[14, 21].map((option) => (
                 <button
                   key={option}
                   type="button"
@@ -419,7 +421,7 @@ export default function Step3RepaymentUnderstanding() {
                   }}
                   className="text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"
                 >
-                  {t(`loanStep3.repaymentScheduleOptions.${option}`)}
+                  {t(`loanStep3.repaymentScheduleOptions.${option} days`)}
                 </button>
               ))}
             </div>

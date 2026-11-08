@@ -349,6 +349,9 @@
     }
   },
   "loanStep1": {
+    "wapanIdLabel": "Lambar memba ta WAPAN",
+    "wapanIdRequired": "Shigar da lambar memba ta WAPAN.",
+    "membershipLocked": "Ba za a iya sauya kungiyar da aka zaba a aikace-aikacen da aka riga aka tura ba.",
     "title": "Nawa kake son aro?",
     "placeholder": "Shigar da adadin da kake son aro",
     "limitNote": "Iyakar adadin da zaka iya aro shine ₦{{limit}}",
@@ -357,7 +360,7 @@
     "purposePlaceholder": "Zaɓi dalilin rance",
     "otherPurposeLabel": "Sauran",
     "otherPurposePlaceholder": "Shigar da dalili",
-    "membershipLabel": "Zaɓi ƙungiyar da kake ciki",
+    "membershipLabel": "Kana memba na wata ƙungiya?",
     "membershipPlaceholder": "Zaɓi Zaɓi",
     "associationOptions": {
       "WAPAN": "WAPAN",

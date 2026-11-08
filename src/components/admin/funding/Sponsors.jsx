@@ -43,8 +43,8 @@ const sponsorCreateSchema = yup.object({
     .trim()
     .required("Sponsor short code is required.")
     .matches(
-      /^[A-Za-z][A-Za-z0-9]{1,9}$/,
-      "Short code must be 2-10 letters/numbers and start with a letter.",
+      /^[A-Za-z][A-Za-z0-9-]{1,9}$/,
+      "Short code must be 2-10 characters using letters, numbers or hyphens, and start with a letter.",
     ),
 });
 

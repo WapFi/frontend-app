@@ -349,6 +349,9 @@
     }
   },
   "loanStep1": {
+    "wapanIdLabel": "WAPAN member ID",
+    "wapanIdRequired": "Enter your WAPAN member ID.",
+    "membershipLocked": "Association membership cannot be changed on an existing application.",
     "title": "How much would you like to borrow?",
     "placeholder": "Enter the amount you want to borrow",
     "limitNote": "Your borrowing limit is ₦{{limit}}",
@@ -357,7 +360,7 @@
     "purposePlaceholder": "Select loan purpose",
     "otherPurposeLabel": "Others",
     "otherPurposePlaceholder": "Enter purpose",
-    "membershipLabel": "Select your association membership",
+    "membershipLabel": "Are you a member of an association?",
     "membershipPlaceholder": "Select Option",
     "associationOptions": {
       "WAPAN": "WAPAN",

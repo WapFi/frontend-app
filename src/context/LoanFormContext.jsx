@@ -11,6 +11,7 @@ const emptyLoanFormData = {
   loan_purpose: "",
   other_purpose: "",
   association_membership: "",
+  wapan_member_id: "",
   account_name: "",
   account_number: "",
   bank_name: "",
@@ -61,6 +62,7 @@ export function LoanFormProvider({ children }) {
           loan_amount: restoredData.loan_amount ?? "",
           loan_purpose: restoredData.loan_purpose ?? "",
           other_purpose: restoredData.loan_purpose_other ?? "",
+          wapan_member_id: restoredData.wapan_member_id ?? "",
           association_membership:
             restoredData.association_membership ??
             (restoredData.wapan_member ? "WAPAN" : "NONE"),
