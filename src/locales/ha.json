@@ -391,6 +391,12 @@
     }
   },
   "loanStep2": {
+    "banksLoading": "Ana loda bankuna...",
+    "banksError": "Ba mu iya loda bankuna ba. Da fatan a sake gwadawa.",
+    "banksEmpty": "Babu bankuna a yanzu. Da fatan a sake gwadawa daga baya.",
+    "retryBanks": "Sake gwadawa",
+    "searchBanks": "Nemo banki da suna ko lamba",
+    "noMatchingBanks": "Ba a sami bankin da ya dace ba.",
     "errorForm": "Shigarwar ba daidai ba ce. Don Allah a sake gwadawa.",
     "accountNameLabel": "Sunan Asusun Banki",
     "accountNumberLabel": "Lambar Asusun Banki",
@@ -402,7 +408,8 @@
     "errors": {
       "accountNumberRequired": "Da fatan za a shigar da lambar asusu.",
       "accountNumberInvalid": "Lambar asusu dole ta kasance lambobi 10.",
-      "bankNameRequired": "Da fatan za a shigar da sunan banki."
+      "bankNameRequired": "Da fatan za a shigar da sunan banki.",
+      "bankSelectionRequired": "Da fatan a zaɓi banki daga jerin bankunan yanzu."
     }
   },
   "loanStep3": {
