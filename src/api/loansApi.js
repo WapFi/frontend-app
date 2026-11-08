@@ -1,5 +1,16 @@
 import axios from "./axios";
 
+export const getLoanBanks = async (signal) => {
+  const response = await axios.get("/loans/banks", { signal });
+  const body = response.data;
+  if (body.status !== true || !Array.isArray(body.data) ||
+      body.data.some((bank) => !bank || typeof bank.name !== "string" ||
+        !bank.name.trim() || typeof bank.code !== "string" || !bank.code.trim())) {
+    throw new Error("Invalid bank list response");
+  }
+  return body.data;
+};
+
 export const applyForLoan = async (loanFormData) => {
   const response = await axios.post("/loans/apply", loanFormData);
   return response;

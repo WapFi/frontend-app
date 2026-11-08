@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
+import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -12,15 +14,15 @@ import LoadingSpinner from "../LoadingSpinner";
 
 export default function Step4Summary() {
   const { t } = useTranslation();
-  const { loanFormData, updateLoanFormData } = useLoanForm();
+  const { loanFormData, updateLoanFormData, clearLoanFormData } = useLoanForm();
   // const { refreshDashboardData } = useDashboard();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
-  const [formSuccess, setFormSuccess] = useState("");
+  const submissionInFlight = useRef(false);
   const [showPassword, setShowPassword] = useState(false);
   const { dashboardData, refreshDashboardData } = useDashboard();
-  const isUpdatingPendingLoan = Boolean(dashboardData.pending_loan);
+  const isUpdatingPendingLoan = Boolean(dashboardData?.pending_loan);
 
   const schema = yup.object({
     password: isUpdatingPendingLoan
@@ -43,7 +45,7 @@ export default function Step4Summary() {
     const fetchAndSyncLoanData = async () => {
       // 2. ADD THIS CONDITION AT THE START OF YOUR FETCH LOGIC
       // This ensures it only runs if a pending loan exists AND it hasn't run before
-      if (dashboardData.pending_loan && !loanFormData.loan_amount) {
+      if (!submissionInFlight.current && dashboardData?.pending_loan && !loanFormData.loan_amount) {
         try {
           const freshDashboardRes = await refreshDashboardData();
           if (freshDashboardRes && freshDashboardRes.pending_loan) {
@@ -84,9 +86,10 @@ export default function Step4Summary() {
     };
 
     fetchAndSyncLoanData();
-  }, [dashboardData.pending_loan, refreshDashboardData, updateLoanFormData]);
+  }, [dashboardData?.pending_loan, refreshDashboardData, updateLoanFormData, loanFormData.loan_amount]);
 
   const onSubmit = async (passwordData) => {
+    if (submissionInFlight.current) return;
     if (![14, 21].includes(Number(loanFormData.repayment_schedule))) {
       setFormError(t("loanStep3.errors.repaymentScheduleRequired"));
       return;
@@ -95,9 +98,9 @@ export default function Step4Summary() {
       setFormError(t("loanStep1.wapanIdRequired"));
       return;
     }
+    submissionInFlight.current = true;
     setLoading(true);
     setFormError("");
-    setFormSuccess("");
 
     const payload = {
       loan_amount: loanFormData.loan_amount,
@@ -129,66 +132,34 @@ export default function Step4Summary() {
       payload.loan_purpose_other = loanFormData.other_purpose;
     }
 
-    if (isUpdatingPendingLoan) {
-      try {
-        // update loan details
-        // pendingLoanID = localStorage.getItem("pendingLoanID");
-        const updatedLoanDetails = await updatePendingLoanDetails(
-          payload,
-          // pendingLoanID
-          dashboardData.pending_loan._id,
-        );
-        if (updatedLoanDetails.status === 200) {
-          setFormSuccess(updatedLoanDetails.data?.message);
-          // save updatedLoanDetails and navigate to overview page
-          localStorage.setItem(
-            "latestLoanApplicationData",
-            JSON.stringify(updatedLoanDetails.data?.data),
-          );
-          setTimeout(() => {
-            navigate("/take-a-loan/loan-repayment-overview");
-          }, 3500);
-        } else {
-          setFormError(updatedLoanDetails.data?.message);
-        }
-      } catch (error) {
-        setFormError(error.response?.data?.message);
-      } finally {
-        setLoading(false);
-        setTimeout(() => {
-          setFormError("");
-          setFormSuccess("");
-        }, 3000);
+    try {
+      const response = isUpdatingPendingLoan
+        ? await updatePendingLoanDetails(payload, dashboardData.pending_loan._id)
+        : await applyForLoan({ ...payload, password: passwordData.password });
+
+      if (response.status < 200 || response.status >= 300 || response.data?.status !== true) {
+        setFormError(response.data?.message || t("loanStep4.errorForm"));
+        return;
       }
-    } else {
-      try {
-        const response = await applyForLoan({
-          ...payload,
-          password: passwordData.password,
-        });
-        if (response.status === 201) {
-          reset({ password: "" });
-          setFormSuccess(response.data?.message);
-          localStorage.setItem(
-            "latestLoanApplicationData",
-            JSON.stringify(response.data?.data),
-          );
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 3500);
-        } else {
-          setFormError(response.data?.message);
-        }
-      } catch (error) {
-        setFormError(error.response?.data?.message);
-      } finally {
-        reset({ password: "" });
-        setLoading(false);
-        setTimeout(() => {
-          setFormError("");
-          setFormSuccess("");
-        }, 3000);
-      }
+
+      reset({ password: "" });
+      // The route blocker must see the cleared draft before navigation starts.
+      flushSync(() => clearLoanFormData());
+      if (response.data.message) toast.success(response.data.message);
+      navigate(isUpdatingPendingLoan
+        ? "/take-a-loan/loan-repayment-overview"
+        : "/dashboard", { replace: true });
+      // A failed refresh must not turn a saved application into a failed submission.
+      void refreshDashboardData();
+    } catch (error) {
+      const body = error.response?.data;
+      const validationMessages = body?.errors?.map((item) => item.message).filter(Boolean).join(" ");
+      setFormError(validationMessages || body?.message || t("loanStep4.errorForm"));
+    } finally {
+      reset({ password: "" });
+      setShowPassword(false);
+      setLoading(false);
+      submissionInFlight.current = false;
     }
   };
 
@@ -200,9 +171,6 @@ export default function Step4Summary() {
         </p>
       )}
 
-      {formSuccess && (
-        <p className="text-green-500 mb-3 text-center">{formSuccess || ""}</p>
-      )}
       <div className="flex flex-col gap-1.5">
         <div className="flex justify-between text-[#222]">
           <span className="font-semibold">

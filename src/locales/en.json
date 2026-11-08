@@ -391,6 +391,12 @@
     }
   },
   "loanStep2": {
+    "banksLoading": "Loading banks...",
+    "banksError": "We couldn't load the banks. Please try again.",
+    "banksEmpty": "No banks are available right now. Please try again later.",
+    "retryBanks": "Try again",
+    "searchBanks": "Search by bank name or code",
+    "noMatchingBanks": "No matching banks found.",
     "errorForm": "Invalid entries. Please try again.",
     "accountNameLabel": "Bank Account Name",
     "accountNumberLabel": "Bank Account Number",
@@ -402,7 +408,8 @@
     "errors": {
       "accountNumberRequired": "Please enter account number.",
       "accountNumberInvalid": "Account number must be 10 digits.",
-      "bankNameRequired": "Please enter bank name."
+      "bankNameRequired": "Please enter bank name.",
+      "bankSelectionRequired": "Please select a bank from the current list."
     }
   },
   "loanStep3": {
