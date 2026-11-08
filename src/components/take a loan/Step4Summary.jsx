@@ -87,6 +87,14 @@ export default function Step4Summary() {
   }, [dashboardData.pending_loan, refreshDashboardData, updateLoanFormData]);
 
   const onSubmit = async (passwordData) => {
+    if (![14, 21].includes(Number(loanFormData.repayment_schedule))) {
+      setFormError(t("loanStep3.errors.repaymentScheduleRequired"));
+      return;
+    }
+    if (!isUpdatingPendingLoan && loanFormData.association_membership === "WAPAN" && !loanFormData.wapan_member_id?.trim()) {
+      setFormError(t("loanStep1.wapanIdRequired"));
+      return;
+    }
     setLoading(true);
     setFormError("");
     setFormSuccess("");
@@ -102,8 +110,13 @@ export default function Step4Summary() {
       recyclable_drop_off_known: loanFormData.recyclable_drop_off_known,
 
       repayment_method: loanFormData.repayment_method,
-      repayment_schedule: loanFormData.repayment_schedule,
+      repayment_schedule: Number(loanFormData.repayment_schedule),
     };
+    if (isUpdatingPendingLoan) {
+      delete payload.association_membership;
+    } else if (loanFormData.association_membership === "WAPAN") {
+      payload.wapan_member_id = loanFormData.wapan_member_id.trim();
+    }
 
     // include the location choice only if user does not know the location
     if (loanFormData.recyclable_drop_off_known === false) {
@@ -350,11 +363,16 @@ export default function Step4Summary() {
             {t("loanStep3.repaymentScheduleLabel")}
           </span>
           <span className="font-medium">
-            {loanFormData.repayment_schedule || "N/A"}
+            {[14, 21].includes(Number(loanFormData.repayment_schedule))
+              ? t(`loanStep3.repaymentScheduleOptions.${Number(loanFormData.repayment_schedule)} days`)
+              : "N/A"}
           </span>
         </p>
       </div>
 
+      {!isUpdatingPendingLoan && loanFormData.association_membership === "WAPAN" && (
+        <p className="text-[#222] break-words">{t("loanStep1.wapanIdLabel")}: {loanFormData.wapan_member_id}</p>
+      )}
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
         {!isUpdatingPendingLoan && (
           <>

@@ -9,9 +9,12 @@ import chevronDown from "../../assets/chevron-down.svg";
 import chevronUp from "../../assets/chevron-up.svg";
 import { useLoanForm } from "../../context/LoanFormContext";
 import LoadingSpinner from "../LoadingSpinner";
+import { useDashboard } from "../../context/DashboardContext";
 
 export default function Step1LoanAmount() {
   const { t } = useTranslation();
+  const { dashboardData } = useDashboard();
+  const existingLoan = dashboardData?.pending_loan;
   const { loanFormData, updateLoanFormData, setHasUnsavedChanges } =
     useLoanForm();
   const navigate = useNavigate();
@@ -79,7 +82,13 @@ export default function Step1LoanAmount() {
       .required(t("loanStep1.errors.loanPurposeRequired")),
     associationMembership: yup
       .string()
+      .oneOf(["WAPAN", "ASWOL", "RAN", "NONE"])
       .required(t("loanStep1.errors.membershipRequired")),
+    wapanMemberId: yup.string().trim().when("associationMembership", {
+      is: (value) => value === "WAPAN" && !existingLoan,
+      then: (schema) => schema.required(t("loanStep1.wapanIdRequired")),
+      otherwise: (schema) => schema.notRequired(),
+    }),
     otherPurpose: yup.string().when("loanPurpose", {
       is: "OTHER",
       then: (schema) =>
@@ -103,6 +112,7 @@ export default function Step1LoanAmount() {
       loanPurpose: loanFormData.loan_purpose,
       otherPurpose: loanFormData.other_purpose,
       associationMembership: loanFormData.association_membership,
+      wapanMemberId: loanFormData.wapan_member_id || "",
     },
   });
 
@@ -112,6 +122,7 @@ export default function Step1LoanAmount() {
       loanPurpose: loanFormData.loan_purpose,
       otherPurpose: loanFormData.other_purpose,
       associationMembership: loanFormData.association_membership,
+      wapanMemberId: loanFormData.wapan_member_id || "",
     });
   }, [loanFormData, reset]);
 
@@ -134,6 +145,7 @@ export default function Step1LoanAmount() {
         loan_purpose: data.loanPurpose,
         other_purpose: data.otherPurpose,
         association_membership: data.associationMembership,
+        wapan_member_id: data.associationMembership === "WAPAN" ? data.wapanMemberId : "",
       });
 
       if (setHasUnsavedChanges) {
@@ -280,7 +292,7 @@ export default function Step1LoanAmount() {
             className={`flex items-center justify-between cursor-pointer mt-2 bg-white ${
               displayMembershipForm ? "rounded-t-lg" : "rounded-[8px]"
             }  p-[14px] border border-[rgba(0,0,0,0.08)]`}
-            onClick={() => setDisplayMembershipForm(!displayMembershipForm)}
+            onClick={() => !existingLoan && setDisplayMembershipForm(!displayMembershipForm)}
           >
             <p className="text-[rgba(34,34,34,0.50)] text-[16px]">
               {associationMembership
@@ -293,7 +305,7 @@ export default function Step1LoanAmount() {
               className="ml-2"
             />
           </div>
-          {displayMembershipForm && (
+          {displayMembershipForm && !existingLoan && (
             <div className="mt-[0.2px] bg-white py-[7px] px-[14px] border border-[rgba(0,0,0,0.08)] rounded-b-lg flex flex-col gap-3">
               {["WAPAN", "ASWOL", "RAN", "NONE"].map((value) => (
                 <button
@@ -302,7 +314,9 @@ export default function Step1LoanAmount() {
                   onClick={() => {
                     setValue("associationMembership", value, {
                       shouldValidate: true,
+                      shouldDirty: true,
                     });
+                    if (value !== "WAPAN") setValue("wapanMemberId", "");
                     setDisplayMembershipForm(false);
                   }}
                   className="text-left text-[#222] hover:bg-[rgba(0,0,0,0.05)] p-2 rounded"
@@ -321,6 +335,16 @@ export default function Step1LoanAmount() {
 
         <br />
 
+        {existingLoan && <p className="text-sm text-[#656565]">{t("loanStep1.membershipLocked")}</p>}
+        {associationMembership === "WAPAN" && !existingLoan && (
+          <div className="mb-4">
+            <label htmlFor="wapan-member-id">{t("loanStep1.wapanIdLabel")}</label>
+            <input id="wapan-member-id" {...register("wapanMemberId")}
+              className="mt-2 border border-gray-300 rounded-lg w-full p-3"
+              aria-invalid={Boolean(errors.wapanMemberId)} />
+            {errors.wapanMemberId && <p className="text-red-600 text-sm" role="alert">{errors.wapanMemberId.message}</p>}
+          </div>
+        )}
         <button
           disabled={loading || borrowingLimitLoading || borrowingLimit === null}
           type="submit"
