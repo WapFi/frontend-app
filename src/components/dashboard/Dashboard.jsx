@@ -12,6 +12,7 @@ import CreditScore from "./CreditScore";
 import DisbursedLoansProgressBar from "./DisbursedLoansProgressBar";
 import DisbursedLoansSection from "./DisbursedLoansSection";
 import Overview from "./Overview";
+import RejectedLoanNotice from "./RejectedLoanNotice";
 
 function Dashboard({ dashboardData }) {
   const navigate = useNavigate();
@@ -326,6 +327,14 @@ function Dashboard({ dashboardData }) {
     <div className="text-[18px] text-[#222] flex flex-col items-end md:items-start md:shrink-0 gap-8 py-4 px-2.5 lg:px-[23px]">
       {renderDashboardTitle()}
       {renderPendingLoanCallout()}
+      {!dashboardData.active_loan && !dashboardData.pending_loan &&
+        dashboardData.rejected_loan?.status === "REJECTED" && (
+          <RejectedLoanNotice
+            key={dashboardData.rejected_loan._id}
+            loan={dashboardData.rejected_loan}
+            onApply={handleTakeLoanClick}
+          />
+        )}
 
       {/* Conditional Rendering for Returning User Loan Info */}
       {!isNewUser && dashboardData.active_loan?.status === "DISBURSED" && (

@@ -255,6 +255,13 @@
     "dueBy": "Ranar Karewa: — (Babu lamuni mai aiki)"
   },
   "dashboard": {
+    "rejectedLoan": {
+      "title": "Ba a amince da neman rancen ba",
+      "application": "Neman rance {{id}}",
+      "reason": "Dalili",
+      "apply": "Fara sabon neman rance",
+      "dismiss": "Rufe"
+    },
     "title": "Allon Bayani",
     "outstandingLoanBalance": "Adadin Bashin da Babu Biya",
     "repaymentHistory": "Tarihin Biyan Kuɗi",
@@ -446,6 +453,7 @@
     }
   },
   "loanStep4": {
+    "submissionSaved": "An adana neman rancenka.",
     "errorForm": "Wani abu ya faru. Don Allah a sake gwadawa.",
     "loanAmountPurposeLabel": "Adadin Bashi & Manufa",
     "howMuchToBorrowLabel": "Nawa kake son karɓa a matsayin bashi?",
