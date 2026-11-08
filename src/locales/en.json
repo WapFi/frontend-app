@@ -255,6 +255,13 @@
     "dueBy": "Due by: — (No current loan)"
   },
   "dashboard": {
+    "rejectedLoan": {
+      "title": "Loan application not approved",
+      "application": "Application {{id}}",
+      "reason": "Reason",
+      "apply": "Start a new application",
+      "dismiss": "Dismiss"
+    },
     "title": "Dashboard",
     "outstandingLoanBalance": "Outstanding Loan Balance",
     "repaymentHistory": "Repayment History",
@@ -446,6 +453,7 @@
     }
   },
   "loanStep4": {
+    "submissionSaved": "Your application has been saved.",
     "errorForm": "Something went wrong. Please try again.",
     "loanAmountPurposeLabel": "Loan Amount & Purpose",
     "howMuchToBorrowLabel": "How much would you like to borrow?",

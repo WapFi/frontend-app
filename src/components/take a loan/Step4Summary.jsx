@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
-import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -14,7 +13,10 @@ import LoadingSpinner from "../LoadingSpinner";
 
 export default function Step4Summary() {
   const { t } = useTranslation();
-  const { loanFormData, updateLoanFormData, clearLoanFormData } = useLoanForm();
+  const { loanFormData: draftData, updateLoanFormData, clearLoanFormData } = useLoanForm();
+  const [submission, setSubmission] = useState(null);
+  const loanFormData = submission?.review || draftData;
+  const successMessageRef = useRef(null);
   // const { refreshDashboardData } = useDashboard();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -23,6 +25,17 @@ export default function Step4Summary() {
   const [showPassword, setShowPassword] = useState(false);
   const { dashboardData, refreshDashboardData } = useDashboard();
   const isUpdatingPendingLoan = Boolean(dashboardData?.pending_loan);
+
+  useEffect(() => {
+    if (!submission) return;
+    successMessageRef.current?.focus();
+    successMessageRef.current?.scrollIntoView({ block: "center" });
+    const timer = setTimeout(() => {
+      navigate(submission.destination, { replace: true });
+      void refreshDashboardData();
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [submission, navigate, refreshDashboardData]);
 
   const schema = yup.object({
     password: isUpdatingPendingLoan
@@ -132,6 +145,7 @@ export default function Step4Summary() {
       payload.loan_purpose_other = loanFormData.other_purpose;
     }
 
+    let saved = false;
     try {
       const response = isUpdatingPendingLoan
         ? await updatePendingLoanDetails(payload, dashboardData.pending_loan._id)
@@ -143,14 +157,18 @@ export default function Step4Summary() {
       }
 
       reset({ password: "" });
+      saved = true;
       // The route blocker must see the cleared draft before navigation starts.
-      flushSync(() => clearLoanFormData());
-      if (response.data.message) toast.success(response.data.message);
-      navigate(isUpdatingPendingLoan
-        ? "/take-a-loan/loan-repayment-overview"
-        : "/dashboard", { replace: true });
-      // A failed refresh must not turn a saved application into a failed submission.
-      void refreshDashboardData();
+      flushSync(() => {
+        setSubmission({
+          message: response.data.message,
+          review: { ...loanFormData },
+          destination: isUpdatingPendingLoan
+            ? "/take-a-loan/loan-repayment-overview"
+            : "/dashboard",
+        });
+        clearLoanFormData();
+      });
     } catch (error) {
       const body = error.response?.data;
       const validationMessages = body?.errors?.map((item) => item.message).filter(Boolean).join(" ");
@@ -159,12 +177,20 @@ export default function Step4Summary() {
       reset({ password: "" });
       setShowPassword(false);
       setLoading(false);
-      submissionInFlight.current = false;
+      // Keep duplicate submissions and draft restoration blocked during the pause.
+      // Success sets submission synchronously above; errors remain retryable.
+      if (!saved) submissionInFlight.current = false;
     }
   };
 
   return (
     <div className="w-[95%] mx-auto md:w-[75%] flex flex-col gap-3">
+      {submission && (
+        <p ref={successMessageRef} tabIndex={-1} role="status"
+          className="rounded-lg border border-[#439182] bg-white p-4 text-[#2D6157] break-words">
+          {submission.message || t("loanStep4.submissionSaved")}
+        </p>
+      )}
       {formError && (
         <p className="text-red-500 mb-3 text-center">
           {formError || t("loanStep4.errorForm")}
@@ -179,6 +205,7 @@ export default function Step4Summary() {
           <div
             className="flex gap-2.5 cursor-pointer"
             onClick={() => {
+              if (submissionInFlight.current) return;
               navigate("/take-a-loan/form/loan-amount-purpose", {
                 state: { fromSummary: true },
               });
@@ -244,6 +271,7 @@ export default function Step4Summary() {
           <div
             className="flex gap-2.5 cursor-pointer"
             onClick={() => {
+              if (submissionInFlight.current) return;
               navigate("/take-a-loan/form/bank-account-confirmation", {
                 state: { fromSummary: true },
               });
@@ -287,6 +315,7 @@ export default function Step4Summary() {
           <div
             className="flex gap-2.5 cursor-pointer"
             onClick={() => {
+              if (submissionInFlight.current) return;
               navigate("/take-a-loan/form/loan-repayment-method", {
                 state: { fromSummary: true },
               });
@@ -341,7 +370,7 @@ export default function Step4Summary() {
       {!isUpdatingPendingLoan && loanFormData.association_membership === "WAPAN" && (
         <p className="text-[#222] break-words">{t("loanStep1.wapanIdLabel")}: {loanFormData.wapan_member_id}</p>
       )}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+      {!submission && <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
         {!isUpdatingPendingLoan && (
           <>
             <p className="text-[#2D6157] text-sm md:text-base">
@@ -421,7 +450,7 @@ export default function Step4Summary() {
         >
           {loading ? <LoadingSpinner /> : t("loanStep4.continueButton")}
         </button>
-      </form>
+      </form>}
     </div>
   );
 }
