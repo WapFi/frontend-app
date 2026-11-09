@@ -3,8 +3,31 @@ import { getLoanApplications, getUserDetails } from "../../../api/adminApi";
 import UserAvatar from "../../common/UserAvatar";
 import LoanApplicationModal from "../modals/LoanApplicationModal";
 import UserDetailsModal from "../modals/UserDetailsModal";
+import FailedPayments from "./FailedPayments";
 
 function LoanApplications() {
+  const [view, setView] = useState("applications");
+  return (
+    <div className="space-y-6">
+      <div role="group" aria-label="Loan application views" className="flex flex-wrap gap-2 border-b border-gray-200">
+        {[["applications", "Applications"], ["failed", "Failed Payments"]].map(([value, label]) => (
+          <button key={value} type="button" aria-pressed={view === value} onClick={() => setView(value)}
+            className={`cursor-pointer border-b-2 px-4 py-3 text-sm font-medium ${view === value ? "border-yellow-500 text-yellow-700" : "border-transparent text-gray-600 hover:text-gray-900"}`}>
+            {label}
+          </button>
+        ))}
+      </div>
+      {view === "applications" ? <ApplicationsList /> : (
+        <>
+          <h1 className="text-2xl font-bold text-gray-900">Loan Applications</h1>
+          <FailedPayments />
+        </>
+      )}
+    </div>
+  );
+}
+
+function ApplicationsList() {
   const [loanApplications, setLoanApplications] = useState([]);
   const [selectedLoan, setSelectedLoan] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -44,6 +67,7 @@ function LoanApplications() {
   ) => {
     try {
       setLoading(true);
+      setError(null);
       const params = { page, limit: perPage };
       if (search) params.search = search;
       if (startDate) params.start_date = startDate;
@@ -87,6 +111,8 @@ function LoanApplications() {
           totalPages: total_pages,
           totalApplications: total_applications,
         });
+      } else {
+        setError(response.message || "Failed to load loan applications");
       }
     } catch (err) {
       console.error("Error fetching loan applications:", err);
@@ -189,6 +215,7 @@ function LoanApplications() {
     { value: "APPROVED", label: "Approved" },
     { value: "REJECTED", label: "Rejected" },
     { value: "DISBURSED", label: "Disbursed" },
+    { value: "CANCELLED", label: "Cancelled" },
   ];
 
   if (loading) {
@@ -222,7 +249,7 @@ function LoanApplications() {
         <div className="text-center py-8">
           <p className="text-red-600">{error}</p>
           <button
-            onClick={() => fetchLoanApplications()}
+            onClick={() => fetchLoanApplications(pagination.currentPage, searchTerm, startDate, endDate, statusFilter)}
             className="mt-2 text-blue-600 hover:text-blue-800"
           >
             Retry
@@ -330,6 +357,9 @@ function LoanApplications() {
             </thead>
 
             <tbody className="bg-white divide-y divide-gray-200">
+              {loanApplications.length === 0 && (
+                <tr><td colSpan={8} className="px-4 py-8 text-center text-sm text-gray-500">No loan applications found.</td></tr>
+              )}
               {loanApplications.map((loan) => (
                 <tr
                   key={loan.id}
@@ -413,7 +443,7 @@ function LoanApplications() {
 
             <button
               type="button"
-              disabled={pagination.currentPage === pagination.totalPages}
+              disabled={pagination.currentPage >= pagination.totalPages}
               onClick={() => handlePageChange(pagination.currentPage + 1)}
               className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -453,7 +483,7 @@ function LoanApplications() {
             <div>
               <button
                 className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={pagination.currentPage === pagination.totalPages}
+                disabled={pagination.currentPage >= pagination.totalPages}
                 onClick={() => handlePageChange(pagination.currentPage + 1)}
               >
                 Next
@@ -474,6 +504,7 @@ function LoanApplications() {
 
       {selectedLoan && (
         <LoanApplicationModal
+          key={selectedLoan.id}
           loan={selectedLoan}
           onClose={handleCloseLoanModal}
           onUpdated={() =>

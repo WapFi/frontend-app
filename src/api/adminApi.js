@@ -71,6 +71,11 @@ export const retryLoanDisbursement = async (loanId) => {
   }
 };
 
+export const getDisbursements = async (params = {}, signal) => {
+  const response = await axios.get('/admins/disbursements', { params, signal });
+  return response.data;
+};
+
 // Analytics
 export const getAnalyticsData = async (params = {}) => {
   try {
