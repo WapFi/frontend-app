@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import {
   retryLoanDisbursement,
@@ -47,6 +47,9 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
   const [fundsError, setFundsError] = useState("");
   const [actionError, setActionError] = useState("");
   const [actionLoading, setActionLoading] = useState("");
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [retryAttempted, setRetryAttempted] = useState(false);
+  const actionInFlight = useRef(false);
 
   const loanStatus = loan?.status?.toUpperCase();
   const disbursementStatus = loan?.disbursementStatus?.toUpperCase();
@@ -91,6 +94,7 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
   if (!loan) return null;
 
   const handleApprove = async () => {
+    if (actionInFlight.current || !isPending) return;
     if (!selectedFundId) {
       setActionError(
         "Select an eligible fund before approving and disbursing this loan.",
@@ -98,6 +102,7 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
       return;
     }
 
+    actionInFlight.current = true;
     try {
       setActionLoading("approve");
       setActionError("");
@@ -123,31 +128,41 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
         getErrorMessage(error, "Unable to approve and disburse loan."),
       );
     } finally {
+      actionInFlight.current = false;
       setActionLoading("");
     }
   };
 
   const handleDecline = async () => {
+    if (actionInFlight.current || !isPending) return;
+    actionInFlight.current = true;
     try {
       setActionLoading("decline");
       setActionError("");
-      const response = await updateLoanApplicationStatus(loan.id, "REJECTED");
+      const payload = { status: "REJECTED" };
+      if (rejectionReason.trim()) payload.rejection_reason = rejectionReason.trim();
+      const response = await updateLoanApplicationStatus(loan.id, payload);
 
       if (response.status) {
-        toast.success(response.message || "Loan declined successfully.");
+        toast.success(response.message || "Loan rejected successfully.");
         await onUpdated?.();
         onClose();
       } else {
-        setActionError(response.message || "Unable to decline loan.");
+        setActionError(response.message || "Unable to reject loan.");
       }
     } catch (error) {
-      setActionError(getErrorMessage(error, "Unable to decline loan."));
+      setActionError(getErrorMessage(error, "Unable to reject loan."));
     } finally {
+      actionInFlight.current = false;
       setActionLoading("");
     }
   };
 
   const handleRetryDisbursement = async () => {
+    if (actionInFlight.current || !isFailedDisbursement || retryAttempted) return;
+    actionInFlight.current = true;
+    setRetryAttempted(true);
+    let retryAccepted = false;
     try {
       setActionLoading("retry");
       setActionError("");
@@ -155,8 +170,7 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
 
       if (response.status) {
         toast.success(response.message || "Disbursement retry started.");
-        await onUpdated?.();
-        onClose();
+        retryAccepted = true;
       } else {
         setActionError(response.message || "Unable to retry disbursement.");
       }
@@ -165,6 +179,14 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
         getErrorMessage(error, "Unable to retry disbursement."),
       );
     } finally {
+      // Refresh even when another admin has already retried, or the outcome is uncertain.
+      try {
+        await onUpdated?.();
+        if (retryAccepted) onClose();
+      } catch {
+        setActionError("Unable to refresh the loan status. Refresh the list before retrying.");
+      }
+      actionInFlight.current = false;
       setActionLoading("");
     }
   };
@@ -179,6 +201,8 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
           </h2>
           <button
             onClick={onClose}
+            disabled={Boolean(actionLoading)}
+            aria-label="Close loan application"
             className="text-gray-400 hover:text-gray-600 cursor-pointer"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -325,6 +349,18 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
             </p>
           )}
 
+          {isPending && (
+            <div>
+              <label htmlFor="rejection-reason" className="block text-sm font-medium text-gray-700">
+                Rejection reason (optional)
+              </label>
+              <textarea id="rejection-reason" rows={3} value={rejectionReason}
+                disabled={Boolean(actionLoading)}
+                onChange={(event) => setRejectionReason(event.target.value)}
+                className="mt-2 w-full rounded-md border border-gray-300 p-3 text-sm focus:border-yellow-500 focus:outline-none focus:ring-1 focus:ring-yellow-500" />
+            </div>
+          )}
+
           {/* Action Buttons */}
           {isPending ? (
             <div className="flex space-x-3">
@@ -346,7 +382,7 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
                 disabled={Boolean(actionLoading)}
                 className="flex-1 bg-red-100 text-red-700 py-3 px-4 rounded-md font-medium hover:bg-red-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
-                {actionLoading === "decline" ? "Declining..." : "Decline Loan"}
+                {actionLoading === "decline" ? "Rejecting..." : "Reject Loan"}
               </button>
             </div>
           ) : (
@@ -368,20 +404,25 @@ function LoanApplicationModal({ loan, onClose, onUpdated }) {
                     Disbursement failed
                   </h3>
                   <p className="mt-1 text-sm text-red-700">
-                    Retry the payout for this failed disbursement. If the
-                    borrower has already re-confirmed it, the request will no
-                    longer be accepted.
+                    Retry initiates another payout attempt. The server will only
+                    accept it if the disbursement is still failed. A successful
+                    retry request does not mean the borrower has received the money.
                   </p>
                   <button
                     type="button"
                     onClick={handleRetryDisbursement}
-                    disabled={Boolean(actionLoading)}
+                    disabled={Boolean(actionLoading) || retryAttempted}
                     className="mt-4 w-full rounded-md bg-yellow-500 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
                   >
                     {actionLoading === "retry"
                       ? "Retrying..."
                       : "Retry Disbursement"}
                   </button>
+                  {retryAttempted && !actionLoading && (
+                    <p className="mt-2 text-sm text-red-700">
+                      Close this window and review the refreshed status before attempting another retry.
+                    </p>
+                  )}
                 </div>
               )}
             </div>
