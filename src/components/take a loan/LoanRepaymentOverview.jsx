@@ -5,12 +5,19 @@ import { cancelPendingLoan } from "../../api/loansApi";
 import { useDashboard } from "../../context/DashboardContext";
 import { useLoanForm } from "../../context/LoanFormContext";
 import LoadingSpinner from "../LoadingSpinner";
+import BankCorrectionForm from "./BankCorrectionForm";
+import canCorrectLoanBank from "../../utils/canCorrectLoanBank";
+import { fetchDashboardData } from "../../api/apiData";
 
 export default function LoanRepaymentOverview() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { clearLoanFormData } = useLoanForm();
-  const { dashboardData, refreshDashboardData } = useDashboard();
+  const { dashboardData, refreshDashboardData, setDashboardData } = useDashboard();
+  const [editingBank, setEditingBank] = useState(false);
+  const [bankSaving, setBankSaving] = useState(false);
+  const [bankMessage, setBankMessage] = useState("");
+  const [bankRefreshError, setBankRefreshError] = useState(false);
 
   const [isDataReady, setIsDataReady] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
@@ -32,6 +39,24 @@ export default function LoanRepaymentOverview() {
   const loanStatus = loanDetails?.status?.toUpperCase();
   const disbursementStatus = loanDetails?.disbursement_status?.toUpperCase();
   const canCancel = loanStatus === "PENDING";
+  const canEditBank = canCorrectLoanBank(loanDetails);
+
+  const refreshBankDetails = async () => {
+    try {
+      const response = await fetchDashboardData();
+      if (!response.status || !response.data) throw new Error("Missing dashboard");
+      setDashboardData(response.data);
+      setBankRefreshError(false);
+    } catch {
+      setBankRefreshError(true);
+    }
+  };
+
+  const handleBankSaved = async (message) => {
+    setBankMessage(message);
+    setEditingBank(false);
+    await refreshBankDetails();
+  };
 
   if (!isDataReady) {
     return <LoadingSpinner />;
@@ -185,6 +210,7 @@ export default function LoanRepaymentOverview() {
                   "N/A"}
                 )
               </p>
+              <p className="break-words text-[#656565]">{loanDetails.bank_account?.bank_name}</p>
             </div>
           </div>
         )}
@@ -193,6 +219,24 @@ export default function LoanRepaymentOverview() {
           <p className="text-red-500" role="alert">
             {cancelError}
           </p>
+        )}
+        {bankMessage && <p role="status" className="break-words text-[#2D6157]">{bankMessage}</p>}
+        {bankRefreshError && (
+          <div role="alert">
+            <p className="text-red-600">{t("bankCorrection.refreshError")}</p>
+            <button type="button" className="cursor-pointer py-2 text-[#2D6157] underline" onClick={refreshBankDetails}>{t("loanStep2.retryBanks")}</button>
+          </div>
+        )}
+        {canEditBank && !editingBank && !bankRefreshError && (
+          <button type="button" disabled={cancelLoading || bankSaving || showCancelConfirm}
+            onClick={() => { setBankMessage(""); setEditingBank(true); }}
+            className="cursor-pointer rounded-[50px] border border-[#439182] px-6 py-3 text-[#2D6157] disabled:opacity-50">
+            {t("bankCorrection.title")}
+          </button>
+        )}
+        {canEditBank && editingBank && (
+          <BankCorrectionForm key={loanDetails._id} loan={loanDetails}
+            onClose={() => setEditingBank(false)} onSaved={handleBankSaved} onBusyChange={setBankSaving} />
         )}
 
         {cancelSuccess && (
@@ -204,6 +248,7 @@ export default function LoanRepaymentOverview() {
         <div className="mt-2 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
           <button
             type="button"
+            disabled={bankSaving}
             onClick={() => navigate("/dashboard")}
             className="rounded-[50px] bg-[#439182] px-6 py-3 font-medium text-white hover:opacity-80"
           >
@@ -213,7 +258,7 @@ export default function LoanRepaymentOverview() {
           {canCancel && (
             <button
               type="button"
-              disabled={cancelLoading}
+              disabled={cancelLoading || bankSaving || editingBank}
               onClick={() => setShowCancelConfirm(true)}
               className={`rounded-[50px] border border-red-500 px-6 py-3 font-medium text-red-500 hover:bg-red-50 ${
                 cancelLoading

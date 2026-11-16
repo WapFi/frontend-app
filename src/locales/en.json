@@ -482,6 +482,17 @@
     "yes": "Yes",
     "no": "No"
   },
+  "bankCorrection": {
+    "title": "Update bank details",
+    "nameRequired": "Please enter the account name.",
+    "save": "Save bank details",
+    "saving": "Saving...",
+    "cancel": "Cancel changes",
+    "saved": "Bank details updated.",
+    "saveError": "Unable to update bank details. Please try again.",
+    "unavailable": "Bank details can no longer be changed for this loan.",
+    "refreshError": "Your changes were saved, but the latest loan details could not be loaded. Please refresh them."
+  },
   "loanRepaymentOverview": {
     "title": "Loan Terms & Repayment Overview",
     "howMuchToBorrow": "How much would you like to borrow?",
