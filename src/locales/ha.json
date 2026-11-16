@@ -482,6 +482,17 @@
     "yes": "Eh",
     "no": "A'a"
   },
+  "bankCorrection": {
+    "title": "Gyara bayanan banki",
+    "nameRequired": "Da fatan a shigar da sunan asusu.",
+    "save": "Adana bayanan banki",
+    "saving": "Ana adanawa...",
+    "cancel": "Soke gyare-gyare",
+    "saved": "An sabunta bayanan banki.",
+    "saveError": "Ba a iya sabunta bayanan banki ba. Da fatan a sake gwadawa.",
+    "unavailable": "Ba za a iya sake canza bayanan banki na wannan rance ba.",
+    "refreshError": "An adana gyare-gyarenka, amma ba a iya loda sabbin bayanan rancen ba. Da fatan a sake lodawa."
+  },
   "loanRepaymentOverview": {
     "title": "Sharuɗɗan Lamuni & Bayanin Biyan Kuɗi",
     "howMuchToBorrow": "Nawa kake son karɓa aro?",
